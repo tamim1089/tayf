@@ -26,9 +26,13 @@ A projector performs `image → photons → physical surface`. TAYF's optical st
 | A — Human Representation | What is the smallest representation that preserves identity, body motion, face, and hands? | Solved (Mon3tr, GETA-3DGS) | `pipeline/avatar/README.md` |
 | B — Communication | What is the smallest dynamic state transmittable at conversational quality? | Solved (215 floats/frame, <0.2Mbps, ~80ms) | `pipeline/transport/README.md` |
 | C — Free-Space Optics | How much spatial/angular optical information can a 10cm optical engine generate? | **Open** | `hardware/optical-engine.md` |
-| D — Perception | How little optical information does a human observer actually need to perceive convincing presence? | Open, understudied | `docs/theory.md` (this doc) + `experiments/perceptual-quality/README.md` |
+| D — Perception | How little optical information does a human observer actually need to perceive convincing presence? | Open, understudied. **Checked Aug 2026** (55-60 papers read): no clean numeric threshold found, but the single strongest lead in either research pass is real — see below | `docs/theory.md` (this doc) + `experiments/perceptual-quality/README.md` |
 
 The breakthrough, if there is one, most likely comes from the interaction between C and D — not from either alone. A physically sparse optical engine (Track C's likely ceiling for years) becomes viable exactly to the extent that Track D's threshold for "convincing presence" is lower than "complete volumetric fidelity." This is why Track D is not optional academic polish — it is the lever that makes Track C's hard physics survivable on a useful timeline.
+
+## The strongest lead so far on the engineering hypothesis
+
+A dedicated literature check of Track D (arXiv 2401.02171, an AR-HMD telepresence study) found that a life-size, correctly-placed **flat 2D video cutout** — no volumetric geometry, no view-dependent parallax at all — produced co-presence statistically indistinguishable from a full rigged 3D avatar (5.2 vs 5.3 on a 7-point scale), while beating the 3D avatar's fidelity rating by a wide, significant margin (5.1 vs 3.7, p<.001). This is not proof the engineering hypothesis holds for TAYF specifically — the study used a single tracked viewpoint in a headset, not a free-space multi-viewer display, so it says nothing about whether TAYF's optical engine can skip parallax information for simultaneous viewers. But it is real, numerically clean evidence that *for single-viewer conversational presence*, spatial placement and photographic fidelity may matter more than volumetric structure — exactly the kind of result this hypothesis needs, tested at the wrong device class. `experiments/perceptual-quality/README.md` now queues a direct flat-2D-vs-volumetric test as its first experiment rather than starting from nothing.
 
 ## The three testable hypotheses
 
