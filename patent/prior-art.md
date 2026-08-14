@@ -1,0 +1,30 @@
+# Prior Art — Seed List
+
+**Not a completed search.** This is what's already surfaced incidentally during technical research (`research/deepseek_research.md`, `research/arxiv/online_findings.md`) — a real prior-art search for `patent/invention-disclosure.md` needs a professional pass, not just this list.
+
+## Free-space/volumetric display prior art
+
+- JSID 2025 fist-sized femtosecond laser-plasma display (68×42mm, ~10k voxels/s) — the closest existing art to `hardware/optical-engine.md`'s north-star track.
+- Dual-path laser-excited volumetric display, SIGGRAPH 2026 / ETech 2024 (DOI 10.1145/3816042, 10.1145/3641517.3664387).
+- Optica 2025 volumetric cloud display (laser-excited, scattering medium).
+- Fairy Lights in Femtoseconds (arXiv 1506.06668, SIGGRAPH Asia 2015) — foundational femtosecond-laser aerial-graphics prior art.
+- Acoustic levitation displays — MATD (Nature 2019).
+- Photophoretic optical trap displays — Smalley et al. (Nature 2018).
+- Voxon swept-volume displays (VX1/VX2/VX2-XL) — commercial product prior art.
+- Looking Glass Factory, Sony ELF-SR2 — commercial light-field/glasses-free 3D display prior art.
+
+## Telepresence system prior art
+
+- Proto Hologram, Holoconnects — commercial Pepper's-ghost-based "hologram" telepresence products, directly relevant to why "a hologram cube" (`patent/PATENT_NOTES.md`) is unpatentable as a general concept.
+- Google Beam / Project Starline — light-field telepresence booths.
+- Mon3tr (arXiv 2601.07518) — monocular 3D telepresence with pre-built Gaussian avatars; closest prior art to Concept A/D's representation+transmission coupling.
+- Holoportation, VirtualCube, MetaStream, MagicStream, TeleAloha — comparison systems Mon3tr itself benchmarks against (per `research/deepseek_research.md`'s entry on it) — worth pulling that comparison table directly into a real search.
+
+## Explicitly not yet searched
+
+- Patent databases themselves (USPTO, EPO, WIPO) — everything above comes from academic/commercial-product research, not a patent-literature search. This is the biggest gap before `patent/invention-disclosure.md` can be evaluated seriously.
+- Any existing patent specifically describing a small cube-shaped free-space-capture-and-display device — the online research pass tasked with checking this (project task #8) was killed before producing anything. This remains unresolved, not "checked and clear."
+
+## Status
+
+Seed list only. `patent/PATENT_NOTES.md`'s recommended process treats this as step 3 of 6 — currently incomplete.

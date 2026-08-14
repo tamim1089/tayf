@@ -1,0 +1,24 @@
+# TAYF pipeline dependencies — license-clean stack per research/01-volumetric-capture-sota.md
+# Every entry here is Apache-2.0 or MIT. Do not add SMPL-X or other non-commercial-licensed
+# body models to this file — see pipeline/avatar/README.md.
+
+# 3D Gaussian Splatting rasterizer/training
+gsplat
+
+# Parametric body model — Apache-2.0 SMPL-X replacement (NAVER)
+# install per https://github.com/naver/anny — vendored separately, not on PyPI as of this writing
+# anny
+
+# Matting / segmentation (MIT)
+birefnet
+
+# Large avatar model for canonical-avatar enrollment
+# lam  # vendored separately — see pipeline/avatar/README.md for provenance
+
+# Transport
+aiortc          # WebRTC in Python, for the sender/receiver data-channel path
+lz4             # LZ4 compression for the driving-parameter stream
+
+# Runtime numerics
+numpy
+torch

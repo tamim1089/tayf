@@ -1,0 +1,16 @@
+# Raw fetched paper sources — regeneratable via research/arxiv/build_telepresence.py fetch,
+# not meant to be versioned (774MB tex + 77MB pdftotext dumps as of this writing)
+research/papers/
+
+# Raw per-query API response dumps — intermediate, regeneratable via build_telepresence.py build
+research/arxiv/raw/
+
+# Build/fetch run logs — regenerated every run, not meaningful history
+research/arxiv/*.log
+
+# Local Claude Code tool permission config — machine-local, not project content
+.claude/settings.local.json
+
+# Python
+__pycache__/
+*.pyc
