@@ -21,7 +21,7 @@
 
 ## Optical engine
 
-- **Hackathon track:** compact light-field or retroreflective aerial-imaging panel. No vendor/part search done yet — this is the first item for the rerun research pass.
+- **Hackathon track:** compact light-field or retroreflective aerial-imaging panel. No vendor/part search done yet — this is the first item for the rerun research pass. **Software feasibility is no longer a question mark**: arXiv 2506.08064 is an already-working open-source webcam-to-Looking-Glass-Portrait pipeline naming video conferencing as its use case (see `experiments/light-field/README.md`) — this narrows the remaining hackathon-track risk down to actual panel sourcing/pricing, not "can this even be driven in real time."
 - **North-star track:** femtosecond fiber laser + galvo/MEMS scanner. Explicitly out of scope for hardware ordering until `hardware/optical-engine.md`'s eye-safety section is resolved.
 
 ## Power / thermal

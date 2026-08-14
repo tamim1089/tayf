@@ -22,8 +22,12 @@ Sits between avatar animation and the optical-engine driver: takes the fully-ani
 2. For any angular gap the optical engine cannot physically address but the observer-tracking system (`docs/calibration.md`) indicates is relevant, use neural view interpolation between the nearest physical views rather than an additional real render pass — the interpolation network operates in angle-space, not in full 3D reconstruction space, keeping this stage cheap relative to `pipeline/avatar/README.md`'s animation cost.
 3. Apply `docs/theory.md`'s perceptual allocation principle here too: interpolation quality budget goes to face/hands/eyes first.
 
+## Starting point found (Aug 2026 literature sweep)
+
+Don't build this from scratch. **arXiv 2506.08064** ("A Real-time 3D Desktop Display") is an already-working, open-source pipeline (altiro3D) doing exactly this module's job end-to-end: webcam → MiDaS monocular depth → view synthesis (their "FAST" or "REAL" geometric algorithm) → quilt assembly → Looking Glass Portrait output, and it explicitly names video conferencing as a target use case. Their own measured bottleneck is the depth-estimation CNN (>50% of runtime on a laptop GPU), not view synthesis itself — useful to know before optimizing the wrong stage. For driving the panel at higher view counts/framerates once this module needs to scale beyond that baseline, CoherentRaster (arXiv 2605.04509) and LFDPR (arXiv 2601.19901) are real-time Gaussian-splat/point rendering methods validated on actual light-field-panel hardware — see `experiments/light-field/README.md` for full detail on all three. Fork and accelerate 2506.08064's pipeline rather than designing this module independently.
+
 ## Open items
 
-1. No implementation exists — this module is fully blocked on `hardware/optical-engine.md`'s hackathon-track panel choice (task #9), since the physical view count/geometry it needs to target is engine-specific.
+1. No implementation exists yet — next step is forking arXiv 2506.08064's open-source pipeline once `hardware/optical-engine.md`'s hackathon-track panel is sourced (task #9), since the physical view count/geometry it needs to target is engine-specific.
 2. The minimum-physical-channels research question is untested; first real experiment belongs in `experiments/angular-resolution/README.md`.
-3. Candidate neural interpolation methods should be sourced from `research/deepseek_research.md`'s Human/Optics tracks (view-synthesis/NeRF-adjacent papers) once this module is unblocked — not designed from scratch.
+3. 2506.08064's own bottleneck (monocular depth CNN inference) needs re-benchmarking on TAYF's actual Jetson-class edge SoC, not assumed from their laptop-GPU numbers.

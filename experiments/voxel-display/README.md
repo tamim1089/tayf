@@ -17,6 +17,11 @@ Corresponds to `hardware/optical-engine.md`'s north-star track. Not a hackathon-
 3. Rotating object — measure angular consistency and any motion-induced artifacts (voxel "boiling," positional drift).
 4. Fixed-position observer moved around the volume — since a physical voxel is inherently omnidirectional (unlike a light-field engine), this experiment instead measures whether apparent brightness/visibility holds up across viewing angles.
 
+## Added research questions (Aug 2026 literature sweep, see `hardware/optical-engine.md`'s literature-update section)
+
+6. **Does cumulative air-density depletion destabilize voxel position/brightness above ~10kHz repetition rate?** arXiv 2501.10198 measures that below ~10kHz, heat from each femtosecond filament fully diffuses before the next pulse; above ~10kHz, a permanent density-depletion well forms and every subsequent pulse ionizes already-perturbed air (measured: density stays depleted to ~92% between pulses at 100kHz). JSID 2025's ~10k voxels/s baseline sits right at this crossover — naively raising repetition rate to hit the north-star track's 10^5-10^6 points/s target may not scale linearly for this reason alone, independent of laser power or eye safety. Not yet tested experimentally in this project; flagged from the physics literature, not from a TAYF measurement.
+7. **Watch-list scanning mechanism:** arXiv 2601.08906 (a Stanford "Re-Imaging Phased Array" SLM) demonstrates >10 million effective frames/second arbitrary 2D beam addressing — 2-3 orders of magnitude faster than any scanning mechanism considered so far. It is a neutral-atom-quantum-computing/microscopy tool, not a display device: demonstrated spot count is single-digit-to-tens (not millions), it has no depth/z mechanism, and the optical path is multi-meter with active piezo stabilization. Not usable as-is, but worth re-checking as the technology matures — a genuinely faster 2D addressing front-end paired with a separate depth mechanism (e.g. plasma ionization) is a real, if distant, hybrid option for Branch E.
+
 ## Prerequisites before this branch can start
 
 - Eye-safety analysis (`hardware/optical-engine.md` §safety) — not started, not optional, blocks any powered test near a person.
