@@ -12,6 +12,10 @@
 - Photophoretic optical trap displays — Smalley et al. (Nature 2018).
 - Voxon swept-volume displays (VX1/VX2/VX2-XL) — commercial product prior art.
 - Looking Glass Factory, Sony ELF-SR2 — commercial light-field/glasses-free 3D display prior art.
+- Wide-FOV dynamic metasurface-hybrid holographic projector, 159°×159° FOV (arXiv 2511.22639) — closest prior art to any future claim involving metasurface-extended SLM viewing angle.
+- HoloTile RGB real-time speckle-free full-color CGH (arXiv 2409.11049) and Ellipsography joint phase-polarization speckle suppression (arXiv 2604.16237) — prior art against any future claim involving real-time or speckle-suppressed holographic display specifically.
+- Video-rate holographic telepresence via single-shot wavefront measurement (arXiv 2601.00630) — closest prior art to any future claim combining holography with a telepresence/communication use case specifically.
+- altiro3D open-source webcam-to-light-field-panel pipeline naming video conferencing as a use case (arXiv 2506.08064) — direct prior art against any future claim over the hackathon-track's capture→view-synthesis→panel pipeline concept; TAYF's differentiation there, if any, would need to be in the free-space/cube-integration angle, not the pipeline concept itself.
 
 ## Telepresence system prior art
 
