@@ -187,7 +187,7 @@ Current layout is stable and matches this plan. Additions implied by this docume
 
 ```
 tayf/
-├── docs/               01-07 master documents (authoritative)
+├── docs/               01-08 master documents (authoritative; doc 08 = final product plan, MATD engine)
 ├── simulation/         NEW - one subdir per S-track, per doc 07
 │   ├── s1_waveoptics/  s2_layout/  s3_thermal/
 │   ├── s4_lightfield/  s5_perceptual/  s6_tracking/  s7_system/
@@ -201,7 +201,9 @@ tayf/
 ├── app/  design/  pitch/
 ```
 
-Rule: `docs/01–07` are authoritative. The older scattered files (`hardware/*.md`, `docs/theory.md`, `FilesPlan.md`) remain as working detail but **must not contradict** the master documents — this project has already shipped one stale-duplicate bug when the same table lived in two files and only one was updated.
+Rule: `docs/01–08` are authoritative. The older scattered files (`hardware/*.md`, `docs/theory.md`, `FilesPlan.md`) remain as working detail but **must not contradict** the master documents — this project has already shipped one stale-duplicate bug when the same table lived in two files and only one was updated.
+
+> **Change of record (2026-08-15):** the emission-stage open question that this document's §1–§3 budget chain was built to resolve is now closed for the product engine — `docs/08_FINAL_PRODUCT_PLAN.md` selects the verified MATD (acoustic trapping) engine (Track 5) and adds milestone track E. §2's dependency graph R3–R5/R7/R9 remain the correct research framing for the *photoreal research tier* (E4) and the *light-field hackathon instrument*, not for the wireframe product engine. The perceptual battery (S5) still runs — it now also quantifies figurine-rate acceptability (S5.8) — and the hackathon track is unchanged.
 
 ---
 

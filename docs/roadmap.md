@@ -1,24 +1,29 @@
-# TAYF Roadmap — Two Tracks
+# TAYF Roadmap — Three Tracks
 
-Source: `FilesPlan.md` §3.2, §7.
+Source: `FilesPlan.md` §3.2, §7; superseded on the north-star engine by `docs/08_FINAL_PRODUCT_PLAN.md` (2026-08-15).
 
-## Why two tracks
+## Why three tracks
 
-The capture→representation→transport stack is solved (cited, working prior art, real measured numbers). Free-space photoreal optical emission at 10cm is not solved anywhere in the published literature. Pretending otherwise produces a pitch that collapses under the first technical question a judge asks. Splitting it into two explicit tracks is the honest engineering move, not a downgrade.
+The capture→representation→transport stack is solved (cited, working prior art, real measured numbers). Free-space photoreal optical emission at 10cm is not solved anywhere in the published literature — but free-space *wireframe* emission now is: the MATD (Multimodal Acoustic Trapping Display) is verified end-to-end (Nature 2019; SPIE 2020: 10×10×10 cm³ display volume; Sci Adv 2022 BEM; IEEE 2026 AcousTools, MIT) and becomes the product engine. Splitting tracks is the honest engineering move, not a downgrade.
 
 ## Track Hackathon-Prototype (buildable solo, Aug 14 → Sep 13)
 
 Everything in `docs/architecture.md`'s pipeline, terminated in a compact light-field or retroreflective aerial-imaging panel instead of true free-space plasma (`hardware/optical-engine.md` §Hackathon-track). Goal: one working end-to-end cube-to-cube demo, a real body reconstructed from 215 numbers a second, over a real CAMARA QoD-guaranteed link, in well under 150ms.
 
-- **Aug 14 → Aug 23:** finalize the two-track pitch narrative, pick the hackathon-track optical engine, rerun the killed hardware/vendor research pass, submit Idea Capture Template + pitch deck.
+- **Aug 14 → Aug 23:** finalize the pitch narrative, pick the hackathon-track optical engine, rerun the killed hardware/vendor research pass, submit Idea Capture Template + pitch deck.
 - **Aug 23 → Sep 13:** build the pipeline for real, integrate the sourced optical panel, get one working demo with a live CAMARA QoD session.
 
-## Track North-Star (multi-year, the actual invention)
+## Track MATD-Product (the verified free-space engine, post-hackathon)
 
-Laser-plasma or hybrid plasma-in-medium aerial display, scaled from the JSID 2025 baseline (~10k voxels/s, 68×42mm) toward the 10^5-10^6 points/s a recognizable moving face needs, with eye-safety engineering designed in from the start (pulse energy limits, exposure budgets, possibly gaze-tracked pulse gating) rather than retrofitted. This is a publishable/patentable research program. It does not appear on the hackathon timeline, and no laser hardware should be brought near a demo audience before a real eye-safety analysis exists (`hardware/optical-engine.md` §North-star-track / safety).
+The actual product: two cubes exchanging the solved 215-float/frame vector stream, reconstructing the remote person as a glowing wireframe figurine levitated in a 10×10×10 cm³ workspace by opposed 40 kHz phased arrays — with localized audio and haptics from the same arrays. All claims verified (`docs/08` §3). Prototype ladder E0→E3, ~$250–400 in commodity parts to reach E1. Device envelope ~100×100×250 mm (arrays separated 23.4 cm); the 10 cm³ workspace survives.
+
+## Track North-Star (multi-year, the research tier)
+
+Photoreal emission — the E4 tier in `docs/08`: multi-particle POV displays (mermaid/electrostatic separation, StableLev/AAC-class trajectory repair) that do not exist yet in verified literature, or an optical engine that surpasses MATD's wireframe tier. This is a publishable/patentable research program. It does not appear on the hackathon timeline.
 
 ## Hard gates
 
 - **Aug 23, 2026** — Idea Capture Template + pitch deck (GSMA MENA Ignite Hackathon, Idea Phase close).
 - **Sep 13, 2026** — Prototype Phase / Live Demo.
 - **Nov 2026** — MWC Doha showcase, contingent on advancing past the prototype phase.
+- **Q4 2026** — E2 two-cube MATD loop (per `docs/08` §8 M-E4).
