@@ -20,6 +20,8 @@ A 467-paper triage of every "aerial"-tagged corpus entry, plus a full-corpus key
 
 **Next step for whoever picks this branch up:** get institutional or document-delivery access to Optics Express, OSA Continuum, and Optical Review specifically for the Yamamoto/Suyama AIRR line. Another arXiv sweep, however the search terms are refined, will keep returning zero — this is a venue problem, not a search-quality problem.
 
+> **Methodological note:** the two "zero papers found" sweeps that preceded this section were keyword searches, and they were wrong in a specific and instructive way — see `research/METHODOLOGY.md` §1. The real AIRR literature existed the whole time, in journals the keyword never reached.
+
 ## Bounded on first principles (2026-08-15), without needing the paywalled literature
 
 `docs/02_FREE_SPACE_OPTICAL_ENGINEERING.md` settles the branch's central question analytically, which the arXiv sweeps could not: **AIRR is unit-magnification by construction.** A retroreflective aerial-imaging plate forms a real image that is the same size as the source, mirrored about the plate — it relays, it does not magnify. That is a geometric property of the mechanism, not a limitation of any particular implementation, so no amount of primary-literature access changes it.

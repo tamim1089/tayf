@@ -4,6 +4,7 @@ Pointer index across every research artifact in this repo — read this first to
 
 | File | Contents | Scope |
 |---|---|---|
+| `research/METHODOLOGY.md` | **Read first.** Research rules earned from actual wrong conclusions on this project — chiefly: never survey literature by keyword search, and always name the architecture a constraint was evaluated in. | All tracks |
 | `research/notes.md` | The original architecture/vision brainstorm — four research tracks, optical architecture candidates, patent framing, experimental program. Source document for `docs/theory.md`, `experiments/`, `patent/`. | Conceptual/architectural |
 | `research/01-volumetric-capture-sota.md` | Volumetric capture/rendering SOTA: Gaussian splatting, parametric avatars, codecs, licenses, bandwidth figures. Source for `research/LICENSING.md` and `pipeline/`'s dependency choices. | Human representation + transport |
 | `research/deepseek_research.md` | Annotated bibliography — 128 papers deep-read across four tracks (Optics, Human, Transport, Perception), each with a long paragraph on method + relevance to TAYF. The single largest primary-source corpus in this repo. | All four research tracks |

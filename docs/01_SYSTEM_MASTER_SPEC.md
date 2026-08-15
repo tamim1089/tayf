@@ -147,15 +147,50 @@ SBP_available = (modulator pixels) × (time-multiplex factor at 60 Hz output)
 
 **The broadcast mode-count gap is 1.3–1.7×, not orders of magnitude.** That is a normal engineering shortfall, closeable by a modest increase in modulator pixel count or refresh rate — both on active commercial improvement curves.
 
-> **⚠ This is a necessary but not sufficient condition. SBP counts modes; it does not say where those modes can be placed.**
+> **⚠ SBP counts modes; it does not say where those modes can be placed. The Lagrange invariant does.**
 >
-> The Lagrange (optical) invariant constrains the *geometry*: for a modulator of N_x pixels at pitch p, half-width y = N_x·p/2 and half-angle u = λ/2p, so **y·u = N_x·λ/4 — the pitch cancels.** A life-size 250 mm image at ±20° requires **N_x ≈ 3.17×10⁵ pixels across**. A 4K panel is **82× short** on this axis. Equivalently, the Fresnel replay field W = λz/p means a 3.74 µm pitch can form an image no larger than **14.7 mm** anywhere inside a 100 mm cube.
+> For a modulator of N_x pixels at pitch p, half-width y = N_x·p/2 and half-angle u = λ/2p, so **y·u = N_x·λ/4 — the pitch cancels.** Required pixel count across: **N_x = 4·y·u/λ**.
 >
-> The two accountings are not contradictory. Modes are conserved; an étendue expander (lenslet array, engineered diffuser, static metasurface interpolator) *moves* modes from surplus spatial resolution into angular spread without creating them — and the surplus is real (the diffraction-limited spot is λ-scale while the eye resolves only 0.291 mm at 1 m, a 528× linear surplus). **After a perfect étendue expander the residual gap is exactly §4.3's mode-count gap.**
->
-> So the honest headline is: *the 1.3–1.7× figure is correct, and it is contingent on an étendue-expanding component that does not currently exist at this scale in the visible.* The 82× is not a second physical barrier — it is the specification for that missing component. Full derivation: `02_FREE_SPACE_OPTICAL_ENGINEERING.md` §5.
->
-> **Corollary that kills an obvious architecture:** a 4f Fourier layout producing a 100 mm image from a 3.74 µm SLM needs f = 680 mm. That is arithmetic, not engineering taste — the classic holographic projector is the wrong architecture for this envelope.
+> **This constraint is architecture-dependent, and applying it to the wrong architecture produced a false alarm in an earlier revision of this document.** See §4.3a.
+
+### 4.3a The Lagrange requirement collapses under tracking (correction, 2026-08-15)
+
+`02_FREE_SPACE_OPTICAL_ENGINEERING.md` §5 derived N_x ≈ 3.17×10⁵ pixels across for a 250 mm image and concluded a 4K panel is **83× short**. That calculation is correct — **for the broadcast architecture**, where the display must fill ±20° simultaneously. TAYF does not do that (§4.4). Recomputing with u set by what actually has to be filled — a single 6 mm pupil at 1 m, u = 3.0 mrad:
+
+| Target image | y (half-width) | N_x required | 4K panel (3840) | 8K (7680) |
+|---|---|---|---|---|
+| Head only (150 mm) | 75 mm | 1,636 | **2.35× surplus** | 4.69× |
+| **Head + shoulders (250 mm)** | 125 mm | **2,727** | **1.41× surplus** | 2.82× |
+| Torso (450 mm) | 225 mm | 4,909 | 0.78× (short) | 1.56× |
+| Full standing body (1.7 m) | 850 mm | 18,545 | 0.21× | 0.41× |
+
+Broadcast vs. tracked for the same 250 mm image: 3.17×10⁵ vs. 2,727 — **a 116× ratio, exactly the view count.** The Lagrange constraint scales with angular coverage, so the same architectural choice that collapses SBP by 58× collapses the étendue requirement by 116×.
+
+**Both independent accountings now agree that a life-size head is within commodity 4K hardware under tracking.** The "82× wall" was real arithmetic applied to an architecture this project explicitly rejected. The étendue-expander component described in doc 02 §5.4 is required for *broadcast*; it is not on the critical path for the tracked design.
+
+Still true and unchanged: doc 02's corollary that a 4f Fourier layout needs f = 680 mm for a 100 mm image, which kills the classic holographic-projector architecture on arithmetic; and the fact that steering (§4.6) remains unsolved.
+
+### 4.3b The aperture constraint — where the image is allowed to appear
+
+Independent of étendue and not previously documented anywhere in this repo. Light reaches the eye only through the exit aperture, so from a viewer at distance *a* from an aperture of width *D*, an image at distance *b* can be at most
+
+**W_visible = D · (b / a)**
+
+At D = 100 mm, viewer at a = 1 m:
+
+| Apparent image distance | Max visible width | Position |
+|---|---|---|
+| 0.5 m | 50 mm | in front of cube |
+| 1.0 m | 100 mm | at the cube plane |
+| 2.5 m | **250 mm** | **1.5 m behind the cube** |
+| 5.0 m | 500 mm | 4 m behind the cube |
+
+Two consequences, both hard geometry rather than engineering limits:
+
+1. **"Portal" mode works and is the buildable one.** A life-size head+shoulders is fully visible if it appears ~1.5 m *behind* where the cube sits — a window into another space. Glasses-free, no screen, genuinely free-space imagery.
+2. **Floating *in front of* the cube is capped at the aperture size.** For b < a, W < D always. **A 100 mm cube can float at most a ~100 mm object in front of itself.** Life-size floating-in-front requires an aperture of roughly the image size — a ~0.5 m device, not a cube.
+
+**This is the constraint that actually kills the original "person appears sitting in the chair beside you" framing** — not étendue, and not mode count. You cannot see light that never passed through the aperture. It also means the honest product description is *"a window through which a remote person appears life-size"*, not *"a projector that places a person in your room."*
 
 ### 4.4 The head-tracked collapse — the central architectural result
 

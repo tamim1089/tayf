@@ -240,6 +240,16 @@ The commercial light-field panel has **292× more étendue than the requirement 
 
 ## §5 — The constraint SBP accounting hides: Lagrange placement
 
+> **⚠ ARCHITECTURE CAVEAT added 2026-08-15 — read before using this section's headline number.**
+>
+> Everything below is correct arithmetic **for the broadcast architecture** (display fills ±20° simultaneously, no observer tracking). TAYF does not use that architecture — `docs/01_SYSTEM_MASTER_SPEC.md` §4.4 specifies eye-tracked pupil serving.
+>
+> Recomputing §5.1's `N_x = 4·y·u/λ` with u set by a single 6 mm pupil at 1 m (u = 3.0 mrad) rather than by a ±20° cone gives **N_x = 2,727 for a 250 mm head+shoulders — which a 4K panel (3,840) exceeds by 1.41×.** The broadcast figure of 3.17×10⁵ and the tracked figure of 2,727 differ by 116×, exactly the view count, because the Lagrange requirement scales linearly with angular coverage.
+>
+> So **the "82× short" headline does not apply to the architecture this project is building.** The étendue-expander component specified in §5.4 is required for broadcast; it is not on the tracked design's critical path. §5 remains the correct reference for *why* broadcast is unaffordable and for the 4f-layout rejection (f = 680 mm), both of which stand.
+>
+> A separate geometric limit that this section does not cover, and which turns out to be the one that actually bounds the original product vision, is documented in `docs/01_SYSTEM_MASTER_SPEC.md` §4.3b: light reaches the eye only through the aperture, so W_visible = D·(b/a). A 100 mm aperture can show a life-size head only if it appears ~1.5 m *behind* the cube, and can float at most a ~100 mm object *in front* of itself.
+
 ### 5.1 The invariant
 
 For a paraxial system the Lagrange (optical) invariant y·u is conserved: half-image-height times half-angle is fixed. For a modulator of N_x pixels at pitch p, half-width y = N_x p/2 and half-angle u = λ/(2p), so
