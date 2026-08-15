@@ -282,6 +282,8 @@ A survey of the aerial-imaging and commercial-display literature (Optics Express
 
 **One edge case, stated so it isn't misread as a counterexample.** AR glasses place an apparently 2 m-wide image in front of the viewer through a ~2 cm eyepiece. That is fully consistent: a ≈ 2 cm, so D·(b/a) = 2 cm × 100 = 2 m. **The constraint bites only when the aperture sits at arm's length or farther** — which is precisely why §4.3c's move (bring the cube closer) is the correct and only lever.
 
+> **Design consequence:** §4.3b's aperture bound is what sizes every buildable device. Six concrete forms derived from it — including a bag-portable A4 unit showing a life-size head, with **zero moving parts** — are specified in `09_DEVICE_DESIGNS.md`, and modelled to scale in `models/`.
+
 ### 4.4 The head-tracked collapse — the central architectural result
 
 The ±20°/116-view requirement assumes the display must serve every direction in the room simultaneously, on the chance someone is looking from there. That is a broadcast architecture, and it is wasteful in exactly the way `docs/theory.md` predicted.
@@ -572,5 +574,6 @@ Reordered by this specification's analysis, against the project's prior beliefs:
 | `05_RESEARCH_PRIOR_ART_AND_PATENT_ARCHITECTURE.md` | Prior art, overlap matrix, inventive concepts |
 | `06_MASTER_RESEARCH_AND_BUILD_PLAN.md` | Dependency graph, go/no-go gates, milestones |
 | `07_HARDWARE_SIMULATION_PLAN.md` | What to simulate before buying anything |
+| `09_DEVICE_DESIGNS.md` | The six buildable forms; zero-moving-parts finding; AIRR vs Pepper's |
 | `research/deepseek_research.md` | 175 deep-read papers, four tracks |
 | `FilesPlan.md` | Original plan; superseded by this document where they differ |
