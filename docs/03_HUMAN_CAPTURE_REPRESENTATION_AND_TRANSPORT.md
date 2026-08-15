@@ -160,7 +160,9 @@ Two calibrations, on different schedules.
 
 **What is deliberately *not* required:** COLMAP/SfM at runtime, external tracking infrastructure, a calibration wall, or a special chair. `docs/architecture.md` "Environment independence" makes this a hard constraint. Note that the MPEG dynamic-splat test-material call (`research/01-volumetric-capture-sota.md` §3.1) makes COLMAP calibration *mandatory* for its format — one more reason TAYF does not use a per-frame splat format.
 
-**Open:** the mapping from cube-local camera coordinates to the observer's frame — i.e. where the remote person should appear to be standing relative to the local viewer — is `docs/calibration.md`'s problem, not this document's.
+**Boundary with `docs/calibration.md`.** That document owns the four coordinate frames — cube frame (origin at the optical engine's nominal emission centre, axes fixed to the enclosure), capture-volume frame (the user-set box), remote-human placement frame (defaults to coinciding with the capture volume's chair position), and observer frame. This document owns only the camera-to-cube extrinsics (item (b) of that document's one-time calibration flow, a standard checkerboard-class multi-camera calibration). The optical-engine geometric calibration is deferred until a panel is sourced.
+
+**Observer tracking, and a free lunch.** `docs/calibration.md`'s cost-ordered ladder puts a **fixed single-observer assumption with no tracking as the hackathon default**, with camera-based head/eye tracking as the next rung — and that rung is *near-free for TAYF*, because **the observer of the remote avatar is the same person the capture array is already tracking.** The head pose needed by §6's view synthesis falls out of the body estimator that is already running. Depth-based tracking is not planned; multi-observer support is explicitly deferred, because it materially increases the required optical channel count. Observer-tracking accuracy requirements are unquantified — they depend on the unchosen panel's angular sensitivity.
 
 ---
 
@@ -480,10 +482,13 @@ Measured on a laptop (Intel i9-10885H, GTX 1650 Ti Mobile): **10 Hz (~100 ms/fra
 
 ### 6.4 What this module actually does in TAYF
 
-1. Render the animated canonical avatar from the N view directions matching the optical engine's physical output channels, using a **view-amortized** rasterizer (CoherentRaster/G2LF-class batching, not N independent passes).
+The renderer targets an **abstract optical-engine interface** (`hardware/optical-engine.md`): input is the light field `L(x, y, z, θ, φ, t)` restricted to the directions the engine can address; output is engine-specific — panel frames, scan commands, or hologram phase maps. This is what makes the renderer swappable across the hackathon-track panel and any north-star engine.
+
+1. Render the animated canonical avatar from the N view directions matching the engine's physical output channels, using a **view-amortized** rasterizer (CoherentRaster/G2LF-class batching, not N independent passes). `hardware/optical-engine.md`'s working candidate for a near-360° directional light-field variant is **8+ physical views plus neural interpolation** — the low end of what §6.2's methods render trivially.
 2. For angular gaps the engine cannot address but observer tracking (`docs/calibration.md`) says matter, interpolate **in angle-space between the nearest physical views** rather than doing an additional full 3D render pass. Angle-space interpolation is cheap relative to §5's animation cost; a full extra render is not.
 3. Apply §7's perceptual allocation here too: interpolation quality budget goes to face, eyes, and hands first.
 4. Precompute the panel's quilt→native LUT once at boot (altiro3D's approach) — never per frame.
+5. Under the hackathon-track **single-observer default**, render only the angular sector the observer occupies. This is the cheapest possible view-count reduction and it costs nothing to implement: it is a change to which N directions are rendered, not to how they are rendered.
 
 ---
 
@@ -547,17 +552,30 @@ Two independent studies in the corpus say engineering-convenient metrics mislead
 
 **Consequence:** `experiments/perceptual-quality/README.md` must use MOS protocols as ground truth, and TAYF's runtime quality gate must be reference-free (which 4DHumanQA is, and FID/CSIM are not). Also: "train the enrollment longer" is not automatically better.
 
-### 7.6 The allocation policy, consolidated
+### 7.6 Three findings that complicate the story
 
-| Rank | Channel | Rationale | Policy |
+These are the strongest Track D results in the corpus and none of them is comfortable. `experiments/perceptual-quality/README.md` records them; they belong here because they constrain what this pipeline should *try* to achieve.
+
+**(a) A flat 2D cutout scored as well as a rigged 3D avatar on co-presence — and better on fidelity.** arXiv [2401.02171](https://arxiv.org/abs/2401.02171): life-size 2D video cutout vs full rigged 3D avatar in an AR HMD. Co-presence **5.2 vs 5.3** on a 7-point scale (statistically indistinguishable); **fidelity 5.1 vs 3.7, p<.001 — in favour of the flat cutout.** The stated caveat is decisive: this was a *single tracked viewpoint inside a headset*, not free-space multi-viewer, i.e. tested at the wrong device class. But it is a warning that a low-fidelity 3D avatar can be *worse than no 3D at all*, and it is the reason §4's enrollment quality is a higher priority than §6's view count.
+
+**(b) TAYF's actual use case is the hardest one.** arXiv [2509.17748](https://arxiv.org/abs/2509.17748): realistic avatars raise identification but also eeriness, and **people judge avatars of themselves and of people they know most harshly.** A telepresence cube is, by construction, used to talk to people you know. There is no regime where TAYF's avatars are judged leniently.
+
+**(c) Self-view does not drive presence; the remote party does.** arXiv [2409.08577](https://arxiv.org/abs/2409.08577): showing the *remote* participant is what produces presence. Consequence for the product: **do not spend cube compute rendering the local user a view of themselves.** The cube renders the remote person; that is the whole job.
+
+### 7.7 The allocation policy, consolidated
+
+`research/notes.md` §39 states the renderer priority order canonically: **1 face, 2 eyes, 3 mouth, 4 hands, 5 pose, 6 silhouette, 7 clothing, 8 low-saliency detail.** The objective is to maximize perceived presence per unit of optical and representational complexity. The table below is that ordering with the measured evidence and the concrete policy attached to each rung.
+
+| Rank (notes.md §39) | Channel | Measured rationale | Policy |
 |---|---|---|---|
 | 1 | **Face — expression amplitude** | 82.6% preference for expressive-over-timed (2503.20308); face branch has 5× rate headroom (377 fps) | Never attenuate. Light temporal filtering. Highest bit precision on wire |
 | 2 | **Eyes / gaze** | Named as a primary conversational carrier (`01-volumetric-capture-sota` §6.2) | Highest-fidelity region of the canonical avatar; most SH bits under GETA-3DGS |
-| 3 | **Hands / fingers** | Second named carrier; the rate-limiting estimator branch | ROI-gated estimation; full precision on wire; do not decimate hand DoF |
-| 4 | **Body pose (torso, limbs)** | Slow, low-frequency, heavily smoothed anyway | Interpolate between estimates under load; first channel to downrate |
-| 5 | **Garment / hair bulk** | Texture-uniform, quantizes at −0.18 to −0.34 dB (GETA-3DGS) | Aggressive quantization in the canonical avatar |
-| 6 | **Temporal precision** | Well-tolerated (2510.03874); 220 ms lag JND (2503.20308) | Cheapest thing to spend. Drop frames before degrading quality |
-| 7 | **UV precision** | "Little perceptual impact" (2510.03874) | Quantize freely |
+| 3 | **Mouth** | Lip readability is one of 2503.20308's three criteria; mouth interior is a named failure region | High Gaussian density in the canonical avatar; never coarsen under load |
+| 4 | **Hands / fingers** | Second named conversational carrier; the rate-limiting estimator branch | ROI-gated estimation; full precision on wire; do not decimate hand DoF |
+| 5 | **Body pose (torso, limbs)** | Slow, low-frequency, heavily smoothed anyway | Interpolate between estimates under load; first channel to downrate |
+| 6 | **Silhouette** | Matting errors become persistent floating geometry in 3D | Correct outline matters more than interior detail; the capture-box clip protects this cheaply |
+| 7 | **Garment / hair bulk** | Texture-uniform, quantizes at −0.18 to −0.34 dB (GETA-3DGS) | Aggressive quantization in the canonical avatar |
+| 8 | **Low-saliency detail; temporal and UV precision** | Temporal jitter and UV compression both "well tolerated" (2510.03874); 220 ms lag JND (2503.20308) | Cheapest things to spend. Drop frames before degrading quality; quantize UV freely |
 
 **One warning on saliency-driven adaptive streaming.** arXiv [2507.14454](https://arxiv.org/abs/2507.14454) is a full system for this — saliency-driven tiling with rendering-weight importance sampling `w_i = σ_i·√det(Σ_i)`, luminance-weighted local-discrepancy encoding (0.299R+0.587G+0.114B), a temporal-contrast branch `O_s = 1/(1+exp(S_sim)) + 1`, attention-fused per-tile scores, 5 saliency-weighted quality tiers, and a meta-RL ABR controller validated on real 4G/5G traces (Std4G 35–90 Mbps through Ext5G 0–1200 Mbps) against a 50-participant Quest 3 head-trajectory dataset — reaching **84.9% of full-data QoE with only 20% of training data**. The mechanisms are sound and the meta-learned few-shot adaptation is directly relevant to two cubes meeting over an arbitrary residential ISP link. **But its saliency ground truth is VR-headset FoV and head-trajectory prediction, which does not map onto an unconstrained bystander viewing a free-space optical reconstruction from an untracked position.** Take the ABR controller, not the viewport model.
 
@@ -640,7 +658,16 @@ For TAYF's 215 floats:
 4. **Periodic keyframes** — a full fp16 state every N frames (N ≈ 30–60, i.e. 0.5–1 s) plus on-demand on receiver request. Without these, one lost packet corrupts the stream indefinitely.
 5. **Rotation representation matters.** Delta-encoding axis-angle across the π/−π wrap, or quaternions across the q/−q double cover, produces spurious huge residuals. Either delta in a **6D continuous rotation representation** or canonicalize sign/branch before differencing.
 
+**A second proven trick worth stealing: FPZIP over concatenated consecutive states.** INV (arXiv [2302.01532](https://arxiv.org/abs/2302.01532)) faces the structurally identical problem — a per-frame parameter vector that must be streamed — and solves it by concatenating consecutive frames' parameter matrices and running **16-bit FPZIP floating-point compression** across the concatenation, taking **1.12 MB/frame down to 0.3 MB/frame** after a one-time 3.29 MB shared transfer. INV's broader result also independently validates TAYF's whole architecture from a different representation: it finds that MLP NeRFs partition into early *structure* layers (geometry) and later *color* layers (appearance), and that freezing the colour layers and transmitting only 3 per-frame structure layers both cuts the payload to **24.6%** of a full model *and provably eliminates flicker*, because appearance is byte-identical across frames. That is §5.5's argument arrived at from a completely different direction: **the reason to hold appearance fixed is not just bandwidth, it is temporal stability.**
+
+**Two theoretical results that bound what delta coding can achieve:**
+
+- **Shared randomness buys nothing here.** arXiv [2203.12467](https://arxiv.org/abs/2203.12467) proves a variable-length-coding lower bound for LQG control — the shape of a pose-tracking loop — at `L ≥ (1/(T+1))·I(x^T → u^T)` in directed information, and shows that **shared dither/randomness between encoder and decoder does not change the bound.** A shared-seed scheme is not a shortcut; do not design one.
+- **Perfect realism costs 3 dB.** arXiv [2202.04147](https://arxiv.org/abs/2202.04147): in the Gaussian case, perfect realism is achievable iff `R ≥ ½log₂(1/(1−ρ²))`, and **without common randomness, imposing perfect realism costs a 3 dB distortion penalty** versus the classical rate-distortion bound. Relevant the moment TAYF claims its decoder output is perceptually indistinguishable rather than merely accurate.
+
 **Gain is UNVERIFIED and must not be assumed.** `pipeline/transport/README.md` open item 3 is explicit: do not assume delta-encoding is needed until the baseline shows it is. The baseline (fp16 + LZ4, ~0.162 Mbps on the wire) is already 25× under a 4 Mbps residential uplink. **The reason to build delta encoding is not bandwidth — it is packet size.** Getting the per-frame payload well below one MTU with margin improves loss resilience and lets a keyframe plus several deltas ride in one datagram during recovery. Measure it in `experiments/bandwidth/` against the real baseline (§14).
+
+**And the alternative to building it at all: send fewer coefficients.** AGORA-M's distillation (§5.4) reduces per-frame animation to **64 blendshape coefficients** — a 3.4× smaller payload than 215 floats, with no entropy coder, no predictor state, and no keyframe-recovery machinery. If the receiver already animates from a 64-vector SVD basis, transmitting the 64 coefficients directly rather than 215 rig parameters is the simpler system. The cost is that the basis becomes part of the negotiated contract (§12.1) and is avatar-specific, so a rig update invalidates it. **Evaluate this against delta coding before building either** — it may be strictly better and it is certainly less code.
 
 ### 8.5 WebRTC data-channel architecture
 
@@ -680,7 +707,13 @@ For the **audio** stream, use **Opus** (BSD, royalty-free, native to WebRTC, 20 
 
 **Media over QUIC is not an option for this.** `draft-ietf-moq-transport-19`, 6 July 2026, **still pre-RFC**; Cloudflare relays claim *"sub-second"*, which is a **broadcast** target roughly 5× above the conversational budget. Use MoQ for one-to-many volumetric replay, not for calls.
 
-**Loss resilience — ReVo's lesson.** arXiv [2604.27441](https://arxiv.org/abs/2604.27441) (ReVo, Apr 2026) does cross-layer volumetric videoconferencing on WebRTC with modality-aware separation and **network-layer FEC on critical content**, reporting **up to +32% SSIM (RGB), +13% (depth), −95.7% video freezes** (no Mbps/fps published). The transferable idea for TAYF: **apply FEC selectively to the perceptually critical channel.** At ~258 B payload, adding a parity packet every k frames is nearly free in bandwidth terms — a 1/4-rate XOR FEC on the state channel costs ~0.04 Mbps and eliminates most single-packet losses without any retransmission latency. Given §7's ranking, if FEC must be selective, protect the **expression and hand** dimensions.
+**Loss resilience — and an honest statement of how thin the evidence is.** A keyword sweep of `research/deepseek_research.md` (128 deep-read papers) returns **zero hits for FEC, jitter buffer, packet loss, congestion control, QUIC, CAMARA, or QoD**, and exactly three hits for WebRTC (Mon3tr, Tele-Aloha, and the track heading). **The corpus contains no loss-resilience literature at all.** Everything in this subsection beyond the two WebRTC datapoints is standard practice reasoned from first principles, not cited measurement, and should be treated accordingly.
+
+The one relevant published result is **ReVo** (arXiv [2604.27441](https://arxiv.org/abs/2604.27441), from `research/01-volumetric-capture-sota.md` §3.5): cross-layer volumetric videoconferencing on WebRTC with modality-aware separation and **network-layer FEC on critical content**, reporting **up to +32% SSIM (RGB), +13% (depth), −95.7% video freezes** (no Mbps/fps published). The transferable idea: **apply FEC selectively to the perceptually critical channel.** At ~258 B payload, adding a parity packet every k frames is nearly free — a 1/4-rate XOR FEC on the state channel costs ~0.04 Mbps and eliminates most single-packet losses with **zero retransmission latency**, which is the only kind of recovery admissible on an unordered/unreliable channel. Given §7.7's ranking, if FEC must be selective, protect the **expression and hand** dimensions.
+
+The counterfactual datapoint is **Tele-Aloha** (arXiv [2405.14866](https://arxiv.org/abs/2405.14866)), which also uses WebRTC but streams pixels: 4 cropped camera streams concatenated into a single 6000×6000 NVENC input, H.265-encoded, **measured at 100 Mbit/s** — *two to three orders of magnitude above TAYF's budget* on the same transport, for the same task. Same protocol, different architecture, 500× the bandwidth. That comparison is the cleanest available proof that the bandwidth win comes from the representation, not from the network stack.
+
+**Adaptive compute, not just adaptive bitrate.** SlimVC (arXiv [2205.06754](https://arxiv.org/abs/2205.06754)) is the only paper in the corpus explicitly designed around a latency knob, and it contributes two things TAYF should copy. First, a design decision stated outright: its autoregressive spatial prior module is **deliberately dropped because it increases latency by two orders of magnitude** — a direct precedent for refusing an entropy model that would otherwise win on rate. Second, **five runtime width factors [0.25, 0.375, 0.5, 0.75, 1] from a single model**, trading bitrate/memory/compute/latency at inference time, giving **73–436 GFLOPs** across widths versus 643 (STEM) and 3074 (DVC), with **up to 20× speedup at low rates**. For a thermally-throttled cube the important property is not that the codec adapts to the network — it is that **one loaded model adapts to the available compute**, which is exactly what happens when the Jetson hits its thermal ceiling mid-call. (CVPR 2022; no code release.)
 
 ### 8.6 Where CAMARA QoD plugs in
 
@@ -708,9 +741,23 @@ sequenceDiagram
     Note over Agent,TP: On QoD unavailable (Wi-Fi-only demo),<br/>fall through to §12.5 degradation ladder
 ```
 
+**The concrete calls** (`agent/nac_client.py`, Nokia Network-as-Code SDK **v10.0.0**, `network_as_code.client.NetworkAsCodeApi`, default base URL `https://network-as-code.p-eu.rapidapi.com`):
+
+| Call | Parameters that matter |
+|---|---|
+| `congestion_insights.query()` | Returns `{timeIntervalStart, timeIntervalStop, congestionLevel: Low\|Medium\|High}` over the **upcoming 15 minutes**. The forward-looking window is what makes the agent layer predictive rather than reactive |
+| `qod.create_session_v1(...)` | `start_qod_session(phone_number, public_ip, app_server_ip, duration_s=60)` with **`qos_profile="DOWNLINK_M_UPLINK_L"`** — chosen deliberately because TAYF's driving-parameter stream is **upload-dominant** and symmetric on both cubes |
+| `extend_session_v1(...)` | `extend_qod_session(session_id, additional_s=60)` — a call outlives a 60 s session, so extension is the normal path, not an exception |
+| `delete_session_v1(...)` | Teardown at call end |
+| `create_demo_slice(...)` | `slice_info={"service_type": "eMBB", "differentiator": "444444"}`, `slice_uplink_throughput={guaranteed, maximum}`, name matching `^[a-zA-Z0-9][a-zA-Z0-9-]{3,63}[a-zA-Z0-9]$`, then `client.slice.activate(...)` and `attach_device(phone_number, imsi, slice_id, app_id, app_names)` |
+
+**`DOWNLINK_M_UPLINK_L` is the one non-obvious choice in the whole transport stack** and it is right: in a symmetric two-cube call each endpoint is simultaneously a sender and a receiver of the *same* ~0.16 Mbps stream, so the profile must not assume the consumer-video asymmetry that most QoS profiles are shaped around.
+
 **QoD is an optimization, never a dependency.** `pipeline/transport/README.md` open item 2 flags that the no-QoD fallback is undesigned; §12.5 designs it. The bitrate is ~0.16 Mbps — this stream fits inside essentially any working internet connection. QoD buys **jitter and tail-latency guarantees**, which is what actually determines whether the call feels live, not headline bandwidth.
 
-**Prerequisite:** Nokia NaC portal registration is outstanding (`FilesPlan.md` §6 item 5) and blocks any live CAMARA demo. Also `research/LICENSING.md`: the `network-as-code` SDK is a vendor SDK — **verify redistribution terms if TAYF ships the client rather than merely using it.**
+**Open and blocking:** Nokia NaC portal registration is outstanding (`FilesPlan.md` §6 item 5) — **no NaC call has been run against a real or even a sandbox endpoint.** The agent's decision thresholds are untuned; the first pass is simple threshold rules, not learned policy. And `research/LICENSING.md`: `network-as-code` is a vendor SDK — **verify redistribution terms if TAYF ships the client rather than merely using it.**
+
+**One constraint from `agent/compliance.md` that reaches into this document:** the hackathon's mandatory tooling guide permits **Gemini 2.5 or Groq-hosted models** for the agent's LLM brain and does not list Anthropic models; **MCP appears zero times** in that guide. This binds the shipped `agent/` submission only. It does not touch the media pipeline — `agent/` never handles a frame — but any design that put an LLM inside the transport loop would inherit the constraint. Do not put one there.
 
 ---
 
