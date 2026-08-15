@@ -70,9 +70,11 @@ flowchart TB
 
 Laser-plasma or hybrid plasma-in-medium aerial display, scaled from the JSID 2025 baseline toward 10^5-10^6 points/s. This is a multi-year program, not a four-week one — see `docs/roadmap.md`.
 
-### Laser eye safety — not started, not optional
+### Eye safety — applies to BOTH tracks, not just the laser one
 
-Femtosecond laser-plasma ionization is a Class 4 laser hazard by nature of the mechanism (it has to be intense enough to ionize air at focus). A device meant to sit near a person's face has no margin for skipping this. Before any north-star optical hardware is powered on near a person:
+> **⚠ Scoping correction (2026-08-15).** This section previously appeared only under the north-star track, which was wrong and is a real safety error. Per `docs/04_CUBE_HARDWARE_AND_PROTOTYPE_ENGINEERING.md`: **the hackathon track is not automatically safe.** A 150–250 mW visible source — entirely plausible for a compact illumination engine driving a light-field or holographic output — is **Class 3B in the single-fault case** (e.g. a failed diffuser, a scanner that stops mid-sweep leaving a static focused beam, or a collimated zero-order leak from an SLM). Any TAYF prototype with a visible source above roughly 1 mW accessible emission requires a hazard analysis before it is pointed at a person, regardless of which track it belongs to. Single-fault behaviour — not nominal operation — is what the analysis must cover.
+
+Femtosecond laser-plasma ionization is additionally a Class 4 hazard by nature of the mechanism (it has to be intense enough to ionize air at focus). A device meant to sit near a person's face has no margin for skipping this. Before any optical hardware with a non-trivial source is powered on near a person:
 
 1. Full exposure/pulse-energy analysis against applicable laser safety limits (not yet started).
 2. Engineering controls to consider: physical exclusion zone around the focal volume, gaze/proximity-triggered pulse gating, interlocks.

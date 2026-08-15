@@ -160,6 +160,10 @@ The cube already knows where the observer is: **its cameras are pointed at them,
 
 **A 58× reduction, turning a 10× deficit into a 5.6× surplus on commodity hardware.** The same collapse applies to compute: hologram synthesis drops from 5.14 Gpx/s (broadcast) to **0.089 Gpx/s** (tracked) — which matters enormously against §5's power budget.
 
+Verified numerically in `simulation/s1_waveoptics/s1_5_tracked_vs_broadcast.py`: measured sub-aperture area ratio 59.3× against the 58× prediction, and 58× measured compute reduction. **The resource claim holds. The *quality* claim is untested** — PSNR failed to separate the cases because Gerchberg–Saxton reconstructions are speckle-dominated, which is a metric failure, not a refutation. A valid quality test needs a resolution-target metric or human MOS (Track D / S5).
+
+> **⚠ Freedom-to-operate: this architecture is encumbered.** Using an observer/eye estimate to select which angular views a display physically emits is claimed by **Google US11474597B2** (granted, in force to 2040) — see `05_RESEARCH_PRIOR_ART_AND_PATENT_ARCHITECTURE.md`. §4.4 remains the correct engineering choice and is what makes the device buildable, but it is **not ours to own**, and any commercialization path requires a real FTO opinion. Prior art also covers symmetric capture-and-3D-display terminals (Google US10327014B2, to 2037), parametric-state-instead-of-video transport (Duelight US11683448B2, to 2038), and neural gap-filling between sparse views (Looking Glass US11425363B2).
+
 ### 4.5 The 10 cm aperture is not the constraint
 
 Theoretical ceiling of an aperture, SBP_max = A·Ω/λ² (A = 0.01 m², λ = 550 nm):
@@ -198,15 +202,21 @@ A sparse, iconic, genuinely-floating-in-air head is 15× away — not absurd. A 
 
 ## 5. Power and thermal budget — the actual binding constraint
 
-Sealed enclosure, edge L, surface area 6L², natural convection h ≈ 8 W/m²K, emissivity 0.9, ambient 25 °C.
+Sealed enclosure, edge L, natural convection h ≈ 8 W/m²K, emissivity 0.9, ambient 25 °C.
 
 Q_total = h·A·ΔT + εσA(T_s⁴ − T_amb⁴)
 
-| ΔT | Surface temp | Convection | Radiation | **Total** |
+| ΔT | Surface temp | Convection | Radiation | Total (6 faces) |
 |---|---|---|---|---|
-| 15 K | 40 °C | 7.20 W | 5.24 W | **12.44 W** |
-| 25 K | 50 °C | 12.00 W | 9.18 W | **21.18 W** |
-| 35 K | 60 °C (too hot to hold) | 16.80 W | 13.50 W | 30.30 W |
+| 15 K | 40 °C | 7.20 W | 5.24 W | 12.44 W |
+| 25 K | 50 °C | 12.00 W | 9.18 W | 21.18 W |
+| 35 K | 60 °C | 16.80 W | 13.50 W | 30.30 W |
+
+> **⚠ The rows above 40 °C are not usable, and the 6-face figure is optimistic.** Two corrections from `04_CUBE_HARDWARE_AND_PROTOTYPE_ENGINEERING.md`:
+> 1. **A 60 °C metal shell is a safety violation, not a comfort complaint.** IEC touch-temperature guidance caps metal at ~48 °C. The 50 °C and 60 °C rows describe a device that cannot ship.
+> 2. **Only ~5 faces participate** — one is occupied by mounting/base and the optical exit aperture is not a radiator.
+>
+> **Realistic ceiling: ≈16 W at the ~48 °C metal touch limit, on 5 participating faces.** Junction temperature is not the constraint (silicon is fine at 25 W); *human skin* is. Every "PASS at 50 °C" result in `simulation/s3_thermal/` must be read against this — that script's DT_ACCEPTABLE=25 K case is above the touch limit and is retained only for sensitivity analysis, not as a design point.
 
 Against that budget: Jetson Orin Nano **7–15 W**, Orin NX **10–25 W** — before cameras, modem, SLM, laser, or optics.
 

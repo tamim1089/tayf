@@ -75,6 +75,21 @@ Mon3tr's numbers were measured with **an RTX 5090-class PC as the sender** and *
 
 Mitigations are specified per-stage below, and the measurement plan is §14. Treat every fps figure in this document as *published elsewhere*, not *measured here*, unless explicitly stated otherwise.
 
+### 0.4 The constraint set every section below optimizes against
+
+From `docs/theory.md`:
+
+| Constraint | Value | Governed by |
+|---|---|---|
+| Endpoint volume | **≤ 1000 cm³** (10×10×10 cm) | `hardware/enclosure.md` |
+| Sustained bandwidth | **≤ ~0.3 Mbps** | §9 |
+| One-way latency | **≤ 150 ms** | §10 |
+| Power / thermal | ≤ what a sealed 1000 cm³ enclosure can reject | `hardware/power-thermal.md` — **no number exists yet** |
+| Optical / laser safety | Analysis complete before any demo | `hardware/optical-engine.md` — not started |
+| Environment independence | No wall, projection surface, special chair, capture booth, or external tracking | `docs/architecture.md` |
+
+`docs/theory.md`'s two decoupling moves map exactly onto this document's two halves: **(1) representation vs transmission** — persistent identity enrolled once, only dynamic state per frame — which it marks **solved and measured**; and **(2) physical optical volume vs perceived image scale**, which it marks **not solved** and which is the other document's problem. Tracks A (Human Representation) and B (Communication) are both marked **solved**; Tracks C (Free-Space Optics) and D (Perception) are **open**. This document covers A and B, and borrows from D only where D has real numbers (§7).
+
 ---
 
 ## 1. Camera architecture
@@ -793,6 +808,29 @@ Without the optional FEC: **~0.21 Mbps** one-way, ~0.43 Mbps bidirectional. With
 
 **Do not confuse the two budgets.** GETA-3DGS compresses the *model footprint* (fits-on-device, one-time transfer). Mon3tr and 2510.10492 compress the *per-frame animation bandwidth*. They are orthogonal and both are needed.
 
+### 9.3 Reference points for the canonical payload, and one shortcut
+
+| Method | Size | Quality | Render speed | Note |
+|---|---|---|---|---|
+| **Constrained Dynamic GS** (arXiv [2602.03538](https://arxiv.org/abs/2602.03538)) | **31.5 MB** at 300k target Gaussians; **6.8 MB** at 100k | 32.14 dB / 31.83 dB on N3DV (vs Ex4DGS 32.11 dB at 115 MB) | — | **Hits an exact byte budget to within 0.1–1.4%** via a quadratic budget loss on a continuous activation `c_i = clamp((M_i−0.5)/τ_c + 0.5, 0, 1)` multiplying opacity |
+| **GrainGS** (arXiv [2607.21448](https://arxiv.org/abs/2607.21448)) | **4.67 MB** | 36.98 dB mean on D-NeRF | **435.6 fps** on RTX 4090 | 7.0× smaller than SC-GS, 5.1× smaller than 4D-GS. The stop-gradient on canonical position, `∂(Δx)/∂sg(x_can)=0`, is worth **+1.34 dB by itself** — a free implementation detail |
+| **P-4DGS** (arXiv [2510.10030](https://arxiv.org/abs/2510.10030)) | **1.039 MB** (vs D3DGS 39.45 MB, 40×); **0.704 MB** on NeRF-DS (>90×) | 38.10 dB / 24.18 dB | **262 fps** (vs 149) | Staged ablation is the useful part: anchor prediction alone 56.7 MB → 7.27 MB (−87%); + quantization + entropy coding → 0.85 MB |
+
+**The shortcut worth taking seriously: use the hardware video encoder.** Constrained Dynamic GS quantizes dynamic Gaussian attributes, reshapes them into **2D attribute images grouped by channel, and compresses them with stock H.264 (YUV 4:4:4, CQP=20, I/P-frames only, 3 reference frames — explicitly chosen to keep decode fast)**. V3 (arXiv 2409.13648) takes the same position and `research/01-volumetric-capture-sota.md` §3.2 calls it *"architecturally the most shippable"* for exactly this reason. **The Jetson has a hardware video decoder sitting idle in a pipeline that transmits no video.** Routing the canonical-avatar payload through it costs nothing in power and removes a bespoke entropy decoder from the critical path.
+
+**Two warnings on this whole area:**
+
+- **The 3DGS compression stacks do not compose.** Splatwizard (arXiv [2512.24742](https://arxiv.org/abs/2512.24742)) documents that the field has fragmented into incompatible CUDA/rasterizer implementations (HAC, CAT-3DGS, LightGaussian, SpeedySplat), so pruning + quantization + entropy coding **cannot simply be stacked.** GETA-3DGS's claim of complementarity with HAC++/CompGS is a claim about *information theory*, not about *integration effort*. Budget real time for this.
+- **Never put G-PCC or a learned point-cloud coder in a real-time path.** arXiv [2202.00719](https://arxiv.org/abs/2202.00719) measures throughput rather than ratio and finds **PNG at ~5.5M points/s versus Octree 670k and G-PCC 440k**; G-PCC achieves the best ratio (98.74%) and takes tens to hundreds of seconds. SparseVoxelDNN (arXiv [2204.05043](https://arxiv.org/abs/2204.05043)) beats MPEG G-PCC v14 by **52% average bitrate** and **decodes in 229 seconds**. These are archival codecs wearing streaming clothes.
+
+### 9.4 The fallback transport path, if the avatar architecture fails
+
+If enrollment quality proves unacceptable — the failure mode §7.6(a) warns about, where a mediocre 3D avatar is worse than a good 2D image — there is one low-compute retreat in the corpus that does not blow the budget.
+
+**CPSL** (arXiv [2511.14927](https://arxiv.org/abs/2511.14927)) decomposes each monocular frame into K depth-ordered RGBA layers `L_k = (C_k, α_k, z_k)`, warps them for novel views by plane-induced homography `p_s ~ K_s(R − tnᵀ/d)K_t⁻¹p_t`, and composites front-to-back with premultiplied alpha `I = Σ_k C_kα_k∏_{j<k}(1−α_j)`. It beats MPI by **+3.1 dB (29.60 vs 26.50)** on DyCheck, halves the boundary-crack metric (0.05 vs 0.11), and on the FSVVD multi-camera dataset **matches point-cloud-streaming perceptual quality at 31.2 dB with 2.3 Mbps versus 18.2 Mbps — over 7× lower.** It sustains **>60 fps** at O(KHW) per-layer 2D warp cost and stays **H.265/AV1-compatible** (an "Edge-Depth Cache" stores sparse quantized depth offsets along boundaries instead of dense depth maps), so it too rides the hardware video codec.
+
+At 2.3 Mbps this is **14× more expensive than the parametric path** and it requires no enrollment at all. Its hard limit: the fronto-parallel layer assumption breaks down at the wide-baseline, near-360° viewing angles a free-space display is supposed to support, confining it to modest-parallax viewing cones. **It is a fallback, not a plan** — but it is a real one, and it is worth knowing that the cliff below the avatar architecture is 2.3 Mbps and not 100.
+
 ---
 
 ## 10. Latency budget
@@ -813,9 +851,19 @@ These are different clocks and TAYF must budget both. The 150 ms figure is the b
 | VR motion-to-photon | **<15–20 ms** | MTP consensus, arXiv 1801.07587 |
 | VR conferencing fluency | degrades from 100 ms; **sharp collapse at 300 ms under cognitive load** | arXiv [2603.09261](https://arxiv.org/abs/2603.09261) |
 | Audiovisual sync JND | **50 ms lead / 220 ms lag** | Vatakis et al. 2006, via arXiv [2503.20308](https://arxiv.org/abs/2503.20308) |
+| Sensorimotor: endpoint error | rises significantly at the **smallest added delay tested — 10 ms** (+0.13 cm, ~39% relative, p<.05) on top of 62 ms native | arXiv [2606.25681](https://arxiv.org/abs/2606.25681) |
+| Sensorimotor: movement time | changes only at **50–100 ms added** (+14–17 ms, p<.001); throughput loss plateaus after ~100–200 ms | arXiv [2606.25681](https://arxiv.org/abs/2606.25681) |
+| Motor performance and embodiment | degrade from **~75 ms** | Waltemate et al., via 2606.25681 |
+| Speed-dependent tolerance | holds to **~120 ms at 350 mm/s** hand speed; degrades from **~80 ms at 500–650 mm/s** | Hoyet et al., via 2606.25681 |
 | Reference achieved | **~80 ms e2e** | Mon3tr |
 
-The 2026 fluency study matters more than the raw G.114 number: fluency *degrades gradually from 100 ms but collapses at 300 ms under cognitive load.* A demo that feels fine while people chat fails the moment they try to work together.
+Three things to take from this table.
+
+**The 2026 fluency study matters more than the raw G.114 number:** fluency *degrades gradually from 100 ms but collapses at 300 ms under cognitive load.* A demo that feels fine while people chat fails the moment the two people try to work on something together.
+
+**Tolerable latency is speed-dependent, not fixed** (2606.25681): ~120 ms is fine at 350 mm/s and ~80 ms is already degrading at 500–650 mm/s. Conversational gesture spans that range. This is a second, independent argument for §3.5's per-channel smoothing policy — the fast channels are the ones with the tight budget.
+
+**But these are the *wrong* thresholds for TAYF, and it is important to say so.** The 10 ms and 75 ms figures are **sensorimotor** — they measure a person acting on a delayed representation of *their own* hand. TAYF's user is not manipulating anything through the cube; they are watching a remote person. The binding constraints are the conversational ones (G.114's 150 ms, the 300 ms fluency collapse) and the audiovisual-sync ones (50 ms lead / 220 ms lag). The sensorimotor numbers become binding only if TAYF ever adds a shared-manipulation task, and they are recorded here so that decision is made knowingly.
 
 ### 10.2 Per-stage budget
 
@@ -856,6 +904,14 @@ flowchart LR
 
 **What §7.2 buys back:** the 220 ms audiovisual *lag* tolerance means a face rendered up to ~220 ms behind the audio is not perceived as desynchronized, provided the expression amplitude is preserved. The binding constraint on the pose stream is therefore conversational turn-taking fluency (the 300 ms collapse), not lip-sync. This is more slack than the G.114 number alone suggests, and it should be spent on *not dropping expression frames* rather than on shaving milliseconds.
 
+### 10.3 Two calibration points for "is this achievable on weak hardware"
+
+The pessimistic reading of §10.2 is that every compute figure came from a desktop GPU. Two results in the corpus bound the answer from opposite sides.
+
+**The encouraging one — D-Compress** (arXiv [2603.13699](https://arxiv.org/abs/2603.13699)) is the closest analogue in the corpus to TAYF's compute envelope: geometry-preserving LiDAR range-image compression achieving **67.6 dB PSNR at 1.55 bits-per-point, compression ratios exceeding 100×, running at 25.1 fps on a low-power Intel i5-7260U mini-PC — CPU only, no GPU.** Baselines on the same task: G-PCC 1.8 fps, H.265 5.1 fps. It also ships **an RDO rate-control algorithm fitted to a range-image RD model and validated under simulated dynamic bandwidth** — the only congestion-adaptive mechanism anywhere in the corpus. That a 15 W laptop CPU sustains real-time 100× geometric compression is the single best evidence that TAYF's per-frame arithmetic (a 215-float vector and an LBS pass over a fixed Gaussian set) is not the thing that will break.
+
+**The cautionary one** — arXiv [2601.00630](https://arxiv.org/abs/2601.00630), video-rate holographic telepresence: **28 fps, 1.24 s end-to-end latency, ~4 MB/frame, 896 Mbps over a 1 Gbps LAN, reconstruction on 4× RTX A6000.** Its own diagnosis is that the latency is **compute-bound, not network-bound**, and that the real bottleneck is **temporal consistency, not per-frame fidelity** (naive Wirtinger-Flow flickers under motion). This is what the same problem costs when the architecture transmits a wavefront instead of a state vector: 1.24 seconds and four datacenter GPUs, ~15× over the G.114 budget. It is the most expensive point on the spectrum §0.2 tabulates, and it is a useful thing to have in hand when someone proposes skipping the avatar.
+
 ---
 
 ## 11. Compute, memory, and power budget
@@ -872,6 +928,8 @@ flowchart LR
 | Status | **UNVALIDATED — nothing benchmarked** | Available |
 
 `docs/architecture.md` is explicit: *"Remote RTX 5060 is used only for offline avatar enrollment (one-time per-user build), never in the runtime loop."* This is a hard architectural boundary. Anything that needs the 5060 at runtime is a design error, not an optimization opportunity.
+
+**⚠ The 7–15 W figure is a module power-mode envelope, not a TAYF measurement or budget.** `hardware/power-thermal.md` is a worksheet in which **every cell is TBD**: no wattage, TDP, duty cycle, or heat-rejection figure exists anywhere in this repository, for the SoC, the cameras, the modem, or the optical panel. The cooling approach is undecided (passive spreader / forced-air fan / vapor chamber) and so is whether the cube is battery-powered or USB-PD-tethered. `hardware/power-thermal.md` names the sealed ~1000 cm³ enclosure running continuous edge inference as *"the real engineering bottleneck of the 10cm cube constraint"* — and it is the bottleneck that has been analysed least. **No claim in §11 about what fits should be read as a budget until that worksheet has numbers in it.**
 
 ### 11.2 Per-stage resource allocation on the edge SoC
 
@@ -953,9 +1011,12 @@ sequenceDiagram
 | `rotation_convention` | axis-angle / 6D / quaternion, and joint ordering |
 | `fps` | Nominal send rate |
 | `avatar_hash` | Content hash of the sender's canonical avatar |
-| `caps` | Supported features: delta coding, FEC, audio-driven-face fallback, view count |
+| `region_mask` | Which body regions this session transmits — full body / high-fidelity (face, eyes, mouth, hands, fingers) / custom (head, hands, upper body, torso). **Set once at call setup, never renegotiated per frame** (`app/README.md`) |
+| `caps` | Supported features: delta coding, blendshape-coefficient mode (§8.4), FEC, audio-driven-face fallback, view count |
 
 **Why `dims` and `rig_id` are on the wire:** a 215-float array is self-describing about nothing. If one cube ships an updated rig with a different joint ordering, every packet still parses and the far end renders a person whose elbows bend backwards. Explicit negotiation is the only defence.
+
+**How `region_mask` interacts with the fixed 215-float schema — an open question with a recommended answer.** `app/README.md` flags this as unresolved: the phone app offers body-region selection, but the wire format is a fixed-width struct. **Recommendation: `region_mask` changes which sub-estimators run on the sender, not the packet width.** Unselected regions transmit as zeros (or as a held neutral pose), the struct stays fixed-size, `pipeline/schema.py` needs no variant, and the LZ4 stage compresses the constant-zero runs to almost nothing anyway — a torso-only session's payload shrinks naturally without any format change. The alternative — variable-width packets keyed on the mask — buys a few bytes at the cost of making every parser conditional on session state. Do not do it.
 
 ### 12.2 Packet layout — `state` channel
 
@@ -1019,7 +1080,7 @@ Ordered by severity. Each rung is a defined, testable state, not a fallback that
 | 0 | Nominal | 60 Hz delta + keyframes, 3–4 cameras, all estimators | Full fidelity |
 | 1 | Isolated packet loss | Interpolate/extrapolate from last good pose, damped toward the neutral pose over ~100 ms | Imperceptible |
 | 2 | Loss burst; DELTA undecodable (`ref_seq` missing) | Discard deltas, request KEYFRAME on `ctrl`, hold last good pose | Brief hold, <200 ms |
-| 3 | Sustained loss / rising RTT | Signal `agent/`; drop state rate 60 → 30 Hz; **do not reduce expression precision** (§7.6) | Slightly less fluid body motion |
+| 3 | Sustained loss / rising RTT | Signal `agent/`; drop state rate 60 → 30 Hz; **do not reduce expression precision** (§7.7) | Slightly less fluid body motion |
 | 4 | Bandwidth collapse | 30 → 20 Hz; disable FEC; body pose to coarser quantization; **face and hands hold full precision** | Visibly less fluid body; face intact |
 | 5 | Camera fault or lost calibration (§1.6) | Degrade to single-camera monocular mode; disable multi-view fusion; widen smoothing | More pose jitter, occlusion errors on turns |
 | 6 | Face out of frame / occluded | Switch expression source to **audio-driven** (arXiv [2510.01176](https://arxiv.org/abs/2510.01176), <15 ms GPU) | Face keeps moving with speech |
@@ -1031,7 +1092,7 @@ Ordered by severity. Each rung is a defined, testable state, not a fallback that
 **Two rules govern the whole ladder:**
 
 1. **Audio never degrades before video.** A frozen avatar with clear speech is a usable call; fluid motion with broken audio is not.
-2. **Face and hands are the last things to lose precision** (§7.6). Every rung above degrades body pose, frame rate, or FEC before touching the expression or hand channels.
+2. **Face and hands are the last things to lose precision** (§7.7). Every rung above degrades body pose, frame rate, or FEC before touching the expression or hand channels.
 
 **Explicitly rejected behaviours:** retransmitting state frames (late data renders out of order); blocking the render loop on packet arrival (turns jitter into freezes); silently reinterpreting a `dims`/`rig_id` mismatch (renders a broken human); attenuating expression amplitude under load (contradicts the 82.6% result).
 
@@ -1121,7 +1182,17 @@ Everything above is specification. This is the validation plan, ordered by how m
 | 9 | **Perceptual MOS** on the assembled pipeline, using MOS protocols not PSNR (§7.5), plus 4DHumanQA as a cheap runtime proxy | `experiments/perceptual-quality/` | §7's allocation policy |
 | 10 | **Degradation-ladder validation** — force each rung of §12.5 and confirm the transition is graceful | `experiments/` (new) | The failure design |
 
+**Every branch of `experiments/` is currently "not started", and most are blocked on something outside this document.** #3 and #4 are blocked on the transport implementation, which does not exist (spec only, no code). #8 is blocked on panel sourcing — `hardware/optical-engine.md`'s single blocking hardware decision, `FilesPlan.md` §6 item 1. #1, #2, #5 and #7 are blocked only on hardware arriving, which makes them the ones to schedule first.
+
 **Nothing above #3 should be optimized before it is measured.** The two most likely surprises, ranked: (a) the estimators do not hit 30 fps sustained on the Jetson under thermal load, and (b) matting memory forces a model change. Both have specified mitigations; neither invalidates the architecture, only the model selection inside it.
+
+### 14.1 Against the calendar
+
+`docs/roadmap.md`'s hard gates: **23 Aug 2026** — Idea Capture Template and pitch deck (GSMA MENA Ignite, Idea Phase close). **13 Sep 2026** — Prototype Phase / live demo. **Nov 2026** — MWC Doha showcase, contingent on advancing.
+
+The Sep 13 goal, stated in `docs/roadmap.md`: *one cube-to-cube demo, a body reconstructed from 215 numbers a second, over a real CAMARA QoD link, in well under 150 ms.* That is precisely the scope of this document, and it is achievable — **but only if measurements #1, #3 and #5 happen early enough that a bad result still leaves time to swap a model.** A benchmark run in the last week is a discovery, not a schedule input.
+
+Two dependencies outside this document sit on the critical path and neither is under the pipeline's control: **panel sourcing** (blocks §6, and therefore the demo's entire display half) and **Nokia NaC portal registration** (blocks the CAMARA half of the demo claim). The transport path degrades gracefully without QoD (§12.5 rung 10); the demo narrative does not.
 
 ---
 
@@ -1133,9 +1204,13 @@ Everything above is specification. This is the validation plan, ordered by how m
 - **Representation:** persistent identity (canonical Gaussian avatar, built offline in ~33 s reference / 1–2 h on an RTX 5060, compressed ~5× by GETA-3DGS and 26–58× by static coders, cached on both cubes) split from dynamic state (215 floats at 60 Hz).
 - **Animation:** LBS with the covariance transform **Σ_t = A Σ_c Aᵀ**, rigid fast path via quaternion composition, non-rigid correction projected onto a 64-vector SVD blendshape basis (AGORA-M) so no neural network runs in the per-frame loop (HUGS).
 - **View synthesis:** view-amortized rasterization to the engine's N physical channels (87.7 fps @2K / 228 fps @45 views / 8–22× over naive per-view rendering, all desktop-measured), angle-space interpolation for gaps, altiro3D as the fork base — minus its dominant monocular-depth bottleneck, which TAYF does not have.
-- **Perceptual allocation:** face expressiveness first (82.6% preferred expressive-over-timed), then eyes and hands, then body, then garment bulk; temporal precision and UV precision are the cheapest things to spend.
-- **Transport:** fp16 + LZ4 (+ optional rANS delta coding) over an unreliable/unordered WebRTC data channel at **~0.16 Mbps wire**, with separate reliable channels for control and assets and a standard media track for Opus audio; CAMARA QoD for jitter bounds, never as a dependency.
-- **Budgets:** ~0.26 Mbps one-way including audio and FEC; ~49–89 ms compute-plus-network end-to-end against a 150 ms G.114 budget.
-- **Contract:** explicit `rig_id`/`dims`/`schema_version` negotiation, one packet per frame, `capture_ts` from the hardware trigger as the only clock, seq-ordered discard of late frames, keyframe-plus-delta recovery, and an eleven-rung degradation ladder in which audio and facial expression are the last things to degrade.
+- **Perceptual allocation:** `research/notes.md` §39's order — face, eyes, mouth, hands, pose, silhouette, clothing, low-saliency detail — with 82.6% preferring expressive-over-timed motion, and temporal and UV precision measured as the cheapest things to spend.
+- **Transport:** fp16 + LZ4 (+ optional rANS delta coding, or AGORA-M's 64 blendshape coefficients instead) over an unreliable/unordered WebRTC data channel at **~0.16 Mbps wire**, with separate reliable channels for control and assets and a standard media track for Opus audio; CAMARA QoD (`DOWNLINK_M_UPLINK_L`, 15-minute-ahead congestion prediction) for jitter bounds, never as a dependency.
+- **Budgets:** ~0.26 Mbps one-way including audio and FEC, against a ≤0.3 Mbps constraint; ~49–89 ms compute-plus-network end-to-end against a 150 ms G.114 budget.
+- **Contract:** explicit `rig_id`/`dims`/`schema_version`/`region_mask` negotiation, one packet per frame, `capture_ts` from the hardware trigger as the only clock, seq-ordered discard of late frames, keyframe-plus-delta recovery, and an eleven-rung degradation ladder in which audio and facial expression are the last things to degrade.
 
-**And the one thing that is not specified here because it is not known:** whether all of it fits in 7–15 W inside a sealed 10 cm box. Every fps number in this document was measured on a desktop GPU or a Quest 3. §14 item 1 is the experiment that turns this document from a plan into a result.
+**Three things are not specified here because they are not known.**
+
+1. **Whether it fits in the power and thermal envelope.** Every fps number in this document was measured on a desktop GPU or a Quest 3, and `hardware/power-thermal.md` contains no wattage for any component. §14 item 1 is the experiment that turns this document from a plan into a result.
+2. **Whether the enrolled avatar is good enough to be worth rendering in 3D at all.** arXiv 2401.02171 found a flat 2D cutout beat a rigged 3D avatar on fidelity (5.1 vs 3.7, p<.001) at statistically identical co-presence, and arXiv 2509.17748 found people judge avatars of people they know most harshly — which is TAYF's only use case. §9.4 records the 2.3 Mbps layered-video retreat in case the answer is no.
+3. **How many physical optical channels the engine actually needs.** §6 answers how fast N views can be rendered, three times over. It does not answer what N is. That is `experiments/angular-resolution/` and `hardware/optical-engine.md`, and the corpus contains no controlled free-space multi-viewer angular-view-count sweep against presence — TAYF's own experiment to run, and the most publishable thing in the project.
