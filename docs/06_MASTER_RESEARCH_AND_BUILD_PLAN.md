@@ -67,7 +67,7 @@ flowchart TB
 | Does tracked serving really save 58×? | S1.5 | GPU only | Analytically derived, unverified |
 | Can prediction hit the pupil? | S6.2 (with EyeNavGS real traces) | GPU only | **Unknown — highest kill risk** |
 | Can any modulator steer ±17°? | S1.3, S1.9 | GPU only | Bounded analytically; metasurface path untested |
-| What enclosure size closes thermal? | S3.3 sweep | CPU only | ~12.4 W at 100 mm; size unknown |
+| What enclosure size closes thermal? | S3.3 sweep | CPU only | **Answered: ~16.2 W at 100 mm/48 °C (5 faces). 100 mm FAILS for holographic configs; ~130 mm closes it.** |
 | Does the pipeline run on Jetson-class? | S4.5, then real hardware | One Jetson | Unvalidated — inherited assumption |
 | Is identity preserved from monocular capture? | S5.2 + avatar enrollment trial | RTX 5060 | Unvalidated for familiar viewers |
 | Does an optical layout fit 10 cm? | S2.2, S2.3 | CPU only | Unknown |

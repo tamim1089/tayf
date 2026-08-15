@@ -103,7 +103,7 @@ Hardware note: a 4K complex field is 3840×2160 complex64 ≈ 66 MB; a forward+i
 
 | # | Experiment | Question |
 |---|---|---|
-| S3.1 | Reproduce doc 01 §5's lumped model | Sanity baseline: 12.44 W @ ΔT=15 K, 21.18 W @ 25 K |
+| S3.1 | Reproduce doc 01 §5's lumped model | **Done.** 6-face baseline 12.44 W @ΔT=15 K; corrected 5-face/48 °C ceiling **16.2 W** |
 | S3.2 | 3D FEA with real component placement | Where are the hotspots? Does the SoC throttle? |
 | S3.3 | **Sweep edge length 100 / 125 / 150 / 200 / 250 mm** | **What size does the real component set actually require?** |
 | S3.4 | Passive vs. spreader-to-shell vs. forced air vs. vapour chamber | Which cooling strategy is sufficient, and at what noise cost? |
