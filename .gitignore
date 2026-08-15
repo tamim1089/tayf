@@ -14,3 +14,7 @@ research/arxiv/*.log
 # Python
 __pycache__/
 *.pyc
+
+# Generated 3D output — rebuild with models/build_models.py
+models/obj/
+models/stl/
