@@ -325,7 +325,129 @@ def design_folio():
         note="4.4 L closed - a hardback book, fits any laptop bag")
 
 
-DESIGNS = [design_folio, design_mirror, design_doorway, design_disc,
+
+def design_table_scene():
+    """PRODUCT SCENE: 20x20x10 cm slab on a desk. PORTAL MODE.
+
+    Viewer 0.30 m from the slab; upper body appears 1.20 m from the viewer,
+    i.e. 0.90 m BEYOND the device. b>a so the image legitimately exceeds the
+    aperture (docs/01 4.3b). You look past the slab at them.
+    """
+    m = Mesh()
+    DESK = 0.74
+    m.group("desk")
+    m.box(0, DESK-0.02, 0.45, 1.40, 0.04, 0.70)
+    for sx in (-1,1):
+        for sz in (0.16, 0.74):
+            m.box(sx*0.64, (DESK-0.04)/2, sz, 0.05, DESK-0.04, 0.05)
+
+    m.group("device_body")                       # 20 x 20 x 10 cm slab
+    m.box(0, DESK+0.10, 0.30, 0.20, 0.20, 0.10)
+    m.group("aperture_plate")
+    m.box(0, DESK+0.10, 0.246, 0.19, 0.19, 0.008)
+
+    m.group("floating_image")                    # upper body, 0.90 m beyond
+    zi, base = 1.20, 0.62
+    m.box(0, base+0.30, zi, 0.42, 0.52, 0.24)                 # torso
+    m.cyl(0, base+0.60, zi, 0.055, 0.10)                       # neck
+    m.box(0, base+0.74, zi, 0.17, 0.23, 0.21)                  # head
+    for sx in (-1,1):
+        m.box(sx*0.185, base+0.32, zi+0.02, 0.10, 0.38, 0.11)  # arms
+
+    m.group("viewer_for_scale")
+    m.human(0.0, -0.30, height=1.72, facing=1.0, seated=True)
+    return m, "07_scene_table", dict(
+        aperture="0.20 x 0.20 m slab", depth="0.10 m",
+        shows="life-size upper body, 0.9 m beyond the device",
+        note="PORTAL mode (b>a): you look past the slab at them")
+
+
+def design_chair_scene():
+    """PRODUCT SCENE: aperture built into a chair back. IMAGE-IN-FRONT MODE.
+
+    Rule 4 strict: the image floats in FRONT of the aperture, in the room,
+    so image <= aperture. An 0.80 m chair back therefore shows a seated
+    upper body at true scale, sitting in the chair.
+    """
+    m = Mesh()
+    SEAT, BACK_TOP = 0.45, 1.25
+    m.group("chair")
+    m.box(0, SEAT, -0.02, 0.55, 0.06, 0.50)                    # seat pan
+    for sx in (-1,1):
+        for sz in (-1,1):
+            m.box(sx*0.24, SEAT/2, sz*0.21, 0.05, SEAT, 0.05)  # legs
+    for sx in (-1,1):                                           # back frame
+        m.box(sx*0.29, (SEAT+BACK_TOP)/2, -0.26, 0.05, BACK_TOP-SEAT, 0.09)
+    m.box(0, BACK_TOP+0.025, -0.26, 0.63, 0.05, 0.09)
+
+    m.group("aperture_plate")                                   # 0.55 x 0.80 m
+    m.box(0, (SEAT+BACK_TOP)/2, -0.222, 0.55, BACK_TOP-SEAT, 0.012)
+
+    m.group("floating_image")                                   # seated, in the chair
+    m.human(0.0, 0.02, height=1.72, facing=1.0, seated=True)
+
+    m.group("viewer_for_scale")
+    m.human(0.0, 1.95, height=1.72, facing=-1.0, seated=True)
+    return m, "08_scene_chair", dict(
+        aperture="0.55 x 0.80 m (chair back)", depth="0.09 m",
+        shows="life-size seated upper body, in the chair",
+        note="IMAGE-IN-FRONT mode: rule 4 strict, image <= aperture")
+
+
+
+def design_family():
+    """THE APERTURE LAW, VISUALISED: aperture size == subject size (in-front mode).
+
+    Four devices side by side at true relative scale, each with the largest
+    subject it can show as a real image in the viewer's own space (W <= D).
+    The point of the picture is that each cyan plate is exactly as tall as the
+    green figure standing in front of it. That is the law, drawn.
+    """
+    m = Mesh()
+    slots = [   # (x, aperture_w, aperture_h, subject)
+        (-1.55, 0.25, 0.28, "head"),
+        (-0.75, 0.55, 0.55, "bust"),
+        ( 0.25, 0.60, 0.85, "seated"),
+        ( 1.55, 0.55, 1.75, "standing"),
+    ]
+    m.group("device_frame")
+    for x, aw, ah, _ in slots:
+        base = 0.35 if ah < 1.0 else 0.0
+        m.box(x, base + ah/2, -0.10, aw + 0.05, ah + 0.05, 0.07)
+        if base > 0:                                  # stand for the small ones
+            m.cyl(x, base/2, -0.10, 0.02, base)
+            m.cyl(x, 0.01, -0.10, 0.10, 0.02)
+
+    m.group("aperture_plate")
+    for x, aw, ah, _ in slots:
+        base = 0.35 if ah < 1.0 else 0.0
+        m.box(x, base + ah/2, -0.062, aw, ah, 0.008)
+
+    m.group("floating_image")
+    for x, aw, ah, kind in slots:
+        base = 0.35 if ah < 1.0 else 0.0
+        if kind == "head":
+            cy = base + ah/2
+            m.box(x, cy + 0.02, 0.02, 0.17, 0.22, 0.20)
+            m.cyl(x, cy - 0.135, 0.02, 0.05, 0.09)
+        elif kind == "bust":
+            m.bust(x, base + ah/2, 0.02, height=0.50)
+        elif kind == "seated":
+            cy = base
+            m.box(x, cy + 0.28, 0.02, 0.40, 0.52, 0.22)
+            m.cyl(x, cy + 0.59, 0.02, 0.055, 0.10)
+            m.box(x, cy + 0.73, 0.02, 0.17, 0.23, 0.20)
+            for sx in (-1, 1):
+                m.box(x + sx*0.18, cy + 0.30, 0.03, 0.09, 0.38, 0.10)
+        else:
+            m.human(x, 0.02, height=1.72)
+    return m, "09_aperture_law", dict(
+        aperture="0.25 / 0.55 / 0.60 / 0.55 m",
+        depth="n/a", shows="head / bust / seated upper body / standing",
+        note="each plate is exactly as tall as the figure it shows: W <= D")
+
+
+DESIGNS = [design_family, design_table_scene, design_chair_scene, design_folio, design_mirror, design_doorway, design_disc,
            design_shopwindow, design_c2table]
 
 
