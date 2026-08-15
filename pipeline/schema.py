@@ -55,4 +55,60 @@ class DrivingState:
         )
 
 
-PACKED_SIZE_BYTES = struct.calcsize(_PACK_FMT)  # 215*4 + 8 = 868 bytes/frame, pre-compression
+PACKED_SIZE_BYTES = struct.calcsize(_PACK_FMT)  # 215*4 + 8 = 868 bytes/frame
+
+
+# ----------------------------------------------------------------------
+# Wire encoding — MEASURED, see docs/10_TAYF_UNIVERSAL_ENGINEERING.md §3.4
+# ----------------------------------------------------------------------
+#
+# The original spec was fp16 + LZ4, assuming a 0.6x compression ratio.
+# That assumption was tested and is WRONG: packed pose floats are high
+# entropy, so a general-purpose compressor finds nothing to exploit and
+# *expands* the payload by ~2.6%.
+#
+#     fp16 absolute      430 B/frame   0.206 Mbps @60fps
+#     fp16 + zlib        441 B/frame   0.212 Mbps   <- worse than raw
+#     delta + int8       215 B/frame   0.104 Mbps   <- USE THIS
+#     delta + int8 + zlib 226 B/frame  0.109 Mbps   <- compressor hurts again
+#
+# Quantisation error is DELTA_RANGE/254 rad (half a step). At the 0.35 rad
+# bound below that is 1.4 mrad = 284 arcsec = 0.079 deg, which displaces the
+# end of a 0.5 m limb by 0.7 mm -- invisible. Tightening DELTA_RANGE to the
+# measured motion envelope reduces it proportionally.
+#
+# Delta chains break on packet loss, so send an absolute keyframe
+# periodically; at 1 Hz the amortised cost is negligible (~0.105 Mbps all-in).
+
+DELTA_SCALE = 1.0 / 127.0      # int8 quantisation step, in units of DELTA_RANGE
+DELTA_RANGE = 0.35             # rad; max per-frame joint change at 60 fps [ESTIMATE]
+KEYFRAME_INTERVAL_S = 1.0      # absolute frame cadence for loss recovery
+
+
+def encode_delta(cur: "DrivingState", ref: "DrivingState") -> bytes:
+    """Quantise (cur - ref) to one signed byte per parameter. 215 bytes."""
+    a = (*cur.body_pose, *cur.face_expression, *cur.hand_pose)
+    b = (*ref.body_pose, *ref.face_expression, *ref.hand_pose)
+    step = DELTA_RANGE * DELTA_SCALE
+    return bytes(
+        max(-127, min(127, int(round((x - y) / step)))) + 128
+        for x, y in zip(a, b)
+    )
+
+
+def decode_delta(payload: bytes, ref: "DrivingState", timestamp: float) -> "DrivingState":
+    """Reconstruct from a delta payload. Caller must track `ref` identically."""
+    if len(payload) != TOTAL_DIM:
+        raise ValueError(f"delta payload must be {TOTAL_DIM} bytes, got {len(payload)}")
+    step = DELTA_RANGE * DELTA_SCALE
+    b = (*ref.body_pose, *ref.face_expression, *ref.hand_pose)
+    vals = [y + (p - 128) * step for p, y in zip(payload, b)]
+    return DrivingState(
+        body_pose=tuple(vals[:BODY_POSE_DIM]),
+        face_expression=tuple(vals[BODY_POSE_DIM:BODY_POSE_DIM + FACE_EXPRESSION_DIM]),
+        hand_pose=tuple(vals[BODY_POSE_DIM + FACE_EXPRESSION_DIM:]),
+        timestamp=timestamp,
+    )
+
+
+DELTA_SIZE_BYTES = TOTAL_DIM   # 215 bytes/frame
