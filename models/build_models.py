@@ -83,22 +83,31 @@ class Mesh:
             faces += [(n, a1, a0), (n + 1, a0 + 1, a1 + 1)]
         self.add(verts, faces)
 
+    def quad(self, p0, p1, p2, p3):
+        """Flat four-corner panel (two triangles, no thickness)."""
+        self.add([p0, p1, p2, p3], [(0, 1, 2), (0, 2, 3)])
+
     def human(self, cx, cz, height=1.70, facing=1.0, seated=False):
         """Blocky human proxy standing on y=0, facing +Z if facing=1."""
         H = height
         if seated:
-            # seated: hips at 0.45H, torso above
-            hip = 0.45 * H
-            self.box(cx, hip + 0.16 * H, cz, 0.34 * H, 0.32 * H, 0.19 * H)   # torso
-            self.cyl(cx, hip + 0.40 * H, cz, 0.085 * H, 0.11 * H)            # neck+head
-            self.box(cx, hip + 0.44 * H, cz, 0.16 * H, 0.19 * H, 0.17 * H)   # head
-            for s in (-1, 1):                                                 # thighs
-                self.box(cx + s * 0.10 * H, hip, cz + facing * 0.13 * H,
-                         0.11 * H, 0.10 * H, 0.30 * H)
-                self.box(cx + s * 0.10 * H, hip - 0.20 * H,
-                         cz + facing * 0.27 * H, 0.10 * H, 0.40 * H, 0.10 * H)
-                self.box(cx + s * 0.22 * H, hip + 0.18 * H, cz,
-                         0.09 * H, 0.30 * H, 0.09 * H)                        # arms
+            # Seated anthropometry (absolute, not scaled by standing height):
+            # seat pan 0.45 m, shoulders 1.00 m, top of head 1.28 m.
+            k = H / 1.72
+            seat = 0.45 * k
+            sh = 1.00 * k
+            self.box(cx, (seat + sh) / 2, cz, 0.40 * k, sh - seat, 0.24 * k)  # torso
+            self.cyl(cx, sh + 0.05 * k, cz, 0.055 * k, 0.10 * k)              # neck
+            self.box(cx, sh + 0.18 * k, cz, 0.16 * k, 0.22 * k, 0.20 * k)     # head
+            for s_ in (-1, 1):
+                self.box(cx + s_ * 0.175 * k, (seat + sh) / 2 + 0.04 * k, cz,
+                         0.09 * k, 0.36 * k, 0.10 * k)                        # arms
+                self.box(cx + s_ * 0.10 * k, seat - 0.05 * k,
+                         cz + facing * 0.20 * k,
+                         0.13 * k, 0.11 * k, 0.42 * k)                        # thighs
+                self.box(cx + s_ * 0.10 * k, seat / 2 - 0.03 * k,
+                         cz + facing * 0.40 * k,
+                         0.11 * k, seat - 0.06 * k, 0.11 * k)                 # shins
         else:
             # Anthropometric: shoulder span ~0.27H (46cm at 1.70m), so the
             # figure fits inside a 0.50 m aperture as the geometry requires.
@@ -273,7 +282,50 @@ def design_c2table():
         note="works because operators look DOWN — the inversion")
 
 
-DESIGNS = [design_mirror, design_doorway, design_disc,
+def design_folio():
+    """PORTABLE: A4 folding unit, life-size human head floats above the base.
+
+    Closed it is a hardback book (30 x 21 x 7 cm, 4.4 L) that goes in any
+    laptop bag. Opened, a 45-degree plate stands up and a life-size head
+    floats above the base. An A4 aperture is 29.7 x 21 cm; an adult head is
+    25 x 16 cm -- so A4 is the smallest bag-friendly size that still shows a
+    face at true scale.
+    """
+    m = Mesh()
+    DESK = 0.74                       # sits on a normal desk
+    L, D, T = 0.30, 0.21, 0.035       # base footprint
+
+    m.group("desk")
+    m.box(0, DESK - 0.02, 0, 1.30, 0.04, 0.65)
+    for sx in (-1, 1):
+        for sz in (-1, 1):
+            m.box(sx * 0.60, (DESK - 0.04) / 2, sz * 0.28,
+                  0.05, DESK - 0.04, 0.05)
+
+    m.group("device_base")
+    m.box(0, DESK + T / 2, 0, L, T, D)
+    m.box(0, DESK + T + 0.004, 0.015, L - 0.03, 0.006, D - 0.05)   # source panel
+
+    m.group("aperture_plate")                                       # 45 deg fold
+    y0, y1 = DESK + T, DESK + T + D
+    m.quad((-L/2, y0, -D/2), (L/2, y0, -D/2),
+           ( L/2, y1,  D/2), (-L/2, y1,  D/2))
+
+    m.group("floating_image")                                       # life-size head
+    hy = DESK + T + 0.155
+    m.box(0, hy + 0.055, 0.055, 0.165, 0.215, 0.185)                # head
+    m.cyl(0, hy - 0.075, 0.055, 0.048, 0.075)                       # neck
+    m.box(0, hy - 0.135, 0.055, 0.30, 0.055, 0.16)                  # collar
+
+    m.group("seated_person_for_scale")
+    m.human(0.0, 0.80, height=1.72, facing=-1.0, seated=True)
+    return m, "06_folio_portable", dict(
+        aperture="0.30 x 0.21 m (A4)", depth="0.07 m closed",
+        shows="life-size human head",
+        note="4.4 L closed - a hardback book, fits any laptop bag")
+
+
+DESIGNS = [design_folio, design_mirror, design_doorway, design_disc,
            design_shopwindow, design_c2table]
 
 
