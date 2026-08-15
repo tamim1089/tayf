@@ -100,14 +100,16 @@ class Mesh:
                 self.box(cx + s * 0.22 * H, hip + 0.18 * H, cz,
                          0.09 * H, 0.30 * H, 0.09 * H)                        # arms
         else:
-            self.box(cx, 0.72 * H, cz, 0.30 * H, 0.30 * H, 0.17 * H)         # torso
-            self.cyl(cx, 0.90 * H, cz, 0.06 * H, 0.07 * H)                   # neck
-            self.box(cx, 0.94 * H, cz, 0.14 * H, 0.17 * H, 0.16 * H)         # head
+            # Anthropometric: shoulder span ~0.27H (46cm at 1.70m), so the
+            # figure fits inside a 0.50 m aperture as the geometry requires.
+            self.box(cx, 0.72 * H, cz, 0.24 * H, 0.30 * H, 0.14 * H)         # torso
+            self.cyl(cx, 0.90 * H, cz, 0.05 * H, 0.07 * H)                   # neck
+            self.box(cx, 0.94 * H, cz, 0.12 * H, 0.16 * H, 0.14 * H)         # head
             for s in (-1, 1):
-                self.box(cx + s * 0.20 * H, 0.70 * H, cz,
-                         0.08 * H, 0.34 * H, 0.08 * H)                        # arms
-                self.box(cx + s * 0.08 * H, 0.28 * H, cz,
-                         0.11 * H, 0.56 * H, 0.11 * H)                        # legs
+                self.box(cx + s * 0.105 * H, 0.70 * H, cz,
+                         0.065 * H, 0.34 * H, 0.065 * H)                      # arms
+                self.box(cx + s * 0.062 * H, 0.28 * H, cz,
+                         0.095 * H, 0.56 * H, 0.10 * H)                       # legs
 
     def bust(self, cx, cy, cz, height=0.50):
         """Head + shoulders, vertically centred at cy."""
@@ -155,7 +157,7 @@ class Mesh:
 def design_mirror():
     """CONSUMER: full-length mirror, life-size standing person floats in front."""
     m = Mesh()
-    AW, AH, DEPTH = 0.50, 1.70, 0.20      # aperture 50x170cm, 20cm deep
+    AW, AH, DEPTH = 0.55, 1.75, 0.20      # aperture 50x170cm, 20cm deep
     FLOAT = 0.20                           # image floats 20cm in front
 
     m.group("device_frame")
@@ -172,7 +174,7 @@ def design_mirror():
     m.human(0, FLOAT + 0.12, height=1.70)                     # the person, life-size
 
     m.group("viewer_for_scale")
-    m.human(0.95, 1.30, height=1.70)
+    m.human(1.60, 0.95, height=1.70)
     return m, "01_mirror_fullbody", dict(
         aperture="0.50 x 1.70 m", depth="0.20 m",
         shows="life-size standing person", note="off-state is a mirror")
@@ -191,7 +193,7 @@ def design_doorway():
     m.group("floating_image")
     m.human(0, 0.30, height=1.70)
     m.group("viewer_for_scale")
-    m.human(1.10, 1.60, height=1.70)
+    m.human(1.85, 1.10, height=1.70)
     return m, "02_doorway", dict(
         aperture="0.80 x 2.00 m", depth="0.14 m",
         shows="life-size person standing in the doorway",
@@ -212,7 +214,7 @@ def design_disc():
     m.group("floating_image")
     m.bust(0, STAND + R, DEPTH / 2 + 0.22, height=0.50)
     m.group("viewer_for_scale")
-    m.human(0.80, 0.95, height=1.70)
+    m.human(1.35, 0.55, height=1.70)
     return m, "03_disc_bust", dict(
         aperture="0.50 m dia", depth="0.12 m",
         shows="life-size head + shoulders", note="cheapest entry point")
@@ -234,8 +236,8 @@ def design_shopwindow():
     m.group("floating_image")
     m.human(0, 0.55, height=1.75)                          # person on the pavement
     m.group("pedestrians_for_scale")
-    m.human(-1.15, 1.60, height=1.68)
-    m.human(1.25, 1.75, height=1.72)
+    m.human(-1.55, 1.95, height=1.68)
+    m.human(1.65, 2.05, height=1.72)
     return m, "04_shop_window", dict(
         aperture="2.40 x 2.20 m (existing glass)", depth="0.60 m backstage",
         shows="life-size person on the pavement",
