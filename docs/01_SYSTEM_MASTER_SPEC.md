@@ -227,11 +227,60 @@ The constraint rests on three premises. A genuine escape must break one; all thr
 
 | Premise | Attack | Result |
 |---|---|---|
-| **P1** Light travels in straight lines | Self-accelerating (Airy) beams | **Closed.** The *centroid* travels straight — Ehrenfest's theorem / conservation of transverse momentum. What curves is the **caustic**, the envelope of straight rays fed from the far tail of the aperture (Berry, *J. Opt.* 19 055601, 2017: "caustics are curved even though the rays are straight"; Efremidis et al., *Optica* 6 686, 2019). Bending more requires a *bigger* aperture, and it is a near-field effect — at normal viewing distance there is no bend left. Crucially, a caustic is only *visible* where matter scatters in it (Polynkin, *Science* 324 229, 2009 sees the curve only via a glowing plasma channel). No published work places an image outside the launch aperture's silhouette. |
-| **P2** Only the device emits or redirects | Make the air itself an optical element at the target point | **Closed by 5–6 orders of magnitude on every mechanism.** Acousto-optic: Δn ≈ 10⁻⁷ at 140 dB → 1.5 mrad deflection over 70 mm × 7 passes (Schrödel et al., *Nat. Photon.* 18 54, 2024). Optical Kerr: air ionizes ~7× before Δn reaches useful values (n₂ = 2.9×10⁻¹⁹ cm²/W), converging on the already-excluded plasma wall. Magnetic (Cotton–Mouton): needs ~6,600 T. |
+| **P1** Light travels in straight lines | Self-accelerating (Airy) beams | **Closed.** See §4.3f. |
+| **P2** Only the device emits or redirects | Make the air itself an optical element at the target point | **Closed on a hard ceiling.** See §4.3e. |
 | **P3** The emitting set is the 100 mm face | Enlarge / distribute / sweep the aperture | **Works — and is simply "build a bigger aperture."** Distributed emitters buy resolution, not extent. This is the honest path to a larger floating image, and it means a ~0.5 m device rather than a cube. |
 
 No fourth premise was found. The constraint is not a technology gap; it is a restatement of straight-line propagation plus a fixed angular spectrum.
+
+### 4.3e Why "make the air itself into a lens" fails — the refractivity ceiling
+
+This deserves its own section because it is the most intuitively appealing escape ("bend the light *near* the chair rather than at the cube") and because it fails against a single hard bound rather than against engineering difficulty.
+
+**The ceiling:** air's total refractivity is **(n−1) = 2.7131×10⁻⁴** at 20 °C, 101325 Pa (Jones, *J. Res. NBS* 86(1) 27, 1981), and n−1 ∝ density ∝ P/T. **No scheme that merely redistributes air — compressing, heating, or polarizing it — can exceed that number.** Every mechanism gets some fraction of it:
+
+| Mechanism | Achieved Δn | Measured ray bending | Source |
+|---|---|---|---|
+| Acoustic (140 dB SPL) | ~10⁻⁷ | **1.5 mrad** over 70 mm × 7 passes | Schrödel et al., *Nat. Photon.* 18 54 (2024) |
+| Acoustic (levitator, 157 dB) | ~7×10⁻⁶ | — | Marzo et al., *Nat. Commun.* 6:8661 |
+| Thermal (700 K filament core) | ~1.4×10⁻⁴ | **0.3 mrad** | Schäfer et al., *Rev. Sci. Instrum.* 83 103506 (2012) |
+| Optical Kerr | 1.45×10⁻⁵ at clamping | — | n₂ = 2.9×10⁻¹⁹ cm²/W (Nibbering, *JOSA B* 14 650, 1997) |
+| Magnetic (Cotton–Mouton) | needs ~6,600 T for 10⁻⁴ | — | Brandi et al., *JOSA B* 15 1278 (1998) |
+
+**Two independent measurements — acoustic and thermal, entirely different physics — land within 5× of each other (1.5 and 0.3 mrad), because both are bounded by the same refractivity ceiling.** That convergence is what makes this a physical limit rather than an engineering shortfall.
+
+Three further points close the remaining hope:
+
+1. **Deflection angle is not set by Δn.** For acousto-optic Bragg deflection the angle depends on λ_optical/Λ_acoustic. A 30° deflection at 550 nm needs an acoustic wavelength of ~1.1 µm — about **310 MHz in air**, two orders of magnitude beyond the few-MHz ultrasonic absorption ceiling. Δn only governs *efficiency*; the achievable **angle** is capped near a milliradian regardless of how loud you go.
+2. **Thermal gradients only steer at grazing incidence.** Critical angle from grazing ≈ √(2Δn/n) ≈ **1°**. This is precisely why a mirage needs a kilometre of hot road *and* a viewer nearly in the road's plane. It cannot place a source beside the device at a viewer-arbitrary angle.
+3. **The Kerr route hits the plasma wall first.** Reaching Δn = 10⁻⁴ needs ~7× the intensity at which air ionizes — and plasma is already excluded on power (§4.7).
+
+**Conclusion: unmodified air cannot act as a remote optical element.** Redirecting a ray to a viewer at an arbitrary angle requires either matter placed at that point or an aperture that already spans the required angle.
+
+### 4.3f Why self-bending (Airy) beams are not an exception
+
+The most cited "light travels in curves" result, and the one most likely to be raised as a counterexample. It is a textbook *illustration* of the constraint rather than an escape from it.
+
+- **The centroid travels straight.** Ehrenfest's theorem / conservation of transverse momentum. Efremidis et al., *Optica* 6 686 (2019): *"the intensity centroid of an optical beam is expected to move in a straight line — without acceleration."*
+- **What curves is the caustic** — the *envelope* of a fan of perfectly straight rays. Berry, *J. Opt.* 19 055601 (2017): *"Caustics are curved even though the rays are straight."*
+- **The bend is paid for with aperture.** The curved lobe is fed by straight rays launched from the *far tail* of the aperture distribution (Kaganovsky & Heyman, IOS Press 2013). Bending further requires a *wider* aperture. Droulias et al. (arXiv 2410.08099): *"by reducing the size of the aperture… gradually reducing the ability of a beam to bend."* **Bending is a near-field effect of a large aperture — at normal viewing distance there is no bending budget left.**
+- **A caustic is invisible without matter.** Berry, quoting Stavroudis: a caustic *"becomes visible simply by blowing a cloud of smoke in the region of the focus."* The canonical "visible curved Airy beam" (Polynkin et al., *Science* 324 229, 2009) is visible only because it ionizes air into a glowing plasma channel — matter along the path.
+- **Two traps to avoid.** (a) The >90° nonparaxial beams (Kaminer, *PRL* 108 163901, 2012) start from an aperture whose angular cone is *already* a half-space — the cone is never exceeded, merely already wide. (b) Self-healing is not bending around obstacles; it is *other* straight rays from *other* aperture regions that never met the obstruction, and it isn't even unique to non-diffracting beams (Aiello et al., *Opt. Express* 25 19147, 2017).
+
+No published work places an image outside the launch aperture's angular silhouette.
+
+### 4.3g Empirical confirmation: nobody has ever built one
+
+A survey of the aerial-imaging and commercial-display literature (Optics Express, Applied Optics, Optical Review, JSID, IDW, plus manufacturer documentation) found **no display of any kind** whose image appears in front of the device, outside its angular silhouette, with no matter at the image location. More usefully, the constraint is stated *explicitly* by the field's own authorities:
+
+- **Smalley et al., *Nature* 553 486 (2018)** — the general theorem, in a top journal: *"Clipping restricts the utility of all three-dimensional displays that modulate light at a two-dimensional surface with an edge boundary; these include holographic displays, nanophotonic arrays, plasmonic displays, lenticular or lenslet displays and all technologies in which the light scattering surface and the image point are physically separate."* This is our constraint, published, with the sole exception named: matter at the image point.
+- **Yamamoto, the inventor of AIRR** (*J. Imaging Soc. Japan* 56(4) 341, 2017): *"the aerial image is visible between an eye and the retro-reflector."* His own fix is to **enlarge the aperture** (a transparent retroreflector over the whole panel) — not to escape the cone.
+- **Asukanet (ASKA3D), manufacturer**: *"The size of the projected image and the distance at which an image can be projected depend on the size of the plate."*
+- **Every magnification claim pays in viewing zone.** Momosaki et al., *Appl. Opt.* 60 6748 (2021), measured: *"there is the trade-off relationship between them"* — étendue conservation, confirmed experimentally.
+- **Commercial systems obey it numerically.** Light Field Lab SolidLight: a 28″ panel presents a 14″ volume ~2 ft in front — *half* the panel diagonal, inside the cone. Brelyon: a 30″ aperture yields a 122″ image — but *behind*, at b > a, exactly as W = D·(b/a) requires.
+- **Matter-based systems confirm the exception.** The photophoretic trap display (Smalley 2018) images a cellulose particle in <1 cm³; its own follow-up (Rogers & Smalley, *Sci. Rep.* 11, 2021) notes *"Like all volumetric displays, OTDs lack the ability to show virtual images"* — depth beyond the swept volume must be faked with a backdrop.
+
+**One edge case, stated so it isn't misread as a counterexample.** AR glasses place an apparently 2 m-wide image in front of the viewer through a ~2 cm eyepiece. That is fully consistent: a ≈ 2 cm, so D·(b/a) = 2 cm × 100 = 2 m. **The constraint bites only when the aperture sits at arm's length or farther** — which is precisely why §4.3c's move (bring the cube closer) is the correct and only lever.
 
 ### 4.4 The head-tracked collapse — the central architectural result
 
