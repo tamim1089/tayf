@@ -68,11 +68,13 @@ Three static elements, no mechanism:
 ### Honest caveats
 
 - **Optical efficiency is poor.** The beamsplitter costs ~50% on each pass, so ~75% of source light is lost before the image forms. The source panel must be bright. This is a power-budget item, not a blocker.
-- **Viewing cone ~±20–30°.** Walk far enough round and the image disappears. Fine for a seated conversation; not a walk-around hologram.
+- **Viewing cone — CORRECTED 2026-08-16, and it is far better than this document previously claimed.** Yamamoto, *J. Imaging Soc. Japan* **56**(4) 341–351 (2017), DOI `10.11370/isj.56.341` — **open access on J-Stage, not paywalled** — measures **170° left–right** for AIRR, and reports >2.2× gain for polarised AIRR plus image position independent of retroreflector shape and placement. **[PUBLISHED]**
+  The ~±20–30° figure previously stated here was wrong: it belongs to **ASKA3D / MMAP micro-mirror-array plates**, a *different* aerial-imaging mechanism (measured ~40°, DOI `10.3390/jimaging11050150`). Conflating AIRR with MMAP is an error this document made and now corrects. **AIRR is materially the better choice**, and at 170° the product is much closer to a walk-around image than the "conversational cone only" framing used throughout earlier revisions.
 - **Unit magnification.** Image size = source size, exactly. This is why aperture = image size for this family.
 - **Retroreflector cost scales with area.** Small formats are cheap; a 170 cm plate is not.
 - **The precise folding arrangement for the portable unit is unresolved.** AIRR needs three surfaces in fixed relative geometry; collapsing that into a book-sized hinge is real mechanical design work, not yet done.
-- **The AIRR primary literature remains unread** (Optics Express / OSA Continuum / Optical Review, paywalled — see `experiments/aerial-imaging/README.md`). Brightness, resolution and magnification figures here are reasoned from the mechanism, **not** verified against measurements. Treat quantitative claims as UNVERIFIED until that literature is obtained.
+- **The AIRR primary literature is now READ — and it was never paywalled.** Yamamoto, *J. Imaging Soc. Japan* **56**(4) 341–351 (2017), DOI `10.11370/isj.56.341`, is open access on J-Stage. Two independent passes read it in full and verified quoted strings against the Japanese original. This closes what was, for two days, recorded as this project's largest unverified block — and it was closed by looking in the right place, not by getting institutional access. A cautionary result for `research/METHODOLOGY.md`.
+- **What genuinely remains unmeasured is the absolute photometric transfer**: aerial-image cd/m² per source cd/m², i.e. the retroreflector return efficiency η_RR. Every source-luminance and panel-power figure in this project rests on it, and no published source states it. One afternoon with a spot luminance meter at V0 closes it. **[UNVERIFIED — the single highest-value measurement available]**
 
 ---
 
@@ -124,7 +126,7 @@ Stated plainly so the documentation cannot be mistaken for the dream being met:
 
 - **A device is visible behind the person.** The image genuinely floats in open air with nothing at its location, but the emitting surface is in view. No geometry removes this — light must come from somewhere, and that somewhere must be as wide as the person.
 - **Rule 6 is broken in every case.** The 10 cm cube shows a 10 cm object. That is the law, not a limitation of these designs.
-- **Viewing cone is bounded** (~±20–30°). These are conversational devices, not objects you circle.
+- **Viewing cone is wide, not narrow** — 170° measured for AIRR (§3). The earlier ±20–30° claim confused AIRR with ASKA3D/MMAP plates (~40°) and is withdrawn.
 
 What they do satisfy: **rules 1, 2, 3, 4, 5, 7, 8, 9 and 10 — nine of ten — with commodity parts, no moving components, and no safety envelope to engineer.**
 

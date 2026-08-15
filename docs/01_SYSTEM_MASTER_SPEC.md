@@ -443,6 +443,19 @@ The 0.124 Mbps figure is payload-only and is the number this project previously 
 
 That ratio — roughly 10²–10³ — is the architectural argument for parametric transmission, and it is measured, not projected.
 
+> **⚠ MEASURED 2026-08-16 — the bandwidth criterion is at risk.** The 0.6× LZ4 ratio underpinning every figure above was never measured. It has now been measured twice independently: **LZ4 achieves 1.007× on dense full-body fp16 state — it *expands* the payload.** The 0.6× ratio appears only when ~90 dimensions are region-masked to exact zeros (constant runs compress well; live pose data does not).
+>
+> Consequences: the state channel moves **0.162 → ~0.260 Mbps**, and the one-way total to **~0.31 Mbps bare / ~0.38 Mbps with the specified FEC** — which **breaches this document's own `bitrate ≤ 0.3 Mbps` criterion (§10, §12.1, milestone M-N4).**
+>
+> Three independent fixes, any one of which recovers it:
+> | Approach | Rate | Note |
+> |---|---|---|
+> | **delta + int8 quantisation** | **0.104 Mbps** | Simplest. No compressor at all. Implemented in `pipeline/schema.py` |
+> | byte-plane transpose + rANS | 0.130 Mbps | Groups exponent/mantissa bytes so entropy coding has structure to find |
+> | 64-coefficient distilled basis | 0.114 Mbps | AGORA-M-style SVD blendshapes |
+>
+> Also corrected: the packed figure of **430 B drops `schema.py`'s fp64 timestamp**; the faithful number is **438 B → 0.210 Mbps**. And the header constant of ~80 B derives to **93 B on IPv4 / 113 B on IPv6**.
+
 ### 7.2 Non-runtime transfers
 
 Canonical avatar payload moves once per enrolled user per device pair, not per frame. Compressible ~5× (arXiv 2605.02086). It is a session-setup cost, not a bandwidth cost.

@@ -1,3 +1,5 @@
+> **⚠ RESOLVED 2026-08-16 — read the top of this file with that in mind.** The AIRR primary literature described below as paywalled is not: Yamamoto, *J. Imaging Soc. Japan* **56**(4) 341–351 (2017), DOI `10.11370/isj.56.341`, is **open access on J-Stage** and has now been read in full. It measures **170° viewing angle** and **>2.2× polarised-AIRR gain**. The unit-magnification bound below still stands. What remains unmeasured anywhere is the retroreflector return efficiency η_RR.
+
 # Branch C — Aerial Imaging Optics
 
 Corresponds to the retroreflective/AIP half of `hardware/optical-engine.md`'s hackathon-track option, and to the north-star question of transforming a small optical source into a larger apparent aerial volume.

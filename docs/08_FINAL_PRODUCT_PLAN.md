@@ -1,5 +1,17 @@
 # 08 — Final Product Plan: TAYF with a Verified MATD Engine
 
+> ## ⚠ SUPERSEDED ON THE ENGINE SELECTION — 2026-08-16
+>
+> **This document selects MATD (acoustic trapping) as the product engine. `docs/09_DEVICE_DESIGNS.md` and `docs/10_TAYF_UNIVERSAL_ENGINEERING.md`, both later, select static AIRR optics instead and rule MATD out. The repository was asserting two mutually exclusive engines; this banner resolves it.**
+>
+> **AIRR wins**, on four counts that were not all known when this document was written:
+> 1. **Zero moving parts** — MATD flies a bead at 8.75 m/s; AIRR is static sheet optics.
+> 2. **Photoreal, not wireframe** — MATD's single-bead POV budget caps at a ~7–18 cm glowing wireframe figure. AIRR shows a full-colour photoreal person at life size.
+> 3. **Viewing angle** — AIRR measures **170°** (Yamamoto 2017, `10.11370/isj.56.341`).
+> 4. **Device envelope** — MATD's opposed arrays must *bracket* the workspace (100×100×250 mm for a 10 cm³ volume); AIRR's aperture is a flat plate, so the device is a slab.
+>
+> **What remains valid here:** the verified-facts table (§3) is good work and correctly characterises MATD; the capture/transport analysis is engine-independent and still current; and the E0–E4 ladder is a sound template. Read this document as *the record of a mechanism that was evaluated in depth and not selected*, not as the product plan.
+
 **Reference date: 2026-08-15.** Supersedes the unresolved-engine framing of `docs/06` §1–§3 for the *emission* stage: the free-space engine is now a selected, verified technology (Track 5, MATD), not an open research question. What remains research is fidelity tier, not viability.
 
 ---
