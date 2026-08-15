@@ -210,7 +210,31 @@ Q_total = h·A·ΔT + εσA(T_s⁴ − T_amb⁴)
 
 Against that budget: Jetson Orin Nano **7–15 W**, Orin NX **10–25 W** — before cameras, modem, SLM, laser, or optics.
 
-**At a defensible 40 °C surface, the entire cube has ~12.4 W and the SoC alone can consume all of it.** This, not the optical engine, is what threatens the 10 cm form factor. Options, in order of preference:
+### 5.1 Does 100 mm actually close? (simulated — `simulation/s3_thermal/thermal_sweep.py`)
+
+Candidate configurations, summing datasheet-class SoC figures with estimated peripheral draws (every non-SoC number is an ESTIMATE pending `hardware/bom.md`'s sourcing pass):
+
+| Config | Typical | Peak |
+|---|---|---|
+| Hackathon panel (Orin Nano + cameras + modem) | 11.2 W | 24.0 W |
+| Holographic (Orin Nano + SLM + illumination) | 16.2 W | 40.0 W |
+| Holographic (Orin NX + SLM + illumination) | 19.2 W | 50.0 W |
+
+| Config @ 100 mm | 40 °C typ | 40 °C peak | 50 °C typ | 50 °C peak |
+|---|---|---|---|---|
+| Hackathon panel | **PASS** | FAIL | **PASS** | FAIL |
+| Holographic (Nano) | FAIL | FAIL | **PASS** | FAIL |
+| Holographic (NX) | FAIL | FAIL | **PASS** | FAIL |
+
+**The correct conclusion is narrower than "thermal kills 10 cm."** 100 mm passes at sustained draw for every configuration *if* a 50 °C shell is acceptable, and fails at peak draw in all of them. **10 cm is not killed by thermal — it is cornered by it**, surviving only with a hot shell *and* active peak management. Minimum edge lengths at typical draw: panel 73 mm @50 °C / 95 mm @40 °C; holographic 87 mm @50 °C / 114 mm @40 °C. At peak, 106–154 mm.
+
+**A 150 mm enclosure makes the problem disappear entirely** (28 W at a comfortable 40 °C).
+
+### 5.2 Emissivity is a design decision, not a finish decision
+
+At 100 mm / 50 °C: matte dark finish (ε=0.9) → **21.2 W**; polished bare metal (ε=0.05) → **12.5 W**. A 69% swing on surface finish alone. An Apple-style polished aluminium shell costs more than half the thermal budget — this is a direct conflict with `design/README.md` and must be resolved as an engineering tradeoff, not settled by aesthetics.
+
+### 5.3 Options, in order of preference
 
 1. **Grow the enclosure.** Q scales as L². 150 mm → 28 W at ΔT=15 K; 200 mm → 50 W. Parameter A1 exists for exactly this.
 2. **Cut compute.** §4.4's tracked architecture already removes 58× of hologram synthesis load — this is a thermal result as much as an optical one.
