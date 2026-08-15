@@ -143,7 +143,17 @@ SBP_available = (modulator pixels) × (time-multiplex factor at 60 Hz output)
 | TI DLP MEMS phase (1920×1080) | 2.07×10⁶ | 1440 Hz | 24× | 4.98×10⁷ | **58%** |
 | 4K LCoS, 8× multiplexed | 8.29×10⁶ | 480 Hz | 8× | 6.64×10⁷ | **77%** |
 
-**The broadcast gap is 1.3–1.7×, not orders of magnitude.** That is a normal engineering shortfall, closeable by a modest increase in modulator pixel count or refresh rate — both of which are on active commercial improvement curves.
+**The broadcast mode-count gap is 1.3–1.7×, not orders of magnitude.** That is a normal engineering shortfall, closeable by a modest increase in modulator pixel count or refresh rate — both on active commercial improvement curves.
+
+> **⚠ This is a necessary but not sufficient condition. SBP counts modes; it does not say where those modes can be placed.**
+>
+> The Lagrange (optical) invariant constrains the *geometry*: for a modulator of N_x pixels at pitch p, half-width y = N_x·p/2 and half-angle u = λ/2p, so **y·u = N_x·λ/4 — the pitch cancels.** A life-size 250 mm image at ±20° requires **N_x ≈ 3.17×10⁵ pixels across**. A 4K panel is **82× short** on this axis. Equivalently, the Fresnel replay field W = λz/p means a 3.74 µm pitch can form an image no larger than **14.7 mm** anywhere inside a 100 mm cube.
+>
+> The two accountings are not contradictory. Modes are conserved; an étendue expander (lenslet array, engineered diffuser, static metasurface interpolator) *moves* modes from surplus spatial resolution into angular spread without creating them — and the surplus is real (the diffraction-limited spot is λ-scale while the eye resolves only 0.291 mm at 1 m, a 528× linear surplus). **After a perfect étendue expander the residual gap is exactly §4.3's mode-count gap.**
+>
+> So the honest headline is: *the 1.3–1.7× figure is correct, and it is contingent on an étendue-expanding component that does not currently exist at this scale in the visible.* The 82× is not a second physical barrier — it is the specification for that missing component. Full derivation: `02_FREE_SPACE_OPTICAL_ENGINEERING.md` §5.
+>
+> **Corollary that kills an obvious architecture:** a 4f Fourier layout producing a 100 mm image from a 3.74 µm SLM needs f = 680 mm. That is arithmetic, not engineering taste — the classic holographic projector is the wrong architecture for this envelope.
 
 ### 4.4 The head-tracked collapse — the central architectural result
 
