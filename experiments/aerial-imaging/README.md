@@ -20,6 +20,17 @@ A 467-paper triage of every "aerial"-tagged corpus entry, plus a full-corpus key
 
 **Next step for whoever picks this branch up:** get institutional or document-delivery access to Optics Express, OSA Continuum, and Optical Review specifically for the Yamamoto/Suyama AIRR line. Another arXiv sweep, however the search terms are refined, will keep returning zero — this is a venue problem, not a search-quality problem.
 
+## Bounded on first principles (2026-08-15), without needing the paywalled literature
+
+`docs/02_FREE_SPACE_OPTICAL_ENGINEERING.md` settles the branch's central question analytically, which the arXiv sweeps could not: **AIRR is unit-magnification by construction.** A retroreflective aerial-imaging plate forms a real image that is the same size as the source, mirrored about the plate — it relays, it does not magnify. That is a geometric property of the mechanism, not a limitation of any particular implementation, so no amount of primary-literature access changes it.
+
+Consequences for TAYF:
+- **The apparent image can be no larger than the internal source**, so a life-size head requires a life-size internal display — impossible inside a 100 mm enclosure.
+- Bounded at **≤60 mm image with ~40 mm float distance** for a cube-scale device, and the beamsplitter geometry stops fitting beyond roughly that.
+- This makes AIRR viable for a small floating object — a face at doll scale, an icon, a status indicator — and **not viable for a life-size remote human**.
+
+The Optical Review papers named below remain worth reading for the thickness/magnification and resolution-recovery engineering, but they cannot change the unit-magnification bound. **Branch C is therefore no longer "unassessed" — it is bounded, and it does not reach TAYF's stated apparent-size requirement (`docs/01_SYSTEM_MASTER_SPEC.md` §8).**
+
 ## Status
 
-Not started — contingent on task #9's outcome. Search target for the eventual literature deep-dive is now specific: AIRR/ASKA3D, not a generic "aerial imaging" arXiv search.
+Bounded, not pursued for the life-size target. Still a candidate for a small-object or reduced-scale variant if parameter A4 (apparent subject) is ever relaxed that far. Search target for any future literature dive remains specific: AIRR/ASKA3D, not a generic "aerial imaging" arXiv search.

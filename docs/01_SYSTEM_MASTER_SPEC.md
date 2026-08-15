@@ -136,12 +136,14 @@ Spatial samples (859²) = **7.39×10⁵**
 
 SBP_available = (modulator pixels) × (time-multiplex factor at 60 Hz output)
 
-| Modulator | Pixels | Refresh | Mux | SBP | % of ±20° need |
-|---|---|---|---|---|---|
-| 4K LCoS phase | 8.29×10⁶ | 60 Hz | 1× | 8.29×10⁶ | 9.7% |
-| Holoeye GAEA (4160×2464) | 1.03×10⁷ | 60 Hz | 1× | 1.03×10⁷ | 11.9% |
-| TI DLP MEMS phase (1920×1080) | 2.07×10⁶ | 1440 Hz | 24× | 4.98×10⁷ | **58%** |
-| 4K LCoS, 8× multiplexed | 8.29×10⁶ | 480 Hz | 8× | 6.64×10⁷ | **77%** |
+| Modulator | Pixels | Refresh | Mux | SBP | % of ±20° need | Purchasable? |
+|---|---|---|---|---|---|---|
+| 4K LCoS phase | 8.29×10⁶ | 60 Hz | 1× | 8.29×10⁶ | 9.7% | yes |
+| Holoeye GAEA (4160×2464) | 1.03×10⁷ | 60 Hz | 1× | 1.03×10⁷ | 11.9% | yes |
+| TI DLP MEMS phase (1920×1080) | 2.07×10⁶ | 1440 Hz | 24× | 4.98×10⁷ | **58%** | **yes** |
+| 4K LCoS, 8× multiplexed | 8.29×10⁶ | 480 Hz | 8× | 6.64×10⁷ | 77% | **NO — projection** |
+
+> **⚠ The 77% row is a projection, not a product.** No 480 Hz 4K phase LCoS is purchasable. `02_FREE_SPACE_OPTICAL_ENGINEERING.md` identifies it as **the single most valuable missing component in the project**. The best *real* device is the 1440 Hz TI DLP MEMS phase modulator at 58% — so the honest purchasable gap is **1.7×, not 1.3×**, and it comes with 4-bit phase quantization.
 
 **The broadcast mode-count gap is 1.3–1.7×, not orders of magnitude.** That is a normal engineering shortfall, closeable by a modest increase in modulator pixel count or refresh rate — both on active commercial improvement curves.
 
@@ -200,13 +202,21 @@ Stated plainly, because §4.4 is the kind of result that invites overclaiming:
 
 Voxel rate required vs. the JSID 2025 baseline (~10⁴ voxels/s):
 
-| Target | Points | @30 fps | vs. baseline |
-|---|---|---|---|
-| Sparse wireframe head | 5×10³ | 1.5×10⁵ /s | **15×** |
-| Dense point cloud head | 5×10⁴ | 1.5×10⁶ /s | 150× |
-| Eye-resolution head | 7.39×10⁵ | 2.22×10⁷ /s | 2216× |
+| Target | Points | @30 fps | vs. baseline | **Wall-plug power @5% efficiency** |
+|---|---|---|---|---|
+| Sparse wireframe head | 5×10³ | 1.5×10⁵ /s | 15× | **3.6–36 W** |
+| Dense point cloud head | 5×10⁴ | 1.5×10⁶ /s | 150× | **36–360 W** |
+| Eye-resolution head | 7.39×10⁵ | 2.22×10⁷ /s | 2216× | **533 W – 5.3 kW** |
 
-A sparse, iconic, genuinely-floating-in-air head is 15× away — not absurd. A photoreal one is 2216× away, and two independent physical effects push back on naive scaling (cumulative air-density depletion above ~10 kHz, arXiv 2501.10198; and energy-splitting in multi-spot parallelism). Laser-plasma stays the north-star track, not the prototype.
+> **⚠ Laser-plasma is dead on thermal grounds, not voxel-rate grounds.** At 1.22–12.2 µJ/voxel and 5% wall-plug efficiency, even a *sparse wireframe* head draws 3.6–36 W against a ~16 W total cube budget (§5) — marginal at best. Photoreal is **25–250× outside the envelope**, and **no laser efficiency improvement closes a 250× gap.** The voxel-rate framing (15× / 2216×) understated the problem: rate is an engineering curve, power is a wall. Two further effects push back on naive scaling (air-density depletion above ~10 kHz, arXiv 2501.10198; energy-splitting in multi-spot parallelism).
+>
+> **This reclassifies the north-star track.** Laser-plasma at cube scale is not "far away" — it is excluded by thermodynamics unless the enclosure grows by more than an order of magnitude in heat-rejection capacity. Wavefront (holographic) mechanisms are now the only credible free-space path.
+
+### 4.8 Two physics results that settle the original premise
+
+**Air does not scatter enough to be a display medium.** Clean air scatters ~1.2×10⁻⁶ of incident light over the cube's optical path — **six to eight orders of magnitude short** of visibility. This definitively closes the literal "project the image into the air" reading: without ionization (§4.7, now excluded on power) or an added scattering medium, there is no free-space image formed by scattering. The remaining free-space mechanisms all work by delivering a *wavefront to the observer's eye*, not by illuminating air.
+
+**Eye safety on the main beam is comfortable; the hazard is faults.** A visible face needs only 1–4 lm ≈ **135 mW of laser, 0.7–1.4 W electrical**, and delivers ~2 µW into a pupil against a ~1 mW MPE limit — a **480× safety margin** in nominal operation. The real hazards are narrow and specific: the **undiffracted zero order (135× over limit in a fault)** and accidental focus. This confirms the Class 3B concern in `hardware/optical-engine.md` is correctly scoped to *single-fault* behaviour rather than normal operation.
 
 ---
 
@@ -415,12 +425,14 @@ Reordered by this specification's analysis, against the project's prior beliefs:
 
 | Rank | Risk | Prior belief | Now |
 |---|---|---|---|
-| 1 | **Thermal at 10 cm** | Minor packaging detail | **Binding constraint on the form factor (§5)** |
-| 2 | **Steering range vs. pixel pitch** | Not identified | **The real unsolved optical sub-problem (§4.6)** |
-| 3 | Tracking prediction under latency | Not identified | Likely failure mode of the tracked architecture (§9) |
-| 4 | Jetson-class inference performance | Flagged | Unchanged — still unvalidated |
-| 5 | Perceptual thresholds (Ψ unquantified) | Understudied | Unchanged — must be measured in-house (§10) |
-| 6 | **Raw optical SBP** | **Believed hopeless** | **Not the problem (§4.4–4.5)** |
+| 1 | **Thermal** | Minor packaging detail | **Binding constraint (§5). 100 mm fails for every holographic config; ~130 mm closes it.** |
+| 2 | **Étendue placement (Lagrange)** | **Not identified at all** | **The real optical blocker (§4.3). Needs a component that does not exist at this scale in the visible.** |
+| 3 | **Hologram compute power** | Not identified | **For wavefront branches this, not optics, is the thermal constraint** — every real-time CGH result in the corpus is 4×A6000/workstation class against a 7–15 W SoC |
+| 4 | Tracking prediction under latency | Not identified | Likely failure mode of the tracked architecture (§9) |
+| 5 | Jetson-class inference performance | Flagged | Unchanged — still unvalidated |
+| 6 | Perceptual thresholds (Ψ unquantified) | Understudied | Unchanged — must be measured in-house (§10) |
+| 7 | **Laser-plasma track** | Long-term north star | **Excluded on power (§4.7), not merely distant** |
+| 8 | **Raw optical SBP / mode count** | **Believed hopeless** | **Not the problem (§4.4–4.5) — 1.7× on purchasable hardware** |
 
 ---
 

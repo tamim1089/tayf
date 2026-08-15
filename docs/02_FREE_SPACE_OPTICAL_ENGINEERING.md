@@ -668,7 +668,7 @@ AIRR/MMAP is unit magnification (§6.4), so this layout uses it as a *relocation
 
 ```mermaid
 flowchart LR
-    ENG["Layout B engine<br/>or micro-OLED source<br/>at cube back wall"] --> FRES["Fresnel magnifier M = 4x<br/>f = 45 mm, 55 mm clear<br/>cone /4: 25.5 deg -> 6.4 deg"]
+    ENG["Layout B engine<br/>or micro-OLED source<br/>at cube back wall"] --> FRES["Fresnel magnifier M = 4x<br/>f = 45 mm, 55 mm clear<br/>cone divided by 4: 25.5 deg to 6.4 deg"]
     FRES --> HM["Half-mirror at 45 deg<br/>57 mm diagonal clear"]
     HM --> RR["Retroreflector array<br/>corner-cube or MMAP<br/>60 x 60 mm, cube side wall"]
     RR --> HM
@@ -685,7 +685,7 @@ If the exit aperture must be ~100 mm wide at ~300 nm pitch and horizontal-parall
 
 ```mermaid
 flowchart TB
-    SRC["RGB laser, line-shaped<br/>cylindrical collimator"] --> MOD["HPO exit modulator<br/>~3.2e5 x 1.7e3 elements at ~300 nm<br/>~96 mm wide x 0.5 mm tall<br/>DOES NOT EXIST"]
+    SRC["RGB laser, line-shaped<br/>cylindrical collimator"] --> MOD["HPO exit modulator<br/>~3.2e5 x 1.7e3 elements at ~300 nm<br/>~96 mm wide x 0.6 mm tall<br/>DOES NOT EXIST"]
     MOD --> CYL1["Cylindrical microlens f = 0.2 mm<br/>vertical only"]
     CYL1 --> FOLD["2 body-diagonal folds<br/>83 mm vertical conjugate"]
     FOLD --> CYL2["Cylindrical lens f = 83 mm<br/>vertical magnification 417x"]
@@ -819,7 +819,7 @@ Scored against the ±20° / 8.59×10⁷ SBP requirement and the 12–21 W therma
 
 | # | Architecture | Best measured result in corpus | SBP delivered | Étendue G (m²·sr) | In-cube image bound | Optical/source power | Thermal verdict | Free space? | Blocking gap |
 |---|---|---|---|---|---|---|---|---|---|
-| 1 | **fs-laser plasma** (Layout E) | 68×42 mm, 10⁴ vox/s, JSID 2025 (DOI 10.1002/jsid.2025); 2×10⁵ dots/s, arXiv 1506.06668 | 10⁴–2×10⁵ pts/s → 3.3×10³–6.7×10³ pts/frame at 30 fps | n/a (emissive, unbounded) | **68 × 42 mm, 360° viewing** | 3.6–36 W at 1.5×10⁵ vox/s | **marginal→dead** | **yes** | thermal at >10⁵ vox/s; Class 4 safety; 2501.10198 gas-dynamic ceiling at 10 kHz |
+| 1 | **fs-laser plasma** (Layout E) | 68×42 mm, 10⁴ vox/s, JSID 2025 (DOI 10.1002/jsid.2025); 2×10⁵ dots/s, arXiv 1506.06668 | 10⁴–2×10⁵ pts/s → 3.3×10²–6.7×10³ pts/frame at 30 fps | n/a (emissive, unbounded) | **68 × 42 mm, 360° viewing** | 3.6–36 W at 1.5×10⁵ vox/s | **marginal→dead** | **yes** | thermal at >10⁵ vox/s; Class 4 safety; 2501.10198 gas-dynamic ceiling at 10 kHz |
 | 2 | **CGH, single LCoS** (Layout B) | 60 Hz colour speckle-free video (2409.11049); 28 fps measured objects (2601.00630) | 8.29×10⁶–1.03×10⁷ | 2.5×10⁻⁶ | **4.8–14.4 mm at 8–25°** | 0.7–1.4 W | **fits** | yes | 10.4× SBP; 82× Lagrange; CGH compute needs a GPU |
 | 3 | **CGH, MEMS phase + time-mux** | 1440 Hz, 4-bit, 8 sub-frames (2205.02367) | **4.98×10⁷ (58%)** | ~1.3×10⁻⁶ | 3 mm at ±20° | ~1 W | fits | yes | **1.7× SBP**; 4-bit quantization; same Lagrange gap |
 | 4 | **CGH + static metasurface expander** | 159.4°×159.2°, 45.1% eff., 60 Hz (2511.22639) | 4×10⁶ dynamic (SLM-limited) | 8.7×10⁻⁵ | 186×186 spatial points at 116 views | ~1 W | fits | yes | trades resolution for angle at fixed modes; monochromatic; precomputed playback |
@@ -931,3 +931,82 @@ Everything in this prototype except the modulator is a stock part. That is the s
 | Interferometric phase-jitter rig | 2403.15265's method: hold both arms fixed, watch residual noise at elevated frame rate; its fidelity decomposition (F_N = SNR/(1+SNR)) is the QA framework to adopt wholesale |
 | Standard test-target ladder | point → line → plane → cube → rotating object → symbol → face → hand → head, per `experiments/README.md` |
 | A light-field panel | not for the display, for the *experiment* — the cheapest instrument for measuring the Track D view-count threshold (§3.3) that would relax every other branch by up to 116× |
+
+---
+
+## §12 — What this analysis predicts, and what would falsify it
+
+A document like this is only useful if it is wrong in checkable ways. Each claim below is stated so that one measurement kills it.
+
+| # | Claim | Falsified by |
+|---|---|---|
+| 1 | The mode-count gap to a life-size head at ±20° is 1.3–1.7×, not orders of magnitude | A corrected demand calculation — most likely if strict Nyquist angular sampling (§2.4) is the right convention, which doubles demand to 1.72×10⁸ and makes the gap 2.6–3.5× |
+| 2 | The 10 cm aperture is not the constraint (145× headroom) | Nothing plausible; this follows directly from A·Ω/λ² and is the most robust claim here |
+| 3 | The binding wavefront constraint is Lagrange placement: 82× 1D expansion, i.e. a ~220–350 nm-pitch, ~100 mm-wide exit aperture | A working demonstration of a life-size free-space image from a small-aperture modulator — which would mean the étendue argument has been circumvented by something (scanned exit pupil, time-multiplexed aperture synthesis) that this document has under-weighted. **This is the most likely of these claims to be wrong, and the most valuable if it is** |
+| 4 | Plasma at eye resolution is 25–250× outside the cube's thermal envelope | A measured air-breakdown threshold well below 10¹³ W/cm² for the actual focusing geometry, or a fs source with >50% wall-plug efficiency. The first is measurable on a bench next month; the second does not exist |
+| 5 | Plasma sparse wireframe (1.5×10⁵ vox/s) is thermally marginal at 3.6–36 W | The same threshold measurement, plus the plasma luminous-efficiency measurement (§7.4). These two numbers decide the branch and neither is currently known to this project |
+| 6 | Brightness is not a constraint for any wavefront branch (1–4 lm needed) | An ambient-contrast measurement showing that a see-through free-space image at 200 cd/m² is unreadable against a 500 lux room — plausible, and untested |
+| 7 | The binding thermal constraint for CGH is compute, not optics | A CGH method that runs at video rate for face content within 5 W. 2409.11049 and 2404.10777 are the nearest; neither has been ported to an edge SoC or run on a face |
+| 8 | AIRR inside a 10 cm cube is bounded at ≤60 mm image / 40 mm float | Journal access showing a magnifying AIRR variant. The unit-magnification argument is solid for pure retroreflection; a hybrid Fresnel-AIRR system is exactly what "Reducing thickness of long-distance aerial display system in AIRR using Fresnel lens" (Optical Review 2023) sounds like it addresses |
+| 9 | 2511.22639's wide FOV buys angle by spending resolution at fixed mode count | The paper reporting a dynamic mode count above its SLM's 4×10⁶ — which would violate mode conservation and should be treated as a measurement error until explained |
+| 10 | Track D's view-count requirement (116 at ±20°) may be wrong by up to 116× | arXiv 2401.02171's flat-2D result generalizing to free-space multi-viewer. **This is the single highest-leverage untested hypothesis in the entire project** and it is cheap to test with the hackathon-track panel |
+
+### The three measurements that would change the most
+
+1. **Air-breakdown threshold and plasma luminous efficiency**, on a bench, for the actual focusing geometry. Two numbers, one afternoon of instrumented work, and they decide whether Branch A is a 3.6 W device or a 533 W device. Nothing else in this document has that leverage-to-cost ratio.
+2. **Flat 2D vs volumetric, free-space, multi-viewer** — the Track D experiment `experiments/perceptual-quality/README.md` already queues. If arXiv 2401.02171 generalizes, the SBP demand drops by up to two orders of magnitude and rows 2 and 8 of §10 both become sufficient today.
+3. **Journal access to the AIRR line.** Branch C's verdict is currently "unassessed for procedural reasons," which is the worst possible state for a branch to be in. One document-delivery request resolves it.
+
+### The one component that would change everything
+
+A **4K-resolution, ≥480 Hz, ≥4-bit phase-only modulator** closes §10 row 5 to 77% of requirement on mode count. A **~300 nm-pitch modulator at ~100 mm width** closes row 6 outright. The first is an incremental extension of parts that exist; the second is a 20× area scale-up of a part that exists (if the Swave inference in §5.4 holds). Neither is a physics problem. Both are manufacturing problems with known shapes — which is a substantially better position than this project believed it was in.
+
+---
+
+## §13 — Citation ledger
+
+### arXiv IDs cited, all verified present in `research/deepseek_research.md` Track 1
+
+`2203.06784` critical distance and enhanced-NA Fresnel · `2204.00884` 2×2 viewpoints suffice for accommodation (simulation) · `2204.10587` SLM phase jitter, flicker, calibration · `2205.02367` TI DLP MEMS phase, 1440 Hz, 4-bit, time-multiplexed neural holography · `2205.05144` L-BFGS+CE CGH, FLC binary SLM, replay-field symmetry · `2205.07030` multiplane defocus, focus-weighted loss, 57 s/frame · `2206.07281` passive diffractive decoder, ~16× SBP · `2206.07628` Sb₂S₃ Huygens metasurface, visible, slow switching · `2206.07859` Holo-Printing angle multiplexing, 25 channels · `2206.09155` ForthDD FLC SLM 4.5 kHz, multi-plane structures · `2211.02784` waveguide holography, 1.15 mm, near-eye · `2301.00245` azopolymer rewritable holograms, 100–120 s/frame · `2301.00593` reconfigurable-metasurface taxonomy and the field's own open-challenges verdict · `2303.11287` simultaneous colour CGH, phase-range dispersion · `2303.14066` LC-tuned TiO₂ visible metasurface, 96 pixels, 1.72π · `2305.05196` viewing-angle expansion by deliberate undersampling · `2306.12031` FLASH focusing, spatial-for-temporal DOF trade, 31 MHz · `2309.10816` multisource holography, two SLMs, eyebox uniformity · `2310.04409` BEOL plasmonic LC modulator in 65 nm CMOS, 36 kHz · `2401.12537` Motion Hologram, RL-planned motion despeckling · `2403.15265` wavefront-shaping fidelity decomposition, π/4 phase-only penalty · `2404.10777` divide-conquer-merge, 66 fps at 1080p, 8K on one GPU · `2404.11846` SLM-shaped autofocusing beams controlling air filaments · `2407.14053` DirectL ray-order light-field rendering · `2409.11049` HoloTile RGB, 60 Hz colour speckle-free video · `2411.19445` achromatic single-layer hologram, 60 Hz full colour · `2501.06102` GHz electro-optic metasurface, 3 orders · `2501.10198` cumulative gas dynamics above 10 kHz filamentation · `2505.06582` Gaussian Wave Splatting (display target UNVERIFIED) · `2506.08064` open-source webcam→Looking Glass pipeline, 10 Hz · `2506.08253` closed-form per-point kinoforms on a 10 kHz DMD · `2508.17480` random-phase wave splatting, explicitly near-eye · `2508.18540` 228 fps 45-view radiance-field rendering on a commercial LFD · `2510.00950` GST reconfigurable metasurface, thermal switching · `2511.03860` 74 fs all-optical metasurface beam steering · `2511.15022` complex-valued 2D Gaussian CGH (target UNVERIFIED) · `2511.22639` 159.4°×159.2° dynamic holographic meta-projector · `2512.09401` photophoretic trapping review, no new result since 2018 · `2512.12625` full-wave-accurate inverse design to 25,000×25,000 elements · `2512.20464` snapshot 3D projection with a passive diffractive decoder · `2601.00630` video-rate holographic telepresence, 28 fps, 4× A6000 · `2601.01221` physics-informed network replacing Gerchberg-Saxton (THz) · `2601.08906` 10 MHz Re-Imaging Phased Array SLM · `2601.19901` LFDPR on a real tilted-lens LFD prototype · `2604.16237` Ellipsography, ~30 dB, 2.2 s/frame · `2605.04509` CoherentRaster, 87.7 fps at 2K · `2606.10550` LentiAvatar, 32 views, oblique-view quality is the limiter · `2408.02772` transverse plasma diffractometry (diagnostic method)
+
+Cited via `docs/theory.md` / `hardware/optical-engine.md` (PERCEPTION track, not read directly for this document): `2401.02171` flat-2D cutout matches 3D avatar on co-presence · `2509.17748` observers hardest on avatars of people they know · `2601.07518` Mon3tr, 215 floats/frame.
+
+### Non-arXiv sources, with their verification status from `research/arxiv/online_findings.md`
+
+| Source | Used for | Status |
+|---|---|---|
+| DOI 10.1002/jsid.2025 — JSID 2025 fist-sized plasma display | 68×42 mm, ~10⁴ vox/s, 1030 nm / 155 fs / 10 kHz baseline | verified at DOI level; SPIE 13573 corroborates the 42 mm axial figure; full text paywalled |
+| arXiv 1506.06668 — Fairy Lights | ~2×10⁵ dots/s ceiling; published touch-safety protocol | verified |
+| DOI 10.1145/3816042 — dual-path volumetric display (SIGGRAPH 2026) | dual-path scaling exists | **exact voxel/s gain UNVERIFIED** |
+| DOI 10.1364/optica.562854 — cloud-medium display | denser than air plasma, form factor ≫10 cm | verified at DOI level |
+| *Applied Optics* **65**, G69–G74 (2026) — pulse-shaping | 1.82× per-voxel brightness | **UNVERIFIED**, abstract only, journal-only |
+| DOI 10.1038/nature25176 — photophoretic trap display | single particle, 10 µm voxels, near-360° | verified |
+| Swave HXR (Jon Peddie / BusinessWire, CES 2026) | 2.56×10⁸ px, sub-300 nm pitch, 160° at blue | **UNVERIFIED vendor/trade-press claim.** The 4.8 mm die size and 8.7×10⁻⁵ m²·sr étendue in §5.4 are *my inference* from those two numbers |
+| Looking Glass Go product page | 1440×2560, 100 views, 58°, 60 Hz | vendor spec |
+| DOI 10.1007/s10043-026-01034-w, -01038-6 (Optical Review 2026) | AIRR LSF model; differentiable AIRR renderer | **record-level only, content UNVERIFIED** |
+| DOI 10.3390/jimaging11030075 | MMAP ghost/chromatic suppression | abstract level |
+| PMC12111977 | IP capture → MMAP aerial display of a head, misalignment tolerances | abstract level; **extract the tolerance table before setting mechanical specs** |
+| PubMed 34807179 | DCRA + hologram mirrors, see-through | abstract level |
+| ITE Tech. Rep. 2025-07-24 / 2026-07-31 | ultra-thin corner-cube prism array | Japanese-only abstracts; specs unconfirmed |
+| Optical Review 2023 / 2022 (AIRR thickness; two-sphere resolution) | verbatim Branch C's open questions | titles only, **full text not obtained** |
+| US10228653B2, US12228750B2 / US20250020942A1 | plasma aerial display and flowing-scattering-medium FTO landscape | patent-number level; claims review not done |
+
+### Constants used that come from standards or textbooks, not from this repo's corpus
+
+| Constant | Value used | Where |
+|---|---|---|
+| Rayleigh scattering coefficient of sea-level air at 550 nm | ≈1.2×10⁻⁵ m⁻¹ | §1.2 — conclusion is robust to a factor of several |
+| Air optical-breakdown threshold | 10¹³–10¹⁴ W/cm² | §6.1 — **the range is the whole verdict for Branch A; measure it** |
+| Retinal thermal MPE, 400–700 nm, t = 0.25 s | 18·t^0.75 J/m² | §9.3 — ICNIRP / IEC 60825-1; **verify against the standard before design sign-off** |
+| CIE photopic luminosity function V(λ) | 683 lm/W peak; V(638)≈0.265, V(520)≈0.710, V(450)≈0.038 | §7.3 |
+| Natural-convection coefficient, vertical plate | h ≈ 1.42(ΔT/L)^0.25 | §9.1 — reproduces the project's 12 W / 21 W figures to within 10% |
+| fs Yb fibre amplifier wall-plug efficiency | ~5% | §6.1 — treat as ±2× |
+| Skin reflectance | ρ ≈ 0.35 | §7.1 |
+
+### Numbers computed in this document (re-derivable from the formulas shown)
+
+θ_max for 8/3.74/1/0.35/0.30 µm pitches (§2.3) · Swave's implied 228 nm pitch from its 160°-at-blue claim (§2.3) · minimum diffraction-adequate aperture 2.31 mm (§2.5) · the étendue-SBP identity check, 8.31×10⁶ vs 8.29×10⁶ pixels (§2.2) · the complementary-failure table (§4.4) · y·u = N_xλ/4 and the 3.17×10⁵-elements-across requirement (§5.1) · W = λz/p, the 14.7 mm in-cube image cap, the 220 nm and 352 nm pitch requirements, the 680 mm 4f focal length (§5.2) · 186×186 resolvable points from 2511.22639's mode budget at 116 views (§5.3) · the §5.4 device specification and its HPO relaxation to ~5.4×10⁸ elements · plasma pulse energy 1.22/12.2 µJ and the 3.6 W / 36 W / 533 W / 5.3 kW electrical ladder (§6.1) · z_c = 97.7 mm for a 4K panel at green, and the z/cone/replay-field table (§6.2) · Looking Glass Go's 23× and 34× SBP shortfalls (§6.3) · AIRR's unit-magnification bound and the 57 mm / 141 mm beamsplitter geometry (§6.4) · the fold-count table (§6.7) · 55.7 cd/m² real-face luminance, 1.06/3.79 lm delivered flux, 188 lm/W RGB-laser efficacy, 135 mW source, 0.7–1.4 W electrical (§7) · per-voxel 4.94×10⁻⁴ lm and the implied ~2% plasma conversion (§7.4) · all Layout A–F path lengths and the 415× anamorphic magnification (§8) · the 13.2 W / 21.4 W thermal check (§9.1) · 0.98 mW MPE pupil limit, 2.05 µW delivered, 480× margin, 135× zero-order fault exposure (§9.3).
+
+---
+
+*Companion documents: `hardware/optical-engine.md` (mechanism ranking and literature-update history), `docs/theory.md` (the L(x,y,z,θ,φ,t) formalism and the limited-light principle), `experiments/voxel-display/README.md` (Branch A protocol), `experiments/light-field/README.md` (Branch B protocol), `experiments/aerial-imaging/README.md` (Branch C protocol), `hardware/power-thermal.md` (the budget this document spends), `research/deepseek_research.md` Track 1 (the primary source corpus).*
