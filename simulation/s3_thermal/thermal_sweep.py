@@ -6,10 +6,14 @@ Implements docs/07_HARDWARE_SIMULATION_PLAN.md tracks S3.1 (reproduce the
 lumped model in docs/01_SYSTEM_MASTER_SPEC.md §5) and S3.3 (sweep edge length
 to find the size that actually closes the budget).
 
-Thermal is the binding constraint on the TAYF form factor: a sealed 100 mm
-cube rejects only ~12.4 W at a 40 C surface, and a Jetson-class SoC alone
-draws 7-15 W. This script answers: what edge length does a real component
-set require?
+Thermal is the binding constraint on the TAYF form factor. A sealed 100 mm
+cube rejects only ~10.4 W at a comfortable 40 C shell and ~16.2 W at the
+48 C IEC metal touch limit (5 participating faces), while a Jetson-class SoC
+alone draws 7-15 W. This script answers: what edge length does a real
+component set actually require?
+
+The limit is HUMAN SKIN, not silicon: junction temperature is comfortable at
+25 W, but the shell is a safety violation well before that.
 
 Model: steady-state lumped network, sealed enclosure, still air.
 
@@ -37,12 +41,22 @@ T_AMB_C = 25.0           # ambient, C
 EMISSIVITY = 0.90        # anodized/painted enclosure
 H_CONV_NOMINAL = 8.0     # natural convection, W/m^2K (still air, 5-10 typical)
 
-# Surface temperature limits. Above ~45 C a handheld object reads as "hot";
-# 50 C is the practical ceiling for a device a person sits next to, and
-# IEC 60950-style touch-temperature guidance for metal is stricter still.
-DT_COMFORTABLE = 15.0    # 40 C surface
-DT_ACCEPTABLE = 25.0     # 50 C surface
-DT_LIMIT = 35.0          # 60 C surface - too hot to hold
+# Surface temperature limits.
+#
+# CORRECTED 2026-08-15 per docs/04_CUBE_HARDWARE_AND_PROTOTYPE_ENGINEERING.md:
+# a hot metal shell is a SAFETY violation, not a comfort complaint. IEC
+# touch-temperature guidance caps continuously-touchable METAL at ~48 C
+# (plastic is allowed higher because it conducts heat into skin more slowly).
+# The 50 C and 60 C cases below therefore describe devices that cannot ship;
+# they are retained ONLY for sensitivity analysis and are labelled as such.
+DT_COMFORTABLE = 15.0    # 40 C surface - comfortable, design target
+DT_TOUCH_LIMIT = 23.0    # 48 C surface - IEC metal touch limit, HARD CEILING
+DT_ACCEPTABLE = 25.0     # 50 C - ABOVE the metal limit, sensitivity only
+DT_LIMIT = 35.0          # 60 C - safety violation, sensitivity only
+
+# Not all six faces reject heat: one is occupied by the base/mounting and the
+# optical exit aperture is not a radiator. doc 04 uses ~5 participating faces.
+PARTICIPATING_FACES = 5.0
 
 # Candidate component power draws (W). Every number here is a datasheet-class
 # figure and is marked with its confidence; see hardware/bom.md, where all
@@ -70,9 +84,15 @@ CONFIGS = {
 }
 
 
-def dissipation(edge_m, dT, h=H_CONV_NOMINAL, emis=EMISSIVITY, t_amb_c=T_AMB_C):
-    """Steady-state heat a sealed cube of given edge length can reject."""
-    area = 6.0 * edge_m ** 2
+def dissipation(edge_m, dT, h=H_CONV_NOMINAL, emis=EMISSIVITY, t_amb_c=T_AMB_C,
+                faces=PARTICIPATING_FACES):
+    """Steady-state heat a sealed cube of given edge length can reject.
+
+    `faces` defaults to 5, not 6: the base/mounting face and the optical exit
+    aperture do not radiate usefully. Pass faces=6.0 to reproduce the earlier
+    (optimistic) figures in docs/01 §5's first table.
+    """
+    area = faces * edge_m ** 2
     t_amb_k = t_amb_c + 273.15
     t_s_k = t_amb_k + dT
     q_conv = h * area * dT
@@ -109,7 +129,7 @@ def report():
           "(reproduces docs/01 §5)")
     print(f"  {'dT':>4} {'surface':>9} {'conv':>8} {'rad':>8} {'TOTAL':>9}")
     s31 = []
-    for dT in (DT_COMFORTABLE, DT_ACCEPTABLE, DT_LIMIT):
+    for dT in (DT_COMFORTABLE, DT_TOUCH_LIMIT, DT_ACCEPTABLE, DT_LIMIT):
         d = dissipation(0.100, dT)
         print(f"  {dT:4.0f}K {d['surface_C']:8.0f}C {d['q_conv_W']:7.2f}W "
               f"{d['q_rad_W']:7.2f}W {d['q_total_W']:8.2f}W")
@@ -130,8 +150,8 @@ def report():
     # ---- S3.3: the sweep that decides the industrial design ------------
     print("\n[S3.3] Can a given edge length reject a given configuration?")
     edges_mm = [100, 125, 150, 175, 200, 250, 300]
-    for dT, label in ((DT_COMFORTABLE, "40 C surface — comfortable"),
-                      (DT_ACCEPTABLE, "50 C surface — acceptable ceiling")):
+    for dT, label in ((DT_COMFORTABLE, "40 C — comfortable design target"),
+                      (DT_TOUCH_LIMIT, "48 C — IEC metal touch limit, HARD CEILING")):
         print(f"\n  --- dT = {dT:.0f} K ({label}) ---")
         header = "  edge   budget  " + "  ".join(f"{n[:14]:>14s}" for n in CONFIGS)
         print(header)
@@ -151,7 +171,7 @@ def report():
     for name in CONFIGS:
         typ, mx = config_power(name)
         row = {}
-        for dT, lbl in ((DT_COMFORTABLE, "40C"), (DT_ACCEPTABLE, "50C")):
+        for dT, lbl in ((DT_COMFORTABLE, "40C"), (DT_TOUCH_LIMIT, "48C")):
             e_typ = required_edge(typ, dT) * 1000
             e_max = required_edge(mx, dT) * 1000
             row[lbl] = {"typ_mm": e_typ, "max_mm": e_max}
@@ -178,18 +198,18 @@ def report():
     print("VERDICT")
     print("=" * 74)
     d100_40 = dissipation(0.100, DT_COMFORTABLE)["q_total_W"]
-    d100_50 = dissipation(0.100, DT_ACCEPTABLE)["q_total_W"]
+    d100_50 = dissipation(0.100, DT_TOUCH_LIMIT)["q_total_W"]
     print(f"  A sealed 100 mm cube rejects {d100_40:.1f} W at 40 C surface, "
-          f"{d100_50:.1f} W at 50 C.")
+          f"{d100_50:.1f} W at the 48 C metal touch limit.")
     print()
     print("  Does 100 mm close?  (typ = sustained draw, peak = all rails maxed)")
     print(f"  {'config':22s} {'40C typ':>9} {'40C peak':>9} "
-          f"{'50C typ':>9} {'50C peak':>9}")
+          f"{'48C typ':>9} {'48C peak':>9}")
     verdicts = {}
     for name in CONFIGS:
         typ, mx = config_power(name)
         cells, vs = [], {}
-        for dT, lbl in ((DT_COMFORTABLE, "40C"), (DT_ACCEPTABLE, "50C")):
+        for dT, lbl in ((DT_COMFORTABLE, "40C"), (DT_TOUCH_LIMIT, "48C")):
             budget = dissipation(0.100, dT)["q_total_W"]
             for p, plbl in ((typ, "typ"), (mx, "peak")):
                 ok = budget >= p
@@ -199,37 +219,43 @@ def report():
         print(f"  {name:22s} " + " ".join(cells))
 
     print()
-    print("  READ THIS CAREFULLY — the answer is marginal, not binary:")
-    print("   * 100 mm PASSES for every config at sustained/typical draw IF a")
-    print("     50 C surface is acceptable. That is hot to the touch but legal")
-    print("     for a device you don't hold.")
-    print("   * 100 mm FAILS at peak draw in every config, and fails for both")
-    print("     holographic configs even at typical draw if the surface must")
-    print("     stay at a comfortable 40 C.")
+    print("  THE ANSWER (5 participating faces, 48 C metal touch limit):")
+    print("   * Only the hackathon-panel config passes at 100 mm, and only at")
+    print("     sustained draw against the 48 C HARD CEILING - i.e. with zero")
+    print("     comfort margin and no headroom for peaks.")
+    print("   * BOTH holographic configs FAIL at 100 mm at every temperature")
+    print("     and every load. The optical engine's power is what breaks it.")
+    print("   * NO config survives peak draw at 100 mm.")
     print()
-    print("  => 10 cm is not killed by thermal. It is CORNERED by it: it")
-    print("     survives only with a hot shell AND active peak management.")
-    print("     Design consequences (docs/01 §5, in preference order):")
-    print(f"       1. Grow to ~150 mm and the problem disappears entirely")
-    print(f"          (150 mm rejects {dissipation(0.150, DT_COMFORTABLE)['q_total_W']:.0f} W "
-          f"at a comfortable 40 C) — parameter A1 exists for this")
-    print( "       2. Cut compute — the tracked architecture already removes 58x")
-    print( "          of hologram synthesis load (docs/01 §4.4). This is a")
-    print( "          THERMAL result as much as an optical one.")
-    print(f"       3. Forced air: h=25 raises the 100 mm/50 C budget to "
-          f"{dissipation(0.100, DT_ACCEPTABLE, h=25.0)['q_total_W']:.0f} W,")
-    print( "          at the cost of fan noise beside a conversation")
-    print( "       4. Duty-cycle peak power — calls are bursty; peak != sustained")
+    print("  => 10 cm does NOT close for the full-capability device. This is")
+    print("     the binding constraint on the form factor - not the optics,")
+    print("     which have 145x aperture headroom (docs/01 §4.5).")
+    print("     Relaxations, in order of preference (docs/01 §5.3):")
+    e_need = required_edge(config_power("holographic-nano")[0], DT_COMFORTABLE) * 1000
+    print(f"       1. Grow to ~{math.ceil(e_need/10)*10:.0f} mm: the holographic config then closes")
+    print(f"          at a comfortable 40 C. doc 04 independently lands on 130 mm.")
+    print( "       2. Cut compute. The tracked architecture already removes 58x")
+    print( "          of hologram synthesis load (docs/01 §4.4) - a THERMAL")
+    print( "          result as much as an optical one. A 7 W SoC profile or a")
+    print( "          discrete NPU is the highest-value untested hardware")
+    print( "          question in the project.")
+    print( "       3. Duty-cycle. Thermal mass buys ~8-11 min at full capability")
+    print( "          - the length of a phone call. This reframes TAYF as a CALL")
+    print( "          device rather than an always-on one (doc 04).")
+    print( "       4. Forced air is NOT available: doc 04 excludes it on volume")
+    print( "          (~90 cm3 into a ~93%-packed interior), dust (vents plus")
+    print( "          ~20 optical surfaces in a folded coherent path), and")
+    print( "          acoustics (~25 dBA beside a conversation).")
     print()
-    print( "   * Emissivity is nearly free performance: matte dark finish (0.9)")
-    print(f"     gives {dissipation(0.100, DT_ACCEPTABLE)['q_total_W']:.1f} W vs "
-          f"{dissipation(0.100, DT_ACCEPTABLE, emis=0.05)['q_total_W']:.1f} W for polished bare")
-    print( "     metal — a 69% swing on finish alone. An Apple-style polished")
-    print( "     aluminium shell is a THERMAL DECISION, not just an aesthetic one.")
+    pol = dissipation(0.100, DT_TOUCH_LIMIT, emis=0.05)["q_total_W"]
+    ano = dissipation(0.100, DT_TOUCH_LIMIT, emis=0.90)["q_total_W"]
+    print(f"   * Emissivity is first-order, not a finish detail: anodised/matte")
+    print(f"     {ano:.1f} W vs polished bare metal {pol:.1f} W at 100 mm/48 C")
+    print(f"     - a {(ano-pol)/ano*100:.0f}% swing. An Apple-style polished unibody has a")
+    print(f"     THERMAL VETO over the industrial design (design/README.md).")
     print()
-    print("  First-order lumped model — sufficient to force the size decision")
-    print("  now. Escalate to FEA/CFD before committing to 100 mm, precisely")
-    print("  because that call is marginal rather than comfortable.")
+    print("  First-order lumped model. experiments/thermal/ exists to measure")
+    print("  this on real hardware; where they disagree, the measurement wins.")
     out["verdict"] = {
         "budget_100mm_40C_W": d100_40,
         "budget_100mm_50C_W": d100_50,

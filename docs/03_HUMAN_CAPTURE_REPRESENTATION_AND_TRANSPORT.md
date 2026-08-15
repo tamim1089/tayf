@@ -481,11 +481,14 @@ Caveats, stated: all three are tested on **static or rotating synthetic scenes**
 
 **arXiv [2506.08064](https://arxiv.org/abs/2506.08064) — "A Real-time 3D Desktop Display"** (ICTP Trieste, altiro3D). This is an already-working, open-source, complete pipeline doing this module's job, and it explicitly names video conferencing as a target use case:
 
-```
-USB webcam → MiDaS monocular depth (ONNX via OpenCV DNN) → view synthesis
-("FAST" or "REAL"/geometric) → OpenCV/Telea inpainting for disocclusions
-→ quilt assembly → precomputed pixel-and-device-specific LUT remap to
-"Native" format → Looking Glass Portrait
+```mermaid
+flowchart LR
+    W["USB webcam"] --> M["MiDaS monocular depth<br/>ONNX via OpenCV DNN<br/>&gt;50% of runtime"]
+    M --> V["View synthesis<br/>'FAST' or 'REAL' geometric"]
+    V --> I["OpenCV/Telea inpainting<br/>(disocclusion fill)"]
+    I --> Q["Quilt assembly"]
+    Q --> L["Precomputed device-specific<br/>LUT remap to 'Native'"]
+    L --> P["Looking Glass Portrait"]
 ```
 
 Measured on a laptop (Intel i9-10885H, GTX 1650 Ti Mobile): **10 Hz (~100 ms/frame)** with CPU-only MiDaS-small. Two findings worth more than the headline number:
@@ -622,7 +625,7 @@ DrivingState:
 | **fp16 + LZ4** (~0.6× ratio) | **~258** | **~0.124 Mbps** | 3.3× vs fp32 |
 | + SCTP/DTLS/UDP/IP headers (~80 B/datagram) | ~338 | **~0.162 Mbps** | **The real wire rate** |
 
-That last row is why Mon3tr reports **<0.2 Mbps** rather than 0.124 — at 60 packets/s with a ~258-byte payload, protocol headers are **~24% of the wire cost**. Anyone quoting 0.124 Mbps as the delivered rate is quoting payload, not bandwidth. Both numbers are correct; they measure different things, and the budget in §11 uses the wire figure.
+That last row is why Mon3tr reports **<0.2 Mbps** rather than 0.124 — at 60 packets/s with a ~258-byte payload, protocol headers are **~24% of the wire cost**. Anyone quoting 0.124 Mbps as the delivered rate is quoting payload, not bandwidth. Both numbers are correct; they measure different things, and the budget in §9 uses the wire figure.
 
 **The comparison that justifies the whole architecture:**
 

@@ -287,8 +287,12 @@ Two independent perceptual findings give useful margin guidance: audiovisual des
 |---|---|
 | fp32 | 0.413 Mbps |
 | fp16 | 0.206 Mbps |
-| fp16 + LZ4 (~0.6×) | **0.124 Mbps** |
+| fp16 + LZ4 (~0.6×), payload only | 0.124 Mbps |
+| **+ SCTP/DTLS/UDP/IP headers (~24%) — the real wire rate** | **~0.162 Mbps** |
+| *…one-way including audio and FEC* | *~0.26 Mbps* |
 | *Volumetric/point-cloud streaming, for reference* | *20–300 Mbps* |
+
+The 0.124 Mbps figure is payload-only and is the number this project previously quoted. Transport headers add ~24%, which is precisely why Mon3tr reports "<0.2 Mbps" rather than 0.124 — **use ~0.162 Mbps as the wire rate** (`03_HUMAN_CAPTURE_REPRESENTATION_AND_TRANSPORT.md`).
 
 That ratio — roughly 10²–10³ — is the architectural argument for parametric transmission, and it is measured, not projected.
 
