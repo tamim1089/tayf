@@ -157,12 +157,21 @@ SBP_available = (modulator pixels) × (time-multiplex factor at 60 Hz output)
 
 `02_FREE_SPACE_OPTICAL_ENGINEERING.md` §5 derived N_x ≈ 3.17×10⁵ pixels across for a 250 mm image and concluded a 4K panel is **83× short**. That calculation is correct — **for the broadcast architecture**, where the display must fill ±20° simultaneously. TAYF does not do that (§4.4). Recomputing with u set by what actually has to be filled — a single 6 mm pupil at 1 m, u = 3.0 mrad:
 
-| Target image | y (half-width) | N_x required | 4K panel (3840) | 8K (7680) |
-|---|---|---|---|---|
-| Head only (150 mm) | 75 mm | 1,636 | **2.35× surplus** | 4.69× |
-| **Head + shoulders (250 mm)** | 125 mm | **2,727** | **1.41× surplus** | 2.82× |
-| Torso (450 mm) | 225 mm | 4,909 | 0.78× (short) | 1.56× |
-| Full standing body (1.7 m) | 850 mm | 18,545 | 0.21× | 0.41× |
+> **Arithmetic correction, 2026-08-15 (second pass).** The table below originally reported 2,727 px for a 250 mm image. That mixed evaluation planes — it used the *image* half-width with the pupil angle measured at the *aperture*. Evaluated consistently, the Lagrange product is conserved and the requirement reduces to a clean identity:
+>
+> **N_x = D·p / (a·λ)** — where D = aperture width, p = pupil (6 mm), a = viewer-to-aperture distance, λ = 550 nm. **The image distance b cancels entirely.**
+>
+> Checked both ways for D=100 mm, a=1 m, image 250 mm at b=2.5 m: at the aperture (y=50 mm, u=3.00 mrad) → 1,091; at the image (y=125 mm, u=1.20 mrad) → 1,091. They agree.
+>
+> **This means the aperture bound `W = D·b/a` and the Lagrange pixel requirement are the same statement.** The aperture owns a fixed phase-space volume; you may spend it on image size or image distance, but the product is fixed. **Pushing the image further away is free in pixels.**
+
+| Target image | N_x required (corrected) | 4K panel (3840) | 8K (7680) |
+|---|---|---|---|
+| Any image, D=100 mm, viewer at 1.0 m | **1,091** | **3.52× surplus** | 7.0× |
+| Any image, D=100 mm, viewer at 0.6 m | 1,818 | 2.11× surplus | 4.2× |
+| Any image, D=100 mm, viewer at 0.3 m | 3,636 | 1.06× (just fits) | 2.1× |
+
+Because b cancels, the requirement depends on *where the viewer stands relative to the cube* — not on how large or distant the person appears. The old per-target rows are superseded.
 
 Broadcast vs. tracked for the same 250 mm image: 3.17×10⁵ vs. 2,727 — **a 116× ratio, exactly the view count.** The Lagrange constraint scales with angular coverage, so the same architectural choice that collapses SBP by 58× collapses the étendue requirement by 116×.
 
@@ -190,7 +199,39 @@ Two consequences, both hard geometry rather than engineering limits:
 1. **"Portal" mode works and is the buildable one.** A life-size head+shoulders is fully visible if it appears ~1.5 m *behind* where the cube sits — a window into another space. Glasses-free, no screen, genuinely free-space imagery.
 2. **Floating *in front of* the cube is capped at the aperture size.** For b < a, W < D always. **A 100 mm cube can float at most a ~100 mm object in front of itself.** Life-size floating-in-front requires an aperture of roughly the image size — a ~0.5 m device, not a cube.
 
-**This is the constraint that actually kills the original "person appears sitting in the chair beside you" framing** — not étendue, and not mode count. You cannot see light that never passed through the aperture. It also means the honest product description is *"a window through which a remote person appears life-size"*, not *"a projector that places a person in your room."*
+**The clearest statement of the whole constraint:** *put a lamp where the viewer's eye is — the region the device can fill with image is exactly the shadow its aperture casts.* Behind the cube that shadow has spread, so the image can exceed the cube's size (portal mode, works). In front, it hasn't spread, so the image is smaller than the cube. Beside the cube there is no shadow, so there is no image. There is no third case, because there is no third thing a straight line can do.
+
+### 4.3c Viewer distance `a` is a free variable — and it changes the product
+
+Everything above was computed at a fixed a = 1 m. **But `a` is just where the user puts the cube, making it arguably the most freely adjustable parameter in the entire system, and it was never varied.** Since W = D·(b/a) depends only on the ratio:
+
+| Cube at *a* | Person at *b* | Visible width | N_x needed | Fits 4K? | Window |
+|---|---|---|---|---|---|
+| 1.0 m | 2.5 m | 250 mm | 1,091 | yes | 5.7° |
+| 0.8 m | 3.0 m | 375 mm | 1,364 | yes | 7.2° |
+| **0.6 m** | **3.0 m** | **500 mm — head + shoulders** | **1,818** | **yes** | 9.5° |
+| 0.4 m | 3.0 m | 750 mm | 2,727 | yes | 14.3° |
+| **0.3 m** | **3.0 m** | **1000 mm — most of a seated body** | **3,636** | **yes (1.06×)** | 18.9° |
+
+**The pixel requirement stays inside a commodity 4K panel across the entire range.**
+
+So the achievable product is: **place the cube on the desk at arm's length, and the remote person appears life-size, seated in a real chair three metres away, in the viewer's actual room.** That is materially closer to the original vision than "a window into another space" implies — the person genuinely occupies the viewer's space at true scale.
+
+**Honest cost, which must be stated alongside it:** the person is seen *through* a 9–19° window, so the viewer must sit roughly on the cube→chair axis, and lateral head movement slides the visible slice across the person like a porthole. It is not a free-roaming hologram.
+
+**What remains genuinely impossible:** the literal original framing — cube sitting *on* the chair, person appearing *around* it, viewed from across the room. The cube would not lie between viewer and person, so it cannot place light on those rays at all.
+
+### 4.3d Escape routes searched and closed
+
+The constraint rests on three premises. A genuine escape must break one; all three were investigated against the literature (search by mechanism, not keyword, per `research/METHODOLOGY.md` §1).
+
+| Premise | Attack | Result |
+|---|---|---|
+| **P1** Light travels in straight lines | Self-accelerating (Airy) beams | **Closed.** The *centroid* travels straight — Ehrenfest's theorem / conservation of transverse momentum. What curves is the **caustic**, the envelope of straight rays fed from the far tail of the aperture (Berry, *J. Opt.* 19 055601, 2017: "caustics are curved even though the rays are straight"; Efremidis et al., *Optica* 6 686, 2019). Bending more requires a *bigger* aperture, and it is a near-field effect — at normal viewing distance there is no bend left. Crucially, a caustic is only *visible* where matter scatters in it (Polynkin, *Science* 324 229, 2009 sees the curve only via a glowing plasma channel). No published work places an image outside the launch aperture's silhouette. |
+| **P2** Only the device emits or redirects | Make the air itself an optical element at the target point | **Closed by 5–6 orders of magnitude on every mechanism.** Acousto-optic: Δn ≈ 10⁻⁷ at 140 dB → 1.5 mrad deflection over 70 mm × 7 passes (Schrödel et al., *Nat. Photon.* 18 54, 2024). Optical Kerr: air ionizes ~7× before Δn reaches useful values (n₂ = 2.9×10⁻¹⁹ cm²/W), converging on the already-excluded plasma wall. Magnetic (Cotton–Mouton): needs ~6,600 T. |
+| **P3** The emitting set is the 100 mm face | Enlarge / distribute / sweep the aperture | **Works — and is simply "build a bigger aperture."** Distributed emitters buy resolution, not extent. This is the honest path to a larger floating image, and it means a ~0.5 m device rather than a cube. |
+
+No fourth premise was found. The constraint is not a technology gap; it is a restatement of straight-line propagation plus a fixed angular spectrum.
 
 ### 4.4 The head-tracked collapse — the central architectural result
 
