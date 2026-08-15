@@ -1,5 +1,15 @@
 # Free-Space Optical Engineering for TAYF
 
+> ### ⚠ SUPERSEDED IN PART — read [`docs/10_TAYF_UNIVERSAL_ENGINEERING.md`](10_TAYF_UNIVERSAL_ENGINEERING.md) first
+>
+> This document predates the current design and is kept as a **detail source and historical record**, not as a specification. Where it disagrees with document 10, document 10 wins. Specifically superseded:
+> - **The device is not a 10 cm cube.** It is a family of flat apertures (20 cm slab → A4 folio → 50 cm disc → chair → mirror), sized by the aperture law. Depth is dead weight; every form is a slab.
+> - **The engine is static AIRR optics**, selected. Free-space plasma, acoustic and photophoretic routes were all evaluated and ruled out with quantitative reasons (doc 10 §9).
+> - **The "~85% / ~15%" framing is retired.** It described a problem that no longer exists in that shape.
+> - **Viewing angle is 170°**, measured (Yamamoto 2017, `10.11370/isj.56.341`) — not the ±20–30° stated in earlier revisions, which belongs to a different mechanism.
+> - **Transport is delta + int8 at 0.104 Mbps**, measured — not fp16 + LZ4, whose assumed 0.6× ratio was tested and found to *expand* the payload.
+
+
 **Scope.** This document is the physics and engineering analysis of TAYF's one open track: making a remote human visible as light in empty air, from a device whose external envelope is 100 × 100 × 100 mm. Tracks A (representation) and B (transport) are closed — Mon3tr's 215 floats/frame at <0.2 Mbps (arXiv 2601.07518) settles them. This is Track C, plus the parts of Track D (perception) that set numeric requirements on Track C.
 
 **Reading order.** §1 establishes what the physics permits. §2 builds the two accounting systems (space-bandwidth product and étendue) that every candidate must be scored against. §3 and §4 are the demand and supply numbers. §5 is the geometric constraint that SBP accounting alone hides. §6 scores every mechanism. §7–§9 are the radiance, layout, thermal and safety budgets. §10 is the comparison table, §11 the parts lists, §12 the falsification plan.

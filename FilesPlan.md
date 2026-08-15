@@ -1,4 +1,11 @@
-# TAYF — Engineering Plan
+# FilesPlan.md — original engineering plan (HISTORICAL)
+
+> ### ⚠ FULLY SUPERSEDED — see [`docs/10_TAYF_UNIVERSAL_ENGINEERING.md`](docs/10_TAYF_UNIVERSAL_ENGINEERING.md)
+>
+> This was the project's first plan. It is preserved because the reasoning is worth reading and because the corrections log in doc 10 §9 refers back to it — **but almost every specific in it has since been superseded**: the 10 cm cube, the 85%/15% split, the free-space-plasma north star, the 128-paper count (now 175), and the two-track framing. Do not build from this file.
+
+---
+
 
 **Implementability verdict:** ~85% of the system — capture, human representation, compression, transport, and the telecom layer — is buildable today from published, license-clean methods, several already validated at real-time rates with measured bandwidth/latency numbers (see Mon3tr, §3.2). The remaining ~15% — free-space optical emission of a photoreal, video-rate human from a 10cm enclosure — is not solved anywhere in the literature. The closest published result (fist-sized femtosecond laser-plasma display, JSID 2025) reaches ~10k voxels/s in a 68mm volume, roughly 1-2 orders of magnitude short of what a recognizable moving face needs. **We have enough papers to build the capture→network half of TAYF with confidence. We do not have enough papers to build the "hologram" half as originally conceived — that half needs either a scope change or original R&D.** Everything below is written on that basis: solved things are stated as solved, the one open thing is treated as the actual project.
 
