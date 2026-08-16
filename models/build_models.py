@@ -448,29 +448,31 @@ def design_family():
 
 
 def design_cube():
-    """THE CUBE: TAYF-C30, 300 mm cube, life-size human head floating in air.
+    """THE CUBE: TAYF-C35, 350 mm cube, life-size head AND neck floating in air.
 
     The cube the project was originally asked for, sized honestly. AIRR has
     magnification exactly 1 -- a beamsplitter plus a corner-cube array is a
     Euclidean isometry, and an isometry has M = 1 by definition. So the image
     is exactly the size of the source panel.
 
-    A 12.9-inch LCD (262.6 x 196.6 mm) mounted portrait gives a 197 x 263 mm
-    aerial image. An adult head is 250 mm tall, 160 mm wide -- it fits with
-    margin on all four sides. The head floats ~50 mm in FRONT of the front
-    face, in the viewer's own space; a hand passes through it.
+    A 15-inch 4:3 LCD (304.8 x 228.6 mm) mounted portrait gives a 229 x 305 mm
+    aerial image. Head + neck at life size is 320 mm; head alone is 250 mm.
+    So 305 mm shows the head and essentially all of the neck -- it reads as a
+    person leaning into the room, not a severed head.
 
-    300 mm and not 250 mm because image width and float distance compete for
-    the same depth budget: a 250 mm cube reaches a 250 mm image only at
-    near-zero float, which puts the image on the glass and defeats the point.
+    Image size and float distance draw from the same depth budget, roughly
+    image + float = S. At 350 mm: a 305 mm image floats 45 mm out. Trading
+    down to a 12.9-inch panel gives a 263 mm image at 87 mm float -- less
+    subject, dramatically more air.
 
-    What it cannot do: a body. That needs a 2 m panel -- which is exactly what
-    Yamamoto built for his life-scale aerial human (96-inch, 192 x 144 cm).
-    See docs/11_THE_CUBE.md.
+    What it still cannot do: shoulders. A bust is 500 mm WIDE and the cube is
+    350 mm across; width fails before height does. A body needs a 2 m panel --
+    exactly what Yamamoto built for his life-scale aerial human (96-inch,
+    192 x 144 cm). See docs/11_THE_CUBE.md.
     """
     m = Mesh()
     DESK = 0.74
-    S = 0.30                                  # 300 mm cube
+    S = 0.35                                  # 350 mm cube
 
     m.group("desk")
     m.box(0, DESK - 0.02, 0, 1.30, 0.04, 0.65)
@@ -490,8 +492,8 @@ def design_cube():
     m.group("retroreflector")                 # 300 x 300 sheet, back wall
     m.box(0, cy, -S / 2 + 0.006, S - 0.02, S - 0.02, 0.003)
 
-    m.group("source_panel")                   # 12.9in LCD, portrait, on floor
-    m.box(0, DESK + 0.010, -0.02, 0.197, 0.006, 0.263)
+    m.group("source_panel")                   # 15in 4:3 LCD, portrait, on floor
+    m.box(0, DESK + 0.010, -0.02, 0.229, 0.006, 0.305)
 
     m.group("beamsplitter")                   # 45 deg plate
     m.quad((-S/2, DESK + 0.004,  S/2), ( S/2, DESK + 0.004,  S/2),
@@ -501,18 +503,19 @@ def design_cube():
     m.quad((-S/2, DESK,     S/2), ( S/2, DESK,     S/2),
            ( S/2, DESK + S, S/2), (-S/2, DESK + S, S/2))
 
-    m.group("floating_head")                  # LIFE-SIZE, ~50 mm in front
-    hz = S / 2 + 0.05
-    hy = DESK + S / 2 + 0.02
-    m.box(0, hy + 0.045, hz, 0.160, 0.215, 0.180)     # head, 250 mm w/ neck
-    m.cyl(0, hy - 0.075, hz, 0.046, 0.075)            # neck
+    m.group("floating_head")                  # LIFE-SIZE head + neck, 45 mm out
+    hz = S / 2 + 0.045
+    hy = DESK + S / 2 + 0.03
+    m.box(0, hy + 0.050, hz, 0.160, 0.215, 0.180)     # head, 215 mm
+    m.cyl(0, hy - 0.078, hz, 0.048, 0.085)            # neck, 85 mm
+    m.box(0, hy - 0.132, hz, 0.215, 0.025, 0.150)     # collar line
 
     m.group("viewer_for_scale")
     m.human(0.0, 0.95, height=1.70, facing=-1.0, seated=True)
     return m, "00_the_cube", dict(
-        aperture="0.30 x 0.30 m", depth="0.30 m",
-        shows="life-size human head, floating ~50 mm in front",
-        note="THE CUBE. M=1 exactly; a body needs a 2 m panel")
+        aperture="0.35 x 0.35 m", depth="0.35 m",
+        shows="life-size head + neck, floating ~45 mm in front",
+        note="THE CUBE (C35). M=1 exactly; shoulders fail on WIDTH, not height")
 
 
 DESIGNS = [design_cube, design_family, design_table_scene, design_chair_scene, design_folio, design_mirror, design_doorway,
