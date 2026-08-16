@@ -447,8 +447,76 @@ def design_family():
         note="each plate is exactly as tall as the figure it shows: W <= D")
 
 
-DESIGNS = [design_family, design_table_scene, design_chair_scene, design_folio, design_mirror, design_doorway, design_disc,
-           design_shopwindow, design_c2table]
+def design_cube():
+    """THE CUBE: TAYF-C30, 300 mm cube, life-size human head floating in air.
+
+    The cube the project was originally asked for, sized honestly. AIRR has
+    magnification exactly 1 -- a beamsplitter plus a corner-cube array is a
+    Euclidean isometry, and an isometry has M = 1 by definition. So the image
+    is exactly the size of the source panel.
+
+    A 12.9-inch LCD (262.6 x 196.6 mm) mounted portrait gives a 197 x 263 mm
+    aerial image. An adult head is 250 mm tall, 160 mm wide -- it fits with
+    margin on all four sides. The head floats ~50 mm in FRONT of the front
+    face, in the viewer's own space; a hand passes through it.
+
+    300 mm and not 250 mm because image width and float distance compete for
+    the same depth budget: a 250 mm cube reaches a 250 mm image only at
+    near-zero float, which puts the image on the glass and defeats the point.
+
+    What it cannot do: a body. That needs a 2 m panel -- which is exactly what
+    Yamamoto built for his life-scale aerial human (96-inch, 192 x 144 cm).
+    See docs/11_THE_CUBE.md.
+    """
+    m = Mesh()
+    DESK = 0.74
+    S = 0.30                                  # 300 mm cube
+
+    m.group("desk")
+    m.box(0, DESK - 0.02, 0, 1.30, 0.04, 0.65)
+    for sx in (-1, 1):
+        for sz in (-1, 1):
+            m.box(sx * 0.60, (DESK - 0.04) / 2, sz * 0.28,
+                  0.05, DESK - 0.04, 0.05)
+
+    m.group("cube_shell")                     # the 300 mm enclosure
+    cy = DESK + S / 2
+    for sx in (-1, 1):                        # left / right walls
+        m.box(sx * S / 2, cy, 0, 0.004, S, S)
+    m.box(0, DESK + 0.002, 0, S, 0.004, S)    # floor
+    m.box(0, DESK + S, 0, S, 0.004, S)        # ceiling
+    m.box(0, cy, -S / 2, S, S, 0.004)         # back wall
+
+    m.group("retroreflector")                 # 300 x 300 sheet, back wall
+    m.box(0, cy, -S / 2 + 0.006, S - 0.02, S - 0.02, 0.003)
+
+    m.group("source_panel")                   # 12.9in LCD, portrait, on floor
+    m.box(0, DESK + 0.010, -0.02, 0.197, 0.006, 0.263)
+
+    m.group("beamsplitter")                   # 45 deg plate
+    m.quad((-S/2, DESK + 0.004,  S/2), ( S/2, DESK + 0.004,  S/2),
+           ( S/2, DESK + S,     -S/2), (-S/2, DESK + S,     -S/2))
+
+    m.group("aperture")                       # open front face
+    m.quad((-S/2, DESK,     S/2), ( S/2, DESK,     S/2),
+           ( S/2, DESK + S, S/2), (-S/2, DESK + S, S/2))
+
+    m.group("floating_head")                  # LIFE-SIZE, ~50 mm in front
+    hz = S / 2 + 0.05
+    hy = DESK + S / 2 + 0.02
+    m.box(0, hy + 0.045, hz, 0.160, 0.215, 0.180)     # head, 250 mm w/ neck
+    m.cyl(0, hy - 0.075, hz, 0.046, 0.075)            # neck
+
+    m.group("viewer_for_scale")
+    m.human(0.0, 0.95, height=1.70, facing=-1.0, seated=True)
+    return m, "00_the_cube", dict(
+        aperture="0.30 x 0.30 m", depth="0.30 m",
+        shows="life-size human head, floating ~50 mm in front",
+        note="THE CUBE. M=1 exactly; a body needs a 2 m panel")
+
+
+DESIGNS = [design_cube, design_family, design_table_scene, design_chair_scene, design_folio, design_mirror, design_doorway,
+           design_disc, design_shopwindow, design_c2table]
 
 
 # ----------------------------------------------------------------------
