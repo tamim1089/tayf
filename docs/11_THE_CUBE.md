@@ -2,6 +2,8 @@
 
 **Reference date: 2026-08-16.** Supersedes nothing; this is the first document in the repo that specifies a *cube* and states honestly what a cube can and cannot do. Follows the verdict in §1, which was reached by adversarial verification (workflow `wf_4371072e-a02`, two independent high-confidence analyses, one of which retrieved and read Yamamoto 2017 in the original Japanese rather than relying on this repo's summary).
 
+> **Read `docs/12_THE_FORGOTTEN_PRIOR_ART.md` alongside this.** It corrects §1.1 and §4.2(a) of this document, closes two of the open items in §6, and adds a cheaper front optic (a $20–40 Fresnel, no retroreflector, ~85% transmission instead of 25%) that belongs on the C0 bench beside the retroreflector.
+
 ---
 
 ## 1. The verdict, stated once, plainly
@@ -20,7 +22,9 @@ Conventional AIRR has **magnification exactly 1**, and this is a *theorem*, not 
 
 Confirmed by ray construction and by Yamamoto's own card-interception measurement (Fig. 2a–c: sharp, left-right-reversed characters only at the plane-symmetric position; blurred fore and aft). [MEASURED]
 
-So: **image size = source panel size.** A human head is **25 cm** tall (face alone, 22 cm). A panel that size fits in a cube. Therefore a head fits in a cube.
+So: **image size = source panel size — FOR CONVENTIONAL AIRR.** A human head is **25 cm** tall (face alone, 22 cm). A panel that size fits in a cube. Therefore a head fits in a cube.
+
+> **⚠ Scope, added 2026-08-16.** This theorem governs a beamsplitter plus a corner-cube array, and **nothing else**. It is *not* the general law of free-space imaging, and this document originally over-stated it. Two named exceptions: a **transmissive Fresnel projector** (`docs/12` §4) magnifies freely, and a **varifocal curved mirror** (Traub, US 3,493,290, 1966) is not a plane reflection at all, so the isometry argument does not touch it. **The general law is the APERTURE, not the panel** — see §4.2(a) as corrected.
 
 ### 1.2 Why the body does not
 
@@ -188,7 +192,28 @@ Each was tested and each fails for a stated reason. They are recorded so nobody 
 
 **Why it does not rescue the cube — two independent reasons:**
 
-**(a) The constraint relocates from panel to lens.** The system stops being AIRR-limited and becomes **aperture-limited with the lens as the aperture**. An 80 cm in-front image needs a ≥80 cm exit optic; 170 cm needs ≥170 cm. Neither fits a 30 cm box. Law 1 is unmoved — it now applies to the Fresnel instead of the panel. [DERIVED]
+**(a) The constraint relocates from panel to exit aperture — CORRECTED 2026-08-16.**
+
+> ### ⚠ The original wording of this clause was wrong, and is kept here rather than deleted, per `research/METHODOLOGY.md` rule 4.
+>
+> It read: *"An 80 cm in-front image needs a ≥80 cm exit optic; 170 cm needs ≥170 cm."* **That is false.** A projector lens is not as large as its screen, and two published systems form aerial images several times larger than their source element (`docs/12` §5.2). The conclusion survives; the argument did not.
+
+The correct law, derived in `wf_081aee9d-43a` and validated against a published prototype:
+
+> ### `a_min = D·p/(D−W)`
+>
+> the **minimum viewing distance** at which the whole image is visible, for aperture width `D`, image width `W`, float `p`.
+> **`a_min → ∞` as `W → D`, and no solution exists at all once `W ≥ D`.**
+
+The magnifying lens may be far smaller than the image. What must exceed the image is **the exit aperture the viewer looks through** — and for TAYF-C35 that is the 350 mm front face.
+
+Shoulders are **460 mm** and height is **800 mm**; both exceed **D = 350 mm**, so **`W ≥ D` and no viewing distance exists at any magnification.** Magnification, cascading, scanning and every retroreflector variant sit on the wrong side of that wall. [DERIVED]
+
+*Validation:* Sakane 2025 — D = 1000 mm retroreflector, W = 360 mm, p = 3700 mm → `a_min` = 5.78 m. The experiment was run at 10, 15 and 20 m. The formula predicts the design. [DERIVED against PUBLISHED optics]
+
+*Corollary, and it is worth stating separately:* **the largest in-space image a 350 mm front face can ever produce is 305 mm at a = 0.35 m, 328 mm at 0.7 m, 342 mm at 2 m. Never 350.** [DERIVED]
+
+**And the falsification test in §6 item 2 has now been run — twice, independently, both negative.** See `docs/12` §5.2: Sakane 2023 used a 1400 × 1050 mm Fresnel for a 360 mm image (optic 3.9× larger); U. Tokyo's VRSJ 2018 system, the one paper in any language that sets out to *"display an aerial image larger than the imaging element,"* used a 650 × 550 mm Fresnel behind a 155 × 185 mm plate. **The image exceeded the small element, never the largest optic.**
 
 **(b) Étendue charges for every bit of it.** By the sine condition, magnifying by M shrinks the angular cone by M:
 
@@ -227,8 +252,8 @@ So even the magnified version trades away the single best property AIRR has. A 1
 ## 6. Open items this document does not close
 
 1. **`η_RR` is unmeasured.** Every brightness figure in §2 assumes the good case. This is the largest open number in the project. [UNVERIFIED]
-2. **The LeAIRR full texts are paywalled.** Only abstracts were read. Highest-value follow-up: get the Fresnel lens *diameter* versus the aerial image size. Prediction is `D_lens ≳ W_image`. **If a published system shows an in-front image materially exceeding its largest optic, §4.2(a) is wrong and this whole verdict must be reopened.**
-3. **One quote is UNVERIFIED**: *"the viewing angle and size of the proposed optical system are limited by the size of the convex lens"* — held only from two secondary paraphrases, never a primary source. Per methodology rule 2 it must not be cited as fact. **The physics stands without it.**
+2. ~~**The LeAIRR full texts are paywalled.**~~ **RESOLVED 2026-08-16 — the test was run twice, independently, and both came back negative.** Sakane 2023 (*Optical Review* 30:657–663) used a **1400 × 1050 mm** Fresnel to make a **360 × 360 mm** image — the optic is **3.9× larger**. U. Tokyo's VRSJ 2018 system used a **650 × 550 mm** Fresnel behind a 155 × 185 mm plate. **No published system anywhere shows an in-front image exceeding its largest optic**, and no granted patent claims one (`docs/12` §5.2, §8). Measured LeAIRR luminance: **13–20 cd/m² from a 2700 cd/m² source**; viewing angle **3° as built, 24.5° best case**.
+3. ~~**One quote is UNVERIFIED**~~ **CONFIRMED 2026-08-16, verbatim from the primary source**: *"the viewing angle and size of the proposed optical system are limited by the size of the convex lens"* — Takiyama et al., *J. SID* 33:472–481 (2025) §4. [PUBLISHED]
 4. **The exact panel/beamsplitter/retroreflector packing in a 350 mm cube is not a completed optical design.** §2.3 is a layout sketch that closes geometrically; it is not a tolerance-analysed mechanical design.
 5. **Two of four verification angles did not run** (étendue and empirical-reality agents hit the session limit). The two that completed both returned **NO** at high confidence and did not contradict each other, and the AIRR angle read the primary source in the original Japanese. The étendue numbers in §4.2(b) came from the AIRR angle rather than the dedicated étendue agent, and would benefit from independent recomputation.
 
