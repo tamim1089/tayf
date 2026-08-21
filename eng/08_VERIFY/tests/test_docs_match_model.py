@@ -27,8 +27,8 @@ from accommodation import (  # noqa: E402
 )
 from depth_cues import cue_sensitivity_ratio  # noqa: E402
 from pq1_design import (  # noqa: E402
-    DISTANCES, holm_alpha, subjects_for_equivalence,
-    trials_for_within_subject,
+    ALPHA, DISTANCES, holm_alpha, subjects_for_across_subject,
+    subjects_for_equivalence, total_sd, trials_for_within_subject,
 )
 
 DOC13 = _ROOT / "docs" / "13_THE_ROOM.md"
@@ -93,16 +93,41 @@ def test_doc15_records_the_superseded_figure():
 # PQ-1 sizing
 # ---------------------------------------------------------------------------
 
+def _recommended():
+    """Re-derives the recommended design the same way pq1_design.report() does:
+    primary at full alpha, calibration Holm-corrected, both sized with the TOTAL
+    SD rather than the between-subject SD alone."""
+    ceiling = trials_for_within_subject(0.90, ALPHA)
+    equiv = trials_for_within_subject(0.75, holm_alpha())
+    n = max(subjects_for_equivalence(margin=0.10,
+                                     sd=total_sd(0.15, 0.50, equiv)),
+            subjects_for_across_subject(0.75, ALPHA,
+                                        sd=total_sd(0.15, 0.90, ceiling)))
+    per_subj = ceiling * 2 * len(DISTANCES) + equiv * len(DISTANCES)
+    return n, per_subj
+
+
 def test_subject_count_in_the_protocol_matches_the_power_analysis():
-    n = subjects_for_equivalence(margin=0.10, sd=0.15)
+    n, _ = _recommended()
     assert f"{n} subjects" in _text(PQ_README)
 
 
 def test_trial_count_in_the_protocol_matches_the_power_analysis():
-    a = holm_alpha()
-    per_subj = (trials_for_within_subject(0.90, a) * 2 * len(DISTANCES)
-                + trials_for_within_subject(0.75, a) * len(DISTANCES))
+    _, per_subj = _recommended()
     assert f"{per_subj} trials" in _text(PQ_README)
+
+
+def test_protocol_records_the_total_sd_correction():
+    """The correction that simulation forced must be visible to a reader, not
+    buried in code - it is why the study needs 26 subjects and not 21."""
+    assert "total" in _text(PQ_README).lower()
+    assert "0.168" in _text(PQ_README)
+
+
+def test_protocol_declares_a_primary_endpoint():
+    txt = _text(PQ_README)
+    assert "Primary endpoint" in txt
+    assert "1.3" in txt
 
 
 def test_distances_in_the_protocol_match_the_design():

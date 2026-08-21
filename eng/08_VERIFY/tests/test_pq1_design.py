@@ -19,10 +19,10 @@ sys.path.insert(0, str(_ROOT / "eng" / "03_PHYSICS"))
 from scipy import stats  # noqa: E402
 
 from pq1_design import (  # noqa: E402
-    ALPHA, CONDITION_PAIRS, DISTANCES, MAX_SESSION_MIN, N_TESTS, POWER,
-    SECONDS_PER_TRIAL, holm_alpha, predicted_direction, session_plan,
-    subjects_for_across_subject, subjects_for_equivalence,
-    trials_for_within_subject,
+    ALPHA, CONDITION_PAIRS, DISTANCES, MAX_SESSION_MIN, N_SECONDARY, N_TESTS,
+    POWER, PRIMARY_CELL, SECONDS_PER_TRIAL, holm_alpha, predicted_direction,
+    session_plan, subjects_for_across_subject, subjects_for_equivalence,
+    total_sd, trials_for_within_subject,
 )
 
 
@@ -34,11 +34,16 @@ def test_n_tests_matches_the_design():
     assert N_TESTS == len(DISTANCES) * len(CONDITION_PAIRS) == 9
 
 
-def test_holm_alpha_is_bonferroni_at_rank_1_and_relaxes_after():
-    assert holm_alpha(rank=1) == pytest.approx(ALPHA / N_TESTS)
-    assert holm_alpha(rank=N_TESTS) == pytest.approx(ALPHA)
+def test_holm_alpha_corrects_over_the_secondary_family_only():
+    """The primary endpoint is tested at full alpha and excluded from the
+    correction, so the family is N_TESTS - 1. Correcting the primary against its
+    own supporting analyses would penalise the study for asking more questions."""
+    assert N_SECONDARY == N_TESTS - 1
+    assert PRIMARY_CELL[0] in DISTANCES
+    assert holm_alpha(rank=1) == pytest.approx(ALPHA / N_SECONDARY)
+    assert holm_alpha(rank=N_SECONDARY) == pytest.approx(ALPHA)
     prev = 0
-    for r in range(1, N_TESTS + 1):
+    for r in range(1, N_SECONDARY + 1):
         a = holm_alpha(rank=r)
         assert a > prev
         prev = a
@@ -169,3 +174,30 @@ def test_every_planned_cell_has_a_prediction():
             msg, diff, am, sm = predicted_direction(a, b, R)
             assert msg and isinstance(msg, str)
             assert am > 0 and sm > 0
+
+
+# ---------------------------------------------------------------------------
+# The SD correction that simulation forced
+# ---------------------------------------------------------------------------
+
+def test_total_sd_exceeds_between_subject_sd():
+    """An observed proportion carries binomial sampling noise on top of true
+    between-subject spread. The first version of this design ignored that and
+    under-sized the study."""
+    assert total_sd(0.15, 0.50, 44) > 0.15
+    assert total_sd(0.15, 0.50, 44) == pytest.approx(0.1679, abs=1e-3)
+
+
+def test_more_trials_shrinks_total_sd_towards_the_between_subject_floor():
+    prev = math.inf
+    for n_tr in (10, 40, 200, 5000):
+        sd = total_sd(0.15, 0.5, n_tr)
+        assert sd < prev
+        prev = sd
+    assert total_sd(0.15, 0.5, 10_000_000) == pytest.approx(0.15, abs=1e-4)
+
+
+def test_the_sd_correction_costs_real_subjects():
+    naive = subjects_for_equivalence(margin=0.10, sd=0.15)
+    honest = subjects_for_equivalence(margin=0.10, sd=total_sd(0.15, 0.50, 44))
+    assert honest > naive, "the correction must increase the sample size"

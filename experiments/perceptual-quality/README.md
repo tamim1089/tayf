@@ -49,15 +49,22 @@ subject**. Move the viewer, not the rig, so image-to-backdrop stays fixed.
 **Sizing — computed, not guessed.** Run `python3 experiments/perceptual-quality/pq1_design.py`.
 9 cells, Holm-corrected α = 0.0056:
 
-- **21 subjects × 222 trials ≈ 44 min each, one sitting. 15.5 subject-hours total.**
-- Cells predicted at ceiling (flat2d, farscreen — disparity is 44–670× threshold): 15 trials
-  per cell, 8 subjects would do.
+- **26 subjects × 180 trials ≈ 36 min each, one sitting. 15.6 subject-hours total.**
+- **Primary endpoint: R = 1.3 m, aerial vs flat2d**, tested at full α. The product decision is
+  "does free space beat a screen *at the design point*" — one cell, not nine. The other cells are
+  secondary and Holm-corrected among themselves.
+- Cells predicted at ceiling: 8 trials per cell.
 - The calibration cell wants a **null**, and a non-significant t-test is *absence of evidence,
-  not evidence of absence*. It is tested for **equivalence (TOST, margin ±0.10)**, which needs
-  21 subjects and 44 trials — the most demanding cell in the study, deliberately.
+  not evidence of absence*. It is tested for **equivalence (TOST, margin ±0.10)** and needs
+  26 subjects × 44 trials — the most demanding cell in the study, deliberately.
+- Sample sizes use the **total** SD, `sqrt(sd_between² + p(1−p)/n_trials)` ≈ 0.168, not the
+  between-subject SD alone. Treating a measured proportion as a true rate under-sized the first
+  draft by five subjects.
 
-**Pre-registered before any data.** Primary: across-subject one-sided t vs 0.5 per cell, Holm.
-Secondary: per-subject exact binomial. Report effect sizes and CIs for every cell including
+**Pre-registered before any data**, implemented in `pq1_analyze.py` and validated against
+synthetic studies with known ground truth in `test_pq1_analysis.py` — measured power **0.95**,
+false-GO rate **0.05**, broken-rig detection **1.00**. Primary: across-subject one-sided t vs 0.5.
+Secondary: Holm-corrected. Per-subject exact binomial reported individually. Report effect sizes and CIs for every cell including
 nulls. **Fixed n, no peeking, no adding subjects after looking.**
 
 **Prediction to falsify (from the model, not from hope):** A-vs-flat2d strongly discriminated at
@@ -68,6 +75,43 @@ at chance, the cue model is wrong and that is the most informative outcome avail
 **Decision:** A > flat2d and A ≈ real → build the wedge. A ≈ flat2d → the free-space image is
 buying nothing a screen at the same place cannot, **pivot**, and count it a win found for ~$215.
 A ≉ real → fix the rig before believing any other cell.
+
+### PQ-1.1 — Four design flaws simulation caught before the money was spent
+
+`pq1_simulate.py` generates synthetic studies with ground truth we choose and runs them through
+the identical analysis the real data will take. Doing that *before* collection found four faults,
+all of which would have surfaced only as "inconclusive" after 15.6 subject-hours. Recorded per
+`research/METHODOLOGY.md` rule 4.
+
+1. **Sample sizes used the between-subject SD as if it were the total SD.** An observed
+   proportion also carries binomial noise from a finite trial count:
+   `sd_total = √(sd_between² + p(1−p)/n_trials)` = 0.168, not 0.150. The calibration cell went
+   from 21 subjects to **26**.
+2. **The decision rule required *all three* flat2d cells to reach significance** while the study
+   was sized per cell. At per-cell power `q`, joint power is `q³` — 0.80 per cell gives 0.51
+   overall. Fixed by declaring a **primary endpoint** (R = 1.3 m, aerial vs flat2d) tested at
+   full α, with the rest secondary and Holm-corrected among themselves.
+3. **The rig gate conflated "failed to prove equivalence" with "proved a difference".** Those are
+   different claims and only the second means the optics are bad. Re-gated on demonstrated
+   difference.
+4. **The three calibration tests were uncorrected**, so a perfectly good rig was condemned
+   **15%** of the time — wasting bench time and silently eating 15% of the study's power. Holm
+   across that family fixed it. **Measured power rose from 0.85 to 0.95 on that change alone.**
+
+Measured behaviour of the final design, over 400 synthetic studies per world:
+
+| True world | GO | PIVOT | FIX_RIG |
+|---|---|---|---|
+| model is right | **0.948** | 0.000 | 0.052 |
+| free space buys nothing | 0.045 | **0.902** | 0.052 |
+| nothing distinguishable | 0.050 | **0.917** | 0.033 |
+| rig has artefacts | 0.000 | 0.000 | **1.000** |
+
+Type-I rates under the null, all as intended: primary cell 0.050 (deliberately uncorrected),
+secondary family 0.040, calibration family ≤0.09 — against 0.265 for six uncorrected tests.
+
+Two of my own hand-worked Holm examples in `test_pq1_analysis.py` were also wrong, in opposite
+directions; both are kept as comments, because that mistake is easier to make than to spot.
 
 **Rig:** full buildable spec, confound analysis and parts list in **`BENCH.md`** (~$215). Static —
 no DMD, no tracking, no multiplane. The source **must be a physical 3D object, not a screen**: an

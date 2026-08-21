@@ -79,10 +79,22 @@ CONDITION_PAIRS = (
     ("aerial", "flat2d"),          # what does free space buy over a 2D screen?
     ("aerial", "farscreen"),       # the HP Dimension / Beam baseline
 )
+# PRIMARY ENDPOINT. The product decision is "does free space beat a flat screen
+# AT THE DESIGN POINT", which is one cell, not nine. Declaring it primary means
+# it is tested at full alpha and the decision rests on it; the other cells are
+# secondary, Holm-corrected among themselves, and test the model's trend claim.
+#
+# The first draft had no primary endpoint and a decision rule that required ALL
+# three flat2d cells to reach significance. That is a conjunction: at per-cell
+# power q the joint power is q^3, so the study needed q ~ 0.93 per cell to clear
+# 0.80 overall - and it had been sized for q = 0.80. Simulation caught it.
+PRIMARY_CELL = (1.3, "aerial_vs_flat2d")
+
 N_TESTS = len(DISTANCES) * len(CONDITION_PAIRS)
+N_SECONDARY = N_TESTS - 1
 
 
-def holm_alpha(n_tests=N_TESTS, alpha=ALPHA, rank=1):
+def holm_alpha(n_tests=N_SECONDARY, alpha=ALPHA, rank=1):
     """Holm-Bonferroni threshold for the `rank`-th smallest p-value (1-indexed).
 
     [DERIVED] alpha / (n_tests - rank + 1). Sizing against rank=1 is the
@@ -111,6 +123,23 @@ def trials_for_within_subject(p_true, alpha, power=POWER, max_n=4000):
         if achieved >= power:
             return n
     return math.inf
+
+
+def total_sd(sd_between, p_true, n_trials):
+    """SD of an OBSERVED per-subject proportion.
+
+    [DERIVED] sqrt(sd_between^2 + p(1-p)/n_trials).
+
+    The first version of this file sized every test using sd_between alone,
+    which treats each subject's measured proportion as if it were their true
+    rate. It is not - it carries binomial sampling noise from a finite number of
+    trials. At the design's trial counts that inflates the real SD from 0.150 to
+    ~0.168, and the TOST cell from 21 subjects to 26.
+
+    Caught by simulation in test_pq1_analysis.py before any data was collected,
+    which is the whole reason that file exists.
+    """
+    return math.sqrt(sd_between ** 2 + p_true * (1 - p_true) / n_trials)
 
 
 def subjects_for_across_subject(p_true, alpha, power=POWER, sd=0.15,
@@ -225,17 +254,24 @@ def report():
     print("   predicts the flat2d/farscreen cells sit at ceiling (disparity is")
     print("   44-670x threshold) and only the calibration cell sits at chance.\n")
 
-    ceiling_trials = trials_for_within_subject(0.90, a_corr)
-    ceiling_subj = subjects_for_across_subject(0.75, a_corr, sd=0.15)
-    equiv_subj = subjects_for_equivalence(margin=0.10, sd=0.15)
+    ceiling_trials = trials_for_within_subject(0.90, ALPHA)   # primary: full alpha
     equiv_trials = trials_for_within_subject(0.75, a_corr)
+    sd_eq = total_sd(0.15, 0.50, equiv_trials)
+    sd_det = total_sd(0.15, 0.90, ceiling_trials)
+    equiv_subj = subjects_for_equivalence(margin=0.10, sd=sd_eq)
+    det_subj = subjects_for_across_subject(0.75, ALPHA, sd=sd_det)
 
-    print(f"   aerial vs flat2d / farscreen (predicted ceiling):")
-    print(f"      {ceiling_trials} trials/subject/cell, {ceiling_subj} subjects")
-    print(f"   aerial vs real (calibration, wants a NULL -> TOST +/-0.10):")
+    print(f"   PRIMARY cell {PRIMARY_CELL} - tested at full alpha {ALPHA}:")
+    print(f"      {ceiling_trials} trials/subject, {det_subj} subjects")
+    print(f"   Secondary detection cells - Holm across {N_SECONDARY}:")
+    print(f"      same trials, alpha {a_corr:.5f}")
+    print(f"   Calibration (TOST +/-0.10, wants a NULL):")
     print(f"      {equiv_trials} trials/subject, {equiv_subj} subjects")
+    print(f"\n   SD used includes binomial noise, not just between-subject:")
+    print(f"      calibration {sd_eq:.4f}, detection {sd_det:.4f} "
+          f"(naive value was 0.1500)")
 
-    n_subj = max(ceiling_subj, equiv_subj)
+    n_subj = max(equiv_subj, det_subj)
     per_subj = ceiling_trials * 2 * len(DISTANCES) + equiv_trials * len(DISTANCES)
     minutes = per_subj * SECONDS_PER_TRIAL / 60.0
     sittings = max(1, math.ceil(minutes / MAX_SESSION_MIN))
