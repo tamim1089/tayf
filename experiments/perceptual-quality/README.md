@@ -28,31 +28,53 @@ differentiated from a screen *placed at the same distance*. Whether the remainin
 no substrate, walk-around, multi-viewer geometry — are worth a 15-engine ring is the single
 cheapest question that can end the project, and finding 1 above (2401.02171) says it may not be.
 
-**Conditions.** Same content, matched luminance, bezels masked, far wall ≥ 3 m:
+**Conditions.** Four displays, three comparisons, all against the aerial image. The condition
+set is derived from the cue truth-table in `eng/03_PHYSICS/depth_cues.py`, not chosen by hand:
 
-| | Condition | Isolates |
-|---|---|---|
-| A | free-space real image at R | the product |
-| B | flat screen at the same location R | the *distance*, not the free space |
-| C | flat screen at the far wall, perspective-correct | the HP Dimension / Beam baseline |
+| | Display | Cues it gets right | Role |
+|---|---|---|---|
+| **A** | free-space real image at R | all except opacity | the product |
+| **real** | physical object at the same X | all | **calibration** — what does our rig cost us? |
+| **flat2d** | 2D screen physically at X | accommodation only | what does free space buy over 2D? |
+| **farscreen** | 2D screen at the backdrop, angularly matched | none of the depth cues | the HP Dimension / Beam baseline |
 
-**Sweep** R = 0.7 / 1.0 / 1.3 / 1.5 / 2.0 / 2.5 m. R = 1.3 m is the robust design point
-(`robust_window()`); R = 2.5 m is where the model predicts the cue vanishes.
+`cues_distinguishing()` says A-vs-real should differ **only in opacity**, so any other
+discrimination there measures *our optics* — ghosting, luminance mismatch, aberration. It is the
+calibration cell and it caps how far any other cell can be trusted.
 
-**Subjects.** n ≥ 12, naive, none told the hypothesis. Two-alternative forced choice A-vs-B and
-A-vs-C at each R, plus a presence rating. Also run the familiar-viewer condition queued in
-finding 2 above if any subject knows the depicted person — that is TAYF's real deployment case
-and a strictly harder bar.
+**Sweep** R = 0.7 / 1.3 / 2.5 m — strongest cues, the design point, and where accommodation is
+predicted dead. Cut from six distances because `pq1_design.py` showed six needed **173 min per
+subject**. Move the viewer, not the rig, so image-to-backdrop stays fixed.
 
-**Prediction to falsify:** discrimination strong at R ≤ 1.5 m, collapsing to chance by
-R = 2.5 m where `background_cue < DOF_HALF`. At chance *everywhere* means the cue is not the
-mechanism and no pod geometry rescues it.
+**Sizing — computed, not guessed.** Run `python3 experiments/perceptual-quality/pq1_design.py`.
+9 cells, Holm-corrected α = 0.0056:
 
-**Decision:** A > B → build the wedge. A ≈ B > C → pivot to a far cheaper product, and count
-that a win found for ~$300. A ≈ B ≈ C → stop.
+- **21 subjects × 222 trials ≈ 44 min each, one sitting. 15.5 subject-hours total.**
+- Cells predicted at ceiling (flat2d, farscreen — disparity is 44–670× threshold): 15 trials
+  per cell, 8 subjects would do.
+- The calibration cell wants a **null**, and a non-significant t-test is *absence of evidence,
+  not evidence of absence*. It is tested for **equivalence (TOST, margin ±0.10)**, which needs
+  21 subjects and 44 trials — the most demanding cell in the study, deliberately.
 
-**Rig:** static — no DMD, no tracking, no multiplane. Shares a bench with the η_RR measurement
-in `experiments/aerial-imaging/README.md`; build once, take both numbers.
+**Pre-registered before any data.** Primary: across-subject one-sided t vs 0.5 per cell, Holm.
+Secondary: per-subject exact binomial. Report effect sizes and CIs for every cell including
+nulls. **Fixed n, no peeking, no adding subjects after looking.**
+
+**Prediction to falsify (from the model, not from hope):** A-vs-flat2d strongly discriminated at
+*every* distance, because disparity stays 44× threshold even at 2.5 m — the distance sweep tests
+the *accommodation* prediction, not the disparity one. A-vs-real near chance. If A-vs-flat2d is
+at chance, the cue model is wrong and that is the most informative outcome available.
+
+**Decision:** A > flat2d and A ≈ real → build the wedge. A ≈ flat2d → the free-space image is
+buying nothing a screen at the same place cannot, **pivot**, and count it a win found for ~$215.
+A ≉ real → fix the rig before believing any other cell.
+
+**Rig:** full buildable spec, confound analysis and parts list in **`BENCH.md`** (~$215). Static —
+no DMD, no tracking, no multiplane. The source **must be a physical 3D object, not a screen**: an
+AIRR relay images whatever you feed it, so a flat source gives a flat aerial image and the
+experiment tests nothing. Shares the bench with the η_RR measurement in
+`experiments/aerial-imaging/README.md`, which must be taken **first** because it sets the
+comparator dimming.
 
 ## Relationship to other branches
 

@@ -212,15 +212,55 @@ part of the aperture band, and the band can be black between its optical zones.
 
 ## 6. The one thing this beats every screen and every headset at
 
+> ### ⚠ THIS SECTION LED WITH THE WRONG CUE. Corrected 2026-08-21.
+> Kept rather than deleted, per `research/METHODOLOGY.md` rule 4.
+> Model: `eng/03_PHYSICS/depth_cues.py`. Tests: `test_depth_cues.py` (20 tests).
+>
+> **Accommodation is the weakest depth cue the eye has.** Both cues scale
+> identically with subject depth `t` and viewing distance `R` —
+> `accommodation = t/R²` diopters, `disparity = b·t/R²` radians — so the ratio of
+> their suprathreshold margins is a **constant, independent of distance and
+> subject size**:
+>
+> ```
+> stereo_margin / accommodation_margin  =  b · 2·DOF_HALF / θ_threshold  =  268×
+> ```
+>
+> 804× at a 10″ stereoacuity threshold, 134× at a generous 60″. **Stereopsis
+> outperforms accommodation as a depth sense by two to three orders of magnitude,
+> everywhere.** At the design point a body is `0.62×` threshold to focus — flat —
+> and `168×` threshold to stereopsis.
+>
+> So the claim below is not just weak, it is close to backwards. A display that
+> gets disparity right and focus wrong is ~268× nearer correct than one that does
+> the reverse — which is exactly why headsets work at all despite VAC, and why VAC
+> is a **comfort** problem, not a **depth** problem. "Look past it and see it blur"
+> is real but is a *subtle* effect, and `docs/15` shows it is unavailable at all
+> beyond R ≈ 2 m.
+>
+> **What the pitch should actually lead with, in order of defensibility:**
+> 1. **Multi-viewer.** A real image at a real location serves *every* viewer
+>    correctly at once. A tracked stereo screen — including HP Dimension, which is
+>    explicitly one-on-one — serves exactly one. `depth_cues.py` identifies this as
+>    the **only** cue a tracked stereo screen cannot match. It is the irreducible claim.
+> 2. **No eyewear, no headset.**
+> 3. **No substrate** — no bezel, frame, or surface texture betraying the plane.
+> 4. **Walk-around** past any screen's viewing cone.
+> 5. *Then* comfort: no VAC, so no fatigue over a long call.
+>
+> Against a **2D** screen the free-space image also wins enormously on disparity
+> (44–670× threshold). Against a **stereo** screen it does not. State which
+> competitor you mean.
+
 Because the light genuinely converges to a point at a real depth, **the eye focuses there.**
 Accommodation and vergence agree. There is no vergence-accommodation conflict, which is the
 root cause of headset fatigue and of the uncanny flatness of every 2D telepresence screen ever
 built, including a very good one like Project Starline.
 
-This is the demo-able, felt, non-technical difference. A viewer can look *past* the image and
+~~This is the demo-able, felt, non-technical difference. A viewer can look *past* the image and
 see it blur, exactly as with a real object. Nothing on a screen does that. **Lead the pitch with
 this**, not with "360°" — a customer cannot tell 360° from a good 2D screen in a photograph, but
-they can feel focus in three seconds standing in front of it.
+they can feel focus in three seconds standing in front of it.~~
 
 ---
 

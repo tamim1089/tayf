@@ -110,13 +110,49 @@ move the pod. Design point: **R ≈ 1.3 m, z = 1.2 m, N = 15.**
 ## 4. The risk this creates, which is worse than the one it removed
 
 If the subject fits in one focal slab, the within-subject focus cue is gone — you will **not**
-see the nose in front of the ears. So free space is not differentiated from **a flat screen
-placed at the same distance**. What remains is:
+see the nose in front of the ears.
 
-1. no substrate — no bezel, frame, or surface texture betraying the plane,
-2. walk-around,
-3. multi-viewer — a real image at a real location gives *every* viewer the correct
-   accommodation and vergence for *their* distance; a screen serves one.
+### 4.0 ⚠ But "free space ≈ a flat screen" was wrong — added 2026-08-21
+
+The first draft of this section concluded that free space is therefore not differentiated from
+a flat screen at the same distance. **That skipped stereopsis, and stereopsis is the cue that
+actually carries depth.** `eng/03_PHYSICS/depth_cues.py`:
+
+Both cues scale identically — `accommodation = t/R²` diopters, `disparity = b·t/R²` radians —
+so the ratio of their suprathreshold margins is a **constant, independent of `R` and `t`**:
+
+```
+stereo_margin / accommodation_margin  =  b · 2·DOF_HALF / θ_threshold  =  268×
+```
+
+(804× at a 10″ threshold, 134× at a generous 60″.) At the design point a body is **0.62×**
+threshold to accommodation and **168×** threshold to stereopsis.
+
+| R | body: accommodation | body: stereopsis |
+|---|---|---|
+| 0.7 m | 2.50× | 670× |
+| **1.3 m** | **0.62×** | **168×** |
+| 2.5 m | 0.16× | 44× |
+
+**So the correct statement is:** against a **2D** screen, free space wins decisively — on
+disparity, by 44–670×. Against a **stereo** screen serving one tracked viewer, it wins on
+neither focus nor disparity. The honest hierarchy of what free space uniquely buys:
+
+1. **Multi-viewer** — the only cue `depth_cues.py` finds that a tracked stereo screen cannot
+   match, because such a screen serves exactly one viewer by construction. HP Dimension is
+   explicitly one-on-one. **This is the irreducible claim and the pitch should lead with it.**
+2. **No eyewear.**
+3. **No substrate** — no bezel, frame, or surface texture betraying the plane.
+4. **Walk-around** past any screen's cone.
+5. **Comfort** — no VAC over a long call. Comfort, not depth.
+
+This also re-reads **arXiv 2401.02171** more favourably than §4 first did. Its "flat 2D cutout"
+was *correctly placed in 3D space* in an AR headset, so it carried correct placement disparity
+and lacked only *within-object* volumetric structure. The finding is therefore "internal
+volumetric geometry is unnecessary; correct spatial placement is what matters" — which is
+independent support for exactly what doc 15 derived from diopters, and is a threat to
+volumetric *fidelity*, not to TAYF's architecture. `[Read at repository-note level from
+`experiments/perceptual-quality/README.md`, not from the paper. Verify before quoting.]`
 
 Whether that is worth a 15-engine ring is an empirical question, and the literature already
 carries a warning. `experiments/perceptual-quality/README.md` records **arXiv 2401.02171**: a
