@@ -14,6 +14,46 @@ Owns `docs/theory.md`'s Track D question: how little optical information does a 
 4. **View consistency** — does the image stay coherent as the observer moves within the supported viewing cone (`docs/calibration.md`'s single-observer assumption's actual angular tolerance).
 5. **Viewer preference** — direct comparative ratings across configurations (voxel density, view count, avatar compression level) to find the actual quality/cost knee points other branches should target.
 
+## Experiment PQ-1 — Free-space vs. flat screen (the go/no-go for `docs/13`)
+
+**Added 2026-08-21.** This is the experiment this file's own literature check calls out as
+missing (*"no paper tests a controlled sweep of free-space, multi-viewer, angular-view-count
+against presence/identity ratings — that experiment remains this project's own to run"*). Full
+derivation and rationale in `docs/15_THE_ACCOMMODATION_BUDGET.md` §4; geometry from
+`eng/03_PHYSICS/accommodation.py`.
+
+**Why it is now first, not last.** `docs/15` shows a whole person fits inside one depth-of-field
+slab at pod distance, so the within-subject focus cue does not exist and free space is not
+differentiated from a screen *placed at the same distance*. Whether the remaining differences —
+no substrate, walk-around, multi-viewer geometry — are worth a 15-engine ring is the single
+cheapest question that can end the project, and finding 1 above (2401.02171) says it may not be.
+
+**Conditions.** Same content, matched luminance, bezels masked, far wall ≥ 3 m:
+
+| | Condition | Isolates |
+|---|---|---|
+| A | free-space real image at R | the product |
+| B | flat screen at the same location R | the *distance*, not the free space |
+| C | flat screen at the far wall, perspective-correct | the HP Dimension / Beam baseline |
+
+**Sweep** R = 0.7 / 1.0 / 1.3 / 1.5 / 2.0 / 2.5 m. R = 1.3 m is the robust design point
+(`robust_window()`); R = 2.5 m is where the model predicts the cue vanishes.
+
+**Subjects.** n ≥ 12, naive, none told the hypothesis. Two-alternative forced choice A-vs-B and
+A-vs-C at each R, plus a presence rating. Also run the familiar-viewer condition queued in
+finding 2 above if any subject knows the depicted person — that is TAYF's real deployment case
+and a strictly harder bar.
+
+**Prediction to falsify:** discrimination strong at R ≤ 1.5 m, collapsing to chance by
+R = 2.5 m where `background_cue < DOF_HALF`. At chance *everywhere* means the cue is not the
+mechanism and no pod geometry rescues it.
+
+**Decision:** A > B → build the wedge. A ≈ B > C → pivot to a far cheaper product, and count
+that a win found for ~$300. A ≈ B ≈ C → stop.
+
+**Rig:** static — no DMD, no tracking, no multiplane. Shares a bench with the η_RR measurement
+in `experiments/aerial-imaging/README.md`; build once, take both numbers.
+
 ## Relationship to other branches
 
 Every quantitative "how much X do we need" question elsewhere in `experiments/` (angular-resolution's channel count, voxel-display's voxel density, bandwidth's compression aggressiveness) should ultimately be answered against this branch's thresholds, not against engineering convenience alone.
@@ -32,4 +72,7 @@ No paper gives the clean numeric threshold this branch wants ("N views is enough
 
 ## Status
 
-Not started as an in-house measurement, but no longer a blank slate — two concrete, literature-motivated hypotheses are queued above (flat-2D-vs-volumetric for single-viewer use; familiar-viewer identity recognition) as the first experiments to run rather than starting from scratch. This is still the branch most likely to be neglected under hackathon time pressure because it doesn't look like "building the thing" — flagging explicitly that skipping it means every other branch is optimizing against a guess, not a measured target.
+**2026-08-21: PQ-1 above is now the project's next physical action**, ahead of every
+optical build task — see `docs/15` §4 and `docs/13` §13 risk 1.
+
+Not started as an in-house measurement, but no longer a blank slate — three concrete, literature-motivated hypotheses are queued above (flat-2D-vs-volumetric for single-viewer use; familiar-viewer identity recognition) as the first experiments to run rather than starting from scratch. This is still the branch most likely to be neglected under hackathon time pressure because it doesn't look like "building the thing" — flagging explicitly that skipping it means every other branch is optimizing against a guess, not a measured target.

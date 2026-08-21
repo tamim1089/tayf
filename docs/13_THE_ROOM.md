@@ -65,6 +65,12 @@ by making the room bigger. Consequences:
 needs ~88. Same physics, 4× the cost. This falls straight out of the math and should drive the
 industrial design.
 
+**Design point, fixed 2026-08-21 by `docs/15`:** the perceptual analysis independently drives
+`z` down to the same place the geometry does, and pins the viewer distance too. Use
+**z = 1.2–1.5 m, D = 0.5 m → N = 15–19 engines**, with the viewer at **R ≈ 1.3 m**. That R is
+the *robust* window — it satisfies the design conditions for every depth-of-field figure between
+0.20 D and 0.50 D, so the pod dimensions do not depend on which one is right.
+
 ### 1.2 Vertical coverage
 
 Same law in elevation. A band of optic of height `h` at distance `z` covers `β ≈ h/z`. For
@@ -220,6 +226,38 @@ they can feel focus in three seconds standing in front of it.
 
 ## 7. The key open engineering decision: the engine
 
+> ### ⚠ THIS ENTIRE SECTION RESTED ON A WRONG PREMISE. Corrected 2026-08-21.
+> It is kept rather than deleted, per `research/METHODOLOGY.md` rule 4.
+>
+> **The premise:** *"quantised depth (30 planes over a 1 m deep volume = 33 mm steps)."*
+> That sizes the depth planes **geometrically**. The eye does not resolve depth in
+> millimetres — it resolves it in **diopters**, and at pod distance one depth-of-field slab
+> is *metres* thick:
+>
+> | R | one DoF slab (±0.3 D) | thickness | a whole body spans |
+> |---|---|---|---|
+> | 1.0 m | 0.77 → 1.43 m | 659 mm | 0.659 D |
+> | 1.2 m | 0.88 → 1.87 m | 993 mm | 0.444 D |
+> | 1.5 m | 1.03 → 2.73 m | 1693 mm | 0.278 D |
+>
+> **A whole person fits inside a single accommodation slab at every pod distance.** The
+> correct plane count is **1** at the design point and never more than **3** anywhere in the
+> usable range — not 24–32.
+>
+> Therefore, and all of it void:
+> - the **2,700 Hz** plane-switch requirement,
+> - the deformable-mirror and TAG-lens pricing that followed from it,
+> - the ranking of the focus element as **risk 1** in §13,
+> - and option **(b)**'s entire "swept focus" framing below.
+>
+> **What replaces it: fixed-focus engines.** No varifocal, no PB/FLC stack, no swept element.
+> The BOM line disappears rather than shrinking. Derivation, code, and the design window in
+> **`docs/15_THE_ACCOMMODATION_BUDGET.md`**; model at `eng/03_PHYSICS/accommodation.py`;
+> values pinned in `eng/08_VERIFY/tests/test_accommodation.py` (31 tests).
+>
+> **The new risk 1** is not a build risk at all: whether the accommodation cue is *perceptible*
+> at conversational distance. See doc 15 §4 and the §13 correction.
+
 You need each engine to place real focus points at *arbitrary depths*, refreshed at 90 Hz.
 A normal projector has one focal plane and cannot do this. Two candidates:
 
@@ -230,18 +268,24 @@ LCoS phase modulator, compute a hologram whose reconstruction is the point cloud
   low diffraction efficiency, and CGH compute cost. 63 × $10k = $630k of modulators alone. Dead
   at that price for a product; fine for the science prototype.
 
-**(b) Fast binary modulator + swept focus (multi-focal-plane).**
-DMD at 10–20 kHz binary, plus a focus-tunable element (Optotune-class liquid lens ~1 kHz, or a
-deformable mirror, faster) sweeping 24–32 depth planes per frame.
-- Required plane-switch rate: `30 planes × 90 Hz = 2,700 Hz`. Liquid lenses are marginal here;
-  deformable mirrors and acousto-optic lenses clear it. **This is the highest-risk component
-  and should be bench-tested first.**
-- Pro: DMD engines are a commodity (~$1,000–1,500 in small volume), no speckle if LED-pumped,
-  high efficiency.
-- Con: quantised depth (30 planes over a 1 m deep volume = 33 mm steps — coarse; depth-blending
-  between adjacent planes is the standard fix and works).
+**(b) Fast binary modulator + swept focus (multi-focal-plane).** ~~*Recommended.*~~
+**VOID — the swept element is not needed at all. See the correction box at the top of §7.**
+The text below is kept as the record of the wrong reasoning; **do not build from it.** The
+correct engine is (b) with the focus element simply removed: **DMD + fixed-focus relay.**
 
-**Recommendation for a first build: (b).** 63 × $1,500 = $95k is a real BOM line. 63 × $10k is not.
+> ~~DMD at 10–20 kHz binary, plus a focus-tunable element (Optotune-class liquid lens ~1 kHz, or a
+> deformable mirror, faster) sweeping 24–32 depth planes per frame.~~
+> - ~~Required plane-switch rate: `30 planes × 90 Hz = 2,700 Hz`. Liquid lenses are marginal here;
+>   deformable mirrors and acousto-optic lenses clear it. **This is the highest-risk component
+>   and should be bench-tested first.**~~
+- Pro: DMD engines are a commodity (~$1,000–1,500 in small volume), no speckle if LED-pumped,
+  high efficiency. **This still holds, and is now cheaper without the focus element (~$900).**
+- ~~Con: quantised depth (30 planes over a 1 m deep volume = 33 mm steps — coarse; depth-blending
+  between adjacent planes is the standard fix and works).~~ **This "con" was the error: 33 mm is
+  a geometric step, and the eye's step at 1.2 m is ~1000 mm.**
+
+**Recommendation for a first build: (b) with fixed focus.** 15 × $900 ≈ $13.5k, against
+63 × $10k of phase SLMs. The gap widened in our favour once the varifocal came out.
 
 **Explicitly rejected: scanned beam.** A galvo/MEMS scanner draws ~10⁶–10⁷ points/s. You need
 `8 eyes × 10⁶ points × 90 Hz = 7.2×10⁸ points/s`. Scanning loses by two orders of magnitude.
@@ -296,14 +340,22 @@ Non-negotiable, and it will gate the product before any customer sees it.
 
 | Item | Qty | Unit | Total |
 |---|---|---|---|
-| DMD engine + LED + varifocal + drive | 24 | $1,500 | $36,000 |
+| DMD engine + LED + ~~varifocal~~ **fixed-focus relay** + drive | ~~24~~ **15** | $900 | **$13,500** |
 | HOE / relay band, 6.6 m² | 1 | $2,000/m² proto | $13,200 |
 | Render node (2× workstation GPU + host) | 1 | — | $18,000 |
 | Tracking (6× IR camera + illuminators + host) | 1 | — | $6,000 |
 | Pod structure, blackout, acoustics, power, thermal | 1 | — | $25,000 |
 | Calibration rig, cabling, integration labour | 1 | — | $30,000 |
-| **Prototype BOM** | | | **≈ $128,000** |
-| **Volume BOM (100 units, HOE at $300/m², engine at $600)** | | | **≈ $55,000** |
+| **Prototype BOM** | | | ~~≈ $128,000~~ **≈ $101,000** |
+| **Volume BOM (100 units, HOE at $300/m², engine at $450)** | | | ~~≈ $55,000~~ **≈ $42,000** |
+
+> **Corrected 2026-08-21 (`docs/15`).** The engine line was priced with a swept-focus element
+> that §7 has since shown is not needed — a person fits in one depth-of-field slab at pod
+> distance, so the engines are **fixed focus**. `N` also drops from 24 to **15** at the design
+> point `z = 1.2 m, D = 0.5 m`. Both changes cut cost; neither was a negotiation with a vendor.
+> The external review that flagged this line as the BOM's serious error was right that it was
+> wrong, and wrong about the direction — repricing the varifocal was not the fix, **deleting it
+> was.** Power falls with it: 15 × ~40 W + GPUs ~600 W + tracking ~200 W ≈ **1.4 kW**.
 
 Installed sale price at 3–4× volume BOM: **$180k–$250k per pod**, and the product is sold in
 **pairs** (a call needs two ends), so **$360k–$500k per relationship**.
@@ -400,9 +452,15 @@ the head, watch it blur, and know it is not a screen.
 
 ## 13. Risks, ranked by what actually kills the project
 
-1. **Varifocal plane-switch rate (2,700 Hz).** Highest technical risk. Bench-test in week one
-   with a deformable mirror before committing to the architecture. If this fails, fall back to
-   phase SLM and the BOM goes up 6×.
+1. ~~**Varifocal plane-switch rate (2,700 Hz).**~~ **RETIRED 2026-08-21 — the requirement was
+   an artefact, see §7.** Replaced as risk 1 by: **is the accommodation cue perceptible at all?**
+   Once the subject fits in one focal slab, free space is not differentiated from a flat screen
+   *placed at the same distance* — what remains is the absent substrate, the walk-around, and
+   multi-viewer geometry. `experiments/perceptual-quality/README.md` already records the
+   published warning (arXiv 2401.02171: a flat 2D cutout scored co-presence **5.2 vs 5.3**
+   against a full 3D avatar while beating it on fidelity 5.1 vs 3.7, p<.001). This is an
+   *existence* risk, not a build risk, and it is the cheapest thing on this list to settle —
+   ~$300 and two weeks. Do it before anything else. Protocol in `docs/15` §4.
 2. **360° coverage cost.** `N = 2π·z/D` is unforgiving. Every centimetre you can shrink the pod
    or widen the aperture is money. Industrial design and optics must be co-designed, not
    sequenced.

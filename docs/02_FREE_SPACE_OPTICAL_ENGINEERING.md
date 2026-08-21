@@ -921,7 +921,7 @@ Chases the 1.3–1.7× gap directly. Highest information-per-dollar experiment i
 |---|---|---|
 | Femtosecond laser | 1030 nm, ~150 fs, 1–12 µJ, 10–200 kHz, ≤50 × 30 × 25 mm to have any chance of fitting | JSID 2025 used Yb:KGW at 155 fs / 10 kHz |
 | 2-axis AOD or resonant MEMS scanner | ≥150 kHz random access for 1.5×10⁵ vox/s (§6.6) | galvanometers cannot do arbitrary point order at this rate |
-| Axial focus modulator | electrically tunable lens or deformable mirror, 42 mm z sweep | |
+| Axial focus modulator | electrically tunable lens or deformable mirror, 42 mm z sweep | **Not affected by `docs/15`'s plane-count correction — checked 2026-08-21.** Doc 15 removes focus elements whose job is to place *accommodation planes* for the eye. This one places the *laser focus* so air ionises at the intended voxel: a generation requirement, not a perceptual one. It stays. (`research/METHODOLOGY.md` rule 3 — a constraint must be scoped to its architecture. An earlier revision of this line flagged it for removal; that flag was wrong and is recorded here per rule 4.) |
 | High-NA scanning objective | NA ≥ 0.3, long working distance | sets the focal spot size and hence the pulse energy in §6.1 |
 | Optional pulse shaper | grating/prism pair or AOPDF | 2404.11846's cubic phase ψ(R) = −CR³/w³; the *Applied Optics* 65 G69 1.82× brightness claim is **UNVERIFIED** |
 | Plasma diagnostics | transverse optical diffractometry, ~20 µm resolution | **2408.02772** is the method paper; a pump-probe interferometer plus capacitive plasma probe per 2501.10198 measures the rep-rate ceiling directly |

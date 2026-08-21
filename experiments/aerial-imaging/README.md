@@ -22,6 +22,17 @@ A 467-paper triage of every "aerial"-tagged corpus entry, plus a full-corpus key
 
 **Next step for whoever picks this branch up:** measure **η_RR**, the retroreflector return efficiency (aerial-image cd/m² per source cd/m²). The literature question is closed; this one is not, it is stated nowhere, and every brightness and panel-power figure in the project depends on it. One afternoon with a spot luminance meter at V0.
 
+> **Scheduled 2026-08-21.** η_RR now gets measured on the **same bench** as experiment PQ-1 in
+> `experiments/perceptual-quality/README.md`, which needs a static free-space real image anyway.
+> Build once, take both numbers. Two instrument paths: a borrowed spot luminance meter gives
+> `[MEASURED]`; a phone camera in full manual mode calibrated against a known-luminance source
+> gives `[INDICATIVE]` — record which was used. This closes an open item that `docs/13` §4
+> currently papers over with an assumed 5% end-to-end efficiency.
+>
+> Note the unit-magnification bound below does **not** block this use: PQ-1 needs a free-space
+> real image at a controlled distance, not a magnified one, and a 50–80 mm test object at M = 1
+> is exactly what AIRR delivers well.
+
 > **Methodological note:** the two "zero papers found" sweeps that preceded this section were keyword searches, and they were wrong in a specific and instructive way — see `research/METHODOLOGY.md` §1. The real AIRR literature existed the whole time, in journals the keyword never reached.
 
 ## Bounded on first principles (2026-08-15), without needing the paywalled literature
