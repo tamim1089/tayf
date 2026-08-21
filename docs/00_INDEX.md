@@ -66,12 +66,13 @@ corrections are the record. That only works if you can tell them apart. That is 
 | `thedream.md` | **LIVE** | The ten rules. The authority on what the product is *supposed* to be. Doc 11 obeys them; doc 13 suspends 4, 6 and 8 deliberately and says so. |
 | `research/METHODOLOGY.md` | **LIVE** | Five rules earned by breaking them. Read before any research pass. |
 | `eng/03_PHYSICS/` | **LIVE** | `accommodation.py`, `depth_cues.py` — the models the docs are checked against. |
-| `eng/08_VERIFY/tests/` | **LIVE** | 109 tests, including `test_docs_match_model.py`, which fails the build if prose drifts from the code that produced it. |
+| `eng/08_VERIFY/tests/` | **LIVE** | 132 tests, including `test_docs_match_model.py`, which fails the build if prose drifts from the code that produced it. |
 | `experiments/perceptual-quality/` | **LIVE** | PQ-1: protocol, bench spec, pre-registered analysis, and the simulation that validated it. **The next physical action.** |
 | `experiments/aerial-imaging/` | **LIVE** | Branch C, bounded. Holds the η_RR measurement — never measured by anyone, scheduled on the PQ-1 bench. |
 | `hardware/` | **PART** | Being brought onto the doc 13 architecture; check each file's banner. |
 | `models/` | **LIVE** | True-scale 3D models and renderer. Pure standard library. |
-| `research/` | **LIVE** | 175 papers across four tracks, plus citations, licensing, and the external feasibility review. |
+| `research/` | **LIVE** | 175 papers across four tracks, plus citations, licensing, and two external research passes. |
+| `research/2026-08-21_costing_and_legal_research.md` | **LIVE** | The pricing and legal pass. Returned one verified component price that broke the BOM by ~3×, resolved the EU AI Act question, and re-sized the FTO threat from Google to Light Field Lab. |
 | `patent/` | **PART** | Draft IP notes. Superseded on strategy by doc 14 §5 and doc 16 §3.2. **Not legal advice.** |
 
 ---

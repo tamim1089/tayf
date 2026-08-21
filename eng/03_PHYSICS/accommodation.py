@@ -14,10 +14,13 @@ VERIFIED = measured in the cited primary source. DERIVED = computed here from
 verified inputs, formula shown. ASSUMED = engineering baseline, explicitly
 marked, to be swept. UNKNOWN = no basis yet; treated as risk driver.
 
-The load-bearing number in this module is DOF_HALF and it is [ASSUMED]. The
-entire product rests on it, so it is a swept parameter everywhere and never a
-hardcoded truth. sweep_dof_half() exists specifically to show where the design
-window goes when that assumption moves.
+The load-bearing number in this module is DOF_HALF, tier [PUBLISHED, secondary]:
+Campbell (1957) Optica Acta 4:157-164 reports ~0.60-0.80 D total depth of focus,
+so the 0.60 D used here is the conservative end. The entire product rests on it,
+so it is a swept parameter everywhere and never a hardcoded truth.
+sweep_dof_half() shows where the design window goes when it moves, and
+robust_window() returns the R that survives every value in 0.20-0.50 D -- which
+is the real answer to depending on a number you have not read to the decimal.
 
 Ledger: corrects docs/13 section 7 and section 13 risk 1. Feeds
 experiments/perceptual-quality/ and docs/15_THE_ACCOMMODATION_BUDGET.md.
@@ -27,11 +30,19 @@ import math
 # ---------------------------------------------------------------------------
 # The one assumption everything rests on
 # ---------------------------------------------------------------------------
-# Half-width of the human eye's depth of field, in diopters. Literature-typical
-# for a ~3 mm pupil in normal photopic conditions; commonly quoted as +/-0.3 D.
-# [ASSUMED] Not verified against a primary source in this repository. Swept over
-# 0.20-0.50 D in sweep_dof_half(); if the design window vanishes at the low end
-# that is a finding about the product, not a bug in this file.
+# Half-width of the human eye's depth of field, in diopters.
+# [PUBLISHED, secondary] The two primary sources are now identified but not read
+# to the decimal in this repository:
+#   Campbell (1957), "The depth of field of the human eye,"
+#     Optica Acta 4:157-164  -- reports ~0.60-0.80 D TOTAL depth of focus
+#   Marcos, Moreno & Navarro (1999), Vision Research 39:2039-2049
+# +/-0.30 D (0.60 D total) is therefore the CONSERVATIVE end of Campbell's
+# range, which is the right direction to err. Reported values across the
+# literature span +/-0.02 to +/-1.75 D depending on luminance, contrast, target
+# size, spatial frequency and pupil diameter -- so this is a working value, not
+# a constant of nature. Swept over 0.20-0.50 D in sweep_dof_half(); if the
+# design window vanishes at the low end that is a finding about the product,
+# not a bug in this file. Pull both DOIs to upgrade this to [PUBLISHED].
 DOF_HALF = 0.30
 
 # ---------------------------------------------------------------------------

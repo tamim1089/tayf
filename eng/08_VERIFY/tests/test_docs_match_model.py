@@ -261,3 +261,76 @@ def test_room_model_keeps_viewers_inside_the_aperture_ring():
     z, r, n = assigned("Z_POD", float), assigned("R_VIEW", float), assigned("N", int)
     assert z > r, f"viewers at R={r} are outside the band at z={z}"
     assert n == round(engines_needed(z, 0.50)), "N does not match 2*pi*z/D"
+
+
+# ---------------------------------------------------------------------------
+# The 2026-08-21 costing/legal research pass — findings that must not be lost
+# ---------------------------------------------------------------------------
+
+BOM = _ROOT / "hardware" / "bom.md"
+DOC16 = _ROOT / "docs" / "16_BUSINESS_LEGAL_AND_LOGISTICS.md"
+DOC14 = _ROOT / "docs" / "14_TELEHUMAN_AND_THE_PATENT_GAP.md"
+BENCH = _ROOT / "experiments" / "perceptual-quality" / "BENCH.md"
+
+
+def test_bom_carries_the_one_verified_price_and_no_longer_claims_the_refuted_one():
+    """$2,195 (DLi DLP7000UV board) is the only researched component price, and
+    it refutes the $900/engine and $42k volume BOM this file used to state."""
+    txt = _text(BOM)
+    assert "$2,195" in txt
+    assert "UNRESOLVED" in txt, "volume BOM must not be restated without a quote"
+    for line in txt.splitlines():
+        if "$42,000" in line or "$900" in line:
+            assert ("~~" in line or line.lstrip().startswith(">")
+                    or "previous" in line or "exceeds" in line), \
+                f"refuted BOM figure stated live: {line[:90]}"
+
+
+def test_gross_margin_claim_is_withdrawn_not_restated():
+    """At qty-1 pricing the delivered cost exceeds the list price, so the 70% GM
+    claim cannot stand until a volume quote exists."""
+    txt = _text(DOC16)
+    assert "withdrawn" in txt.lower()
+    for line in txt.splitlines():
+        if "70%" in line and "gross margin" in line.lower():
+            assert ("withdrawn" in line or "~~" in line
+                    or line.lstrip().startswith(">")), f"GM restated live: {line[:90]}"
+
+
+@pytest.mark.parametrize("needle", [
+    "Article 50",           # EU AI Act transparency, live 2 Aug 2026
+    "2 August 2026",
+    "C2PA",                 # the marking mechanism
+    "limited-risk",         # the tier, not high-risk
+])
+def test_doc16_carries_the_eu_ai_act_finding(needle):
+    assert needle in _text(DOC16), f"EU AI Act finding lost: {needle}"
+
+
+def test_doc16_records_the_two_corrections_to_its_own_advice():
+    txt = _text(DOC16)
+    assert "AED 30,000" in txt, "Golden Visa salary threshold correction lost"
+    assert "light-industrial" in txt, "DTEC workshop correction lost"
+
+
+def test_fto_threat_is_sized_at_light_field_lab_not_google():
+    """The research pass moved the primary FTO exposure. Both docs must say so."""
+    for doc in (DOC14, DOC16):
+        txt = _text(doc)
+        assert "Light Field Lab" in txt
+        assert "391" in txt, "the active-patent count is the whole point"
+
+
+def test_bench_flags_the_retroreflector_patent_family():
+    """The rig uses a retroreflector, which triggers Asukanet/Yamamoto."""
+    txt = _text(BENCH)
+    assert "Asukanet" in txt
+    assert "IEC 62629-52-1" in txt, "the aerial-display measurement standard"
+
+
+def test_physics_modules_name_their_primary_sources():
+    acc = _text(_ROOT / "eng" / "03_PHYSICS" / "accommodation.py")
+    cue = _text(_ROOT / "eng" / "03_PHYSICS" / "depth_cues.py")
+    assert "Campbell (1957)" in acc and "Optica Acta" in acc
+    assert "Marcos" in acc
+    assert "Howard & Rogers" in cue

@@ -44,7 +44,7 @@ Every dimension falls out of geometry. These are not technology limits; they are
 1. **Clipping** — an image *in your space* cannot exceed the aperture. `W ≤ D`. A 10 cm device floats a 10 cm object. *(Smalley et al., Nature **553**, 486 — matter at the image point is the sole exception, quoted verbatim in [`docs/01`](docs/01_SYSTEM_MASTER_SPEC.md) §4.3g.)*
 2. **Visibility, not capability** — for an image *beyond* the device, `W = D·(b/a)` is a **permission, not a mechanism**: it says where such an image may be *seen from*, never that a device can *make* one. The operative law is the minimum viewing distance `a_min = D·p/(D−W)`, and **it has no solution once `W ≥ D`.** *(Corrected in [`docs/11`](docs/11_THE_CUBE.md) §4.2a — the original wording is kept there.)*
 3. **Presence is an angle** — the device must subtend the same angle as the subject. A face at 1 m is only **12.6°**, which is why small devices are not useless.
-4. **Tiling** — to be seen from 360°, apertures must tile the circle at the image: **`N = 2πz/D`**. This is why the room is small: 15 engines at z = 1.2 m, 88 at 3.5 m. *([`docs/13`](docs/13_THE_ROOM.md) §1, three independent derivations agreeing.)*
+4. **Tiling** — to be seen from 360°, apertures must tile the circle at the image: **`N = 2πz/D`**. This is why the room is small: **19 engines at z = 1.5 m**, 88 at 3.5 m. And viewers stand *inside* the ring, so **z > R** — which is what fixes z at 1.5 m once the design point R ≈ 1.3 m is set. *([`docs/13`](docs/13_THE_ROOM.md) §1, three independent derivations agreeing.)*
 
 **And one perceptual result that corrected the pitch.** Both depth cues scale as `t/R²`, so their ratio is constant at every distance and subject size: **stereopsis is 268× more sensitive to depth than accommodation.** Vergence–accommodation conflict is a *comfort* problem, not a *depth* problem. Lead with **multi-viewer** — a room full of people each seeing the remote person correctly from their own angle, which no tracked screen can do — not with focus. *([`eng/03_PHYSICS/depth_cues.py`](eng/03_PHYSICS/depth_cues.py), 20 tests.)*
 
@@ -52,9 +52,14 @@ Every dimension falls out of geometry. These are not technology limits; they are
 
 **Solved and measured:** capture, avatar representation, compression, transport, and the CAMARA network layer. Wire rate **0.104 Mbps** measured; latency **126 ms** against a 150 ms conversational threshold; AIRR viewing angle **170°** measured *(Yamamoto 2017, `10.11370/isj.56.341`)*.
 
-**Derived and unit-tested, not yet measured:** the aperture law, the depth-cue budget, the accommodation budget, the design point. 109 tests in [`eng/08_VERIFY/tests/`](eng/08_VERIFY/), including one that fails the build if prose drifts from the code that produced it.
+**Derived and unit-tested, not yet measured:** the aperture law, the depth-cue budget, the accommodation budget, the design point. 132 tests in [`eng/08_VERIFY/tests/`](eng/08_VERIFY/), including one that fails the build if prose drifts from the code that produced it.
 
 **Unmeasured, and blocking:** **η_RR**, the retroreflector return efficiency. No published source states it, every brightness figure in the project rests on it, and one afternoon on the PQ-1 bench closes it.
+
+**Unresolved, and expensive:** the **HOE relay band**. It is simultaneously the only defensible
+moat and a single-source risk — and the supplier's demonstrated capability (1400 mm film width,
+A2 master area, automotive-only focus) does not obviously reach a 6.6 m² angularly-multiplexed
+band. Until a written quote exists, the cost model is unproven. See `hardware/bom.md` §3.
 
 **Unresolved, and the real risk:** whether anyone can *tell*. Once a person fits inside one depth-of-field slab, a free-space image is not obviously better than a screen at the same place — and a published study found a flat 2D cutout scoring co-presence indistinguishably from a full 3D avatar. That is an **existence risk**, not a build risk, and it is what PQ-1 exists to settle. See [`docs/15`](docs/15_THE_ACCOMMODATION_BUDGET.md) §4.
 
@@ -67,7 +72,7 @@ Every dimension falls out of geometry. These are not technology limits; they are
 | [`docs/00_INDEX.md`](docs/00_INDEX.md) | **Which documents to believe — start here** |
 | `docs/11`–`16` | The live set: the cube, prior art, the room, patents, accommodation, business |
 | `docs/01`–`10`, `docs/sections/` | Deep derivations and detail specs, partly superseded |
-| `eng/` | Physics models and the 109-test verification suite |
+| `eng/` | Physics models and the 132-test verification suite |
 | `experiments/` | Physical validation programme. **PQ-1 is the next action.** |
 | `models/` | True-scale 3D models, renderer, viewer. Pure standard library. |
 | `simulation/` | Wave-optics propagator (9/9 against analytic results), thermal model |

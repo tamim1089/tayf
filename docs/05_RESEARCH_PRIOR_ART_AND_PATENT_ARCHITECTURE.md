@@ -207,6 +207,15 @@ This is the prior art that bears directly on invention-disclosure Concepts B and
 
 **Reading — this is the single most consequential finding in the document.** "Use observer/eye tracking to decide which angular content the display physically emits, and don't emit the rest" is claimed at four independent levels of the stack: mechanically (Sharp, 1996), computationally at subpixel granularity (Fraunhofer, 2006), foveally (2003 onward, broad thicket), and — decisively — **on a multiview light-field display with per-eye view selection, by Google, granted, and in force until 2040.** Concept B's "candidate novelty" as written in `patent/invention-disclosure.md` ("coupling the *selection* of what to physically emit to a live perceptual/observer-position estimate") is anticipated by US11474597B2 on its face.
 
+> **2026-08-21, later:** claim construction on **US11474597B2** now read (`docs/14` §8). It is
+> **Google LLC via Raxium**, and Claim 1 is limited to an *emissive* "array of angular pixels"
+> plus a *hierarchical* viewer→head→eye tracking process — so it anticipates the concept for
+> **patenting** purposes but a steered-projector ring has a strong literal non-infringement
+> position for **practising** it. The larger unsized exposure is **Light Field Lab's ~391 active
+> patents** (2017–2020 filings to 2037–2040, "converging wavefront" claim vocabulary) and, if any
+> retroreflector is used, the **Asukanet/Utsunomiya AIRR family**. Neither is in this section's
+> tables. **Add them before any FTO opinion is commissioned.**
+>
 > **2026-08-21:** `docs/13_THE_ROOM.md` §11 was written claiming pupil-steering scheduling as moat
 > item 2 **without consulting this section**, and has been corrected. The failure was not finding
 > the art — it was already here, tier [V] — but not reading our own file. See `docs/14` §5.

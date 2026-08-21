@@ -192,9 +192,50 @@ as "we can own it."**
    We are building the steered version, which needs 24 and puts the light in the air."*
 3. **File nothing on steering.** Redirect any patent budget to the HOE band and multi-engine
    calibration (§5 rows 1 and 3).
-4. **Open item:** resolve whether US11474597B2's angular-pixel-array limitation excludes a ring of
-   steered projectors. That is a claim-construction question for a patent attorney, not for this
-   repository.
+4. ~~**Open item:** resolve whether US11474597B2's angular-pixel-array limitation excludes a ring
+   of steered projectors.~~ **RESOLVED 2026-08-21** — see §8.
+
+---
+
+## 8. The 597, resolved — and the threat we mis-sized
+
+`[VERIFIED — USPTO full text and assignment history, `research/2026-08-21_costing_and_legal_research.md` §5 and §13]`
+
+**The 597 is Google LLC but originated at Raxium, Inc.** — inventors → Raxium 2021-07-08 → Google
+LLC recorded 2022-08-25 (corrective 2023-03-23). Priority 2019-11-01 confirmed, filed 2020-11-02,
+granted 2022-10-18, **active to 2040-11-02**.
+
+**Claim 1 is narrower than §5 assumed.** It requires *"a display area comprising an array of
+angular pixels"* where each **emits** light varying across its own field of view — an emissive
+panel with Raxium's microLED heritage — **and** an eye tracker performing a specific
+**hierarchical** process: locate viewer → locate head from viewer → locate eyes from head.
+
+**A ring of independently steered projectors throwing converging wavefronts onto an HOE plausibly
+practises neither limitation.** That is a strong *literal* non-infringement position. The
+counter-argument is doctrine of equivalents — a steered projector as "one angularly-varying
+pixel" — and **the hierarchical-tracking limitation is the best distinguishing feature.** A
+file-wrapper estoppel check (pre-grant pub. US20210132693A1) still needs an attorney, asking
+specifically whether *"array of angular pixels"* was narrowed to overcome prior art.
+
+**So §5's conclusion stands but its emphasis was wrong.** Anticipation still blocks *patenting*
+pupil-steering. It probably does **not** block *using* it.
+
+### 8.1 The threat that was actually under-sized
+
+| Party | Exposure |
+|---|---|
+| **Light Field Lab** | ~471 patents, **~391 active**, 2017–2020 filings running to **2037–2040**. Claims cover converging wavefronts, phase-guide/energy-relay structures, 4D-plenoptic rendering (e.g. US11624934). **Their claim vocabulary is our vocabulary.** This is where a genuine blocker most likely sits, and it needs a paid claim-by-claim opinion. `[count SECONDARY]` |
+| **Asukanet / Utsunomiya (Yamamoto) AIRR family** | Micro-mirror-array plates (US8702252) and multiple retroreflection patents (US11340475, US11300810, US12196977). **Triggered by any retroreflective element** — including the PQ-1 bench. An HOE band is a design-around; a retroreflector is not. |
+| **USC ICT 360° family** | US8432436B2, priority 2007 — **expired or near-expired. Low risk, and it works *for* us as prior art.** |
+| **US 11,668,952** (TAG-lens volumetric) | Different mechanism from fixed-focus engines; likely distinguishable. Include in the opinion. |
+
+### 8.2 A correction to §5's own request
+
+§5 asked someone to find *"the InterDigital/PCMS family claiming eye-tracking to reduce the number
+of views generated."* **It does not exist as described** — that concept appears in the
+Google/Raxium 597's own specification. A distinct InterDigital family does exist in multi-view
+telepresence (**US10701318B2**, PCMS Holdings → InterDigital VC Holdings 2023-03-07). Two patents
+were remembered as one.
 
 ---
 

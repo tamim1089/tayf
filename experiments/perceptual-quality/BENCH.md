@@ -100,6 +100,20 @@ So switching must be **mechanised and ~1 s**:
 The `farscreen` condition is a fourth display at the backdrop, angularly matched,
 always physically present and simply switched on.
 
+## 4.1 A patent note that applies to the bench, not just the product
+
+The rig uses a **retroreflector**, which triggers the **Asukanet / Utsunomiya (Yamamoto) AIRR
+family** — Asukanet micro-mirror-array plates (US8702252) and Yamamoto retroreflection patents
+(US11340475, US11300810, US12196977) `[VERIFIED family exists — `docs/14` §8.1]`.
+
+**This does not block the bench.** Building one experimental rig for internal research is not
+selling a product. But it matters for two reasons worth writing down now:
+
+1. **If a retroreflector survives into the shipped product, this family must be cleared.** The HOE
+   band is a meaningful design-around; a retroreflector is not.
+2. **PQ-1's result is architecture-agnostic** — it measures whether a free-space real image beats
+   a screen, regardless of which optic forms it. A GO here does not commit you to retroreflection.
+
 ## 5. η_RR measurement — do this first
 
 Closes the open item in `experiments/aerial-imaging/README.md`.
@@ -115,6 +129,12 @@ The 0.25 divisor removes the beamsplitter's two-pass `r(1−r)` ceiling
 2. Measure aerial-image luminance at the same PWM, on axis, at 0.7 m.
 3. Repeat at ±5°, ±10°, ±20° to get the angular fall-off — AIRR's cone is
    quoted at 170° but that is a different geometry from ours.
+
+**Measurement standard:** **IEC 62629-52-1 (2024), "3D displays — fundamental measurements of
+aerial display"** exists `[VERIFIED]` and is the natural basis for how η_RR and the angular
+fall-off are measured and reported. Read it before improvising a method — a number taken to a
+published standard is worth considerably more to a customer, an insurer and an investor than one
+taken to a method you invented.
 
 **Instrument paths.** Borrowed spot luminance meter → `[MEASURED]`. Phone camera
 in full manual mode (fixed ISO, shutter, WB), calibrated against a

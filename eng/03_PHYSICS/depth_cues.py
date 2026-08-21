@@ -54,12 +54,14 @@ IPD = 0.065
 
 # Stereoacuity threshold, arcsec - the smallest depth-disparity a viewer can
 # reliably detect.
-# [PUBLISHED, secondary] Literature read at review/abstract level, not from the
-# primary papers: normal stereopsis is conventionally defined as <= 60 arcsec;
-# typical normal observers measure <= 30 arcsec; a 100 ms forced-choice study
-# reports a mean of ~37 arcsec for observers under 60; trained observers reach
-# < 5 arcsec. 30 arcsec is used as the working value and 10/30/60 are swept.
-# NOT verified against primary sources in this repository.
+# [PUBLISHED, secondary] Normal stereopsis is conventionally defined as
+# <= 60 arcsec; typical normal observers measure <= 30 arcsec; a 100 ms
+# forced-choice study reports a mean of ~37 arcsec for observers under 60;
+# trained observers reach < 5 arcsec. The standard reference is Howard & Rogers,
+# "Perceiving in Depth" -- identified but not read here. 30 arcsec is the working
+# value and 10/30/60 are swept in cue_sensitivity_ratio(). The 268x conclusion
+# survives the whole range (134x at the most generous 60 arcsec), so this tier
+# label is the only thing a primary read would change.
 STEREO_THRESHOLD_ARCSEC = 30.0
 
 
