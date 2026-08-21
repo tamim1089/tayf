@@ -201,10 +201,15 @@ This is the prior art that bears directly on invention-disclosure Concepts B and
 | 35 | US11710469, US11238836, US11644669, US12183310 (family, title "Depth based foveated rendering for display systems") | Assignee **not independently confirmed** | — | — | Active | Fovea-tracked content rendered at higher angular resolution than head-tracked content. Numbers and title seen together in USPTO full-text results; assignee attribution not verified. | [R]/[U] on assignee |
 | 36 | US10733924 ("Foveated light field display") | Assignee unconfirmed (Ostendo-adjacent) | — | — | — | Gaze-driven resolution allocation for a light-field display. | [R]/[U] on assignee |
 | 37 | EP4359847A1 | IKIN Inc (Griffith) | 2022-06-21 | 2021-06-21 | Deemed withdrawn 2024-07-31 (still prior art) | Holographic display system where "the volumetric projection is adapted in response to the position of the user." | **[V]** |
+| 37a | **US11385712B2** | **Evolution Optiks Limited** (Gotsch — first author of TeleHuman 2) | 2021-04-23 | 2019-04-01 | **Active** | Pupil-tracked light field with a **velocity-threshold hysteresis**: hold the viewing-zone geometry fixed while pupil velocity is below a designated threshold, re-render the zone only when it exceeds it. Narrow — an anti-jitter algorithm, not a general steering claim — but it is the obvious first fix for a jittery tracker, so design around it (see `docs/14` §4.2). | **[V]** |
 | — | SeeReal "Tracked Viewing Windows" | SeeReal Technologies | — | — | — | Eye-tracked placement of the holographic viewing window per frame; mechanism documented on the company's own pages, specific number not resolved. | **[U]** |
 | — | PCMS Holdings / InterDigital family | InterDigital VC Holdings (assigned 2023) | — | — | — | Described in search records as claiming eye trackers used to **reduce the number of views generated**, generating views only for tracked eye locations plus adjacent zones for tracking uncertainty. Strong second family on the same concept; **no number resolved.** Highest-priority follow-up. | **[U]** |
 
 **Reading — this is the single most consequential finding in the document.** "Use observer/eye tracking to decide which angular content the display physically emits, and don't emit the rest" is claimed at four independent levels of the stack: mechanically (Sharp, 1996), computationally at subpixel granularity (Fraunhofer, 2006), foveally (2003 onward, broad thicket), and — decisively — **on a multiview light-field display with per-eye view selection, by Google, granted, and in force until 2040.** Concept B's "candidate novelty" as written in `patent/invention-disclosure.md` ("coupling the *selection* of what to physically emit to a live perceptual/observer-position estimate") is anticipated by US11474597B2 on its face.
+
+> **2026-08-21:** `docs/13_THE_ROOM.md` §11 was written claiming pupil-steering scheduling as moat
+> item 2 **without consulting this section**, and has been corrected. The failure was not finding
+> the art — it was already here, tier [V] — but not reading our own file. See `docs/14` §5.
 
 ### 3.5 Parametric human transmission — model-based coding
 
@@ -265,6 +270,13 @@ A published paper is prior art under §102(a)(1) exactly as a patent is. `resear
 - **Mon3tr (arXiv 2601.07518)** — monocular 3D telepresence with a **pre-built Gaussian avatar** driven by a **215-float per-frame state** at **<0.2 Mbps / ~80 ms**. This is not "related work." It is the exact architecture of TAYF's solved half, published, with numbers. Every element of `pipeline/schema.py` and `pipeline/avatar/README.md` is anticipated by it.
 - **altiro3D (arXiv 2506.08064)** — open-source webcam → depth → view synthesis → Looking Glass panel pipeline **explicitly naming video conferencing as a use case**. Anticipates the hackathon-track pipeline end to end.
 - **Fairy Lights in Femtoseconds (arXiv 1506.06668)** and the JSID 2025 fist-sized laser-plasma display — free-space aerial voxel graphics, published, and additionally patented (§3.2 #9).
+- **TeleHuman 2 (Gotsch, Zhang, Merritt, Vertegaal, CHI 2018)** — a ring of projectors around a
+  human-sized retroreflective cylinder giving life-size, glasses-free, near-360° motion parallax.
+  This is the broadcast form of the `docs/13` architecture, published, **unpatented** (Vertegaal's
+  16-member estate contains nothing on it — verified four ways), and therefore prior art against
+  the ring-of-emitters concept for everyone including us. Its measured cost of *not* pupil-steering
+  — 275 projectors for 360°, 45 built, 59° delivered, ~10 FPS — is the strongest empirical support
+  the repository has for `docs/13` §3. Full read-out in `docs/14`.
 - **Smalley et al., Nature 2018** — photophoretic free-space volumetric imagery, published and patented (§3.2 #10).
 - **Yamamoto/Suyama AIRR line, Optics Express 22(22):26919 (2014)** onward — published and patented (§3.1).
 - **Gaussian Wave Splatting / Random-phase Wave Splatting (arXiv 2505.06582, 2508.17480)** — closed-form Gaussian-splat-to-hologram transform. This is prior art against the exact bridge Concept D would need, even though its authors never pointed it at human content.

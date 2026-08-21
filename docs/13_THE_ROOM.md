@@ -7,6 +7,11 @@ document by the project owner. Everything else — no headset, no glasses, life-
 free-space, 360° — is retained. This describes a *different product* from `docs/11_THE_CUBE.md`
 (TAYF-C35), which remains the rules-compliant design. Both are kept.
 
+**Read `docs/14_TELEHUMAN_AND_THE_PATENT_GAP.md` alongside this.** It corrects §11's moat claim,
+and it records that Queen's University built the broadcast version of this architecture in 2018
+(TeleHuman 2): 275 projectors needed for 360°, 45 affordable, 59° delivered, onto an acrylic
+cylinder at 10 FPS. That is the empirical price of not pupil-steering, and it corroborates §3.
+
 **Audience:** another AI picking this up cold. All formulas are given so you can re-derive
 rather than trust. Every number here is derived in-document except where marked `[UNVERIFIED]`.
 
@@ -342,16 +347,35 @@ are primed to hear.
 enrolment, calibration drift correction, updates) + per-minute session fee on high-value calls.
 Recurring revenue is what makes it fundable; the hardware is the wedge.
 
-**Moat:** four defensible pieces —
+**Moat:** four claimed pieces —
 1. the HOE design that maps `N` engines onto 360° of aperture band,
 2. the pupil-steering *scheduling* algorithm (which engine serves which eye, and the handoff as
    people walk — this is a hard real-time assignment problem and the hardest thing to copy),
 3. the multi-plane depth-blending calibration that keeps 24 independently-aimed engines
    geometrically coherent to sub-millimetre,
 4. the avatar enrolment pipeline.
-Items 1–3 are patentable. **Search first:** Korevaar & Spivey US 4,881,068 (already read, see
-`docs/12`), the USC ICT 360° light-field display patents (Jones/Debevec/Bolas), Light Field Lab,
-and Sony's spatial-reality display family. Do this before filing anything.
+
+> ### ⚠ Items 2 and 4 are anticipated. Corrected 2026-08-21 — see `docs/14` §5.
+> The clause *"Items 1–3 are patentable"* originally stood here and **is false.** It is kept
+> rather than deleted, per `research/METHODOLOGY.md` rule 4.
+>
+> - **Item 2 is anticipated by US11474597B2** (Google LLC, priority 2019-11-01, **active to
+>   2040**): eye-tracked multiview display that *"renders a specific view for each detected eye
+>   based on that eye's location"* and emits it *"only in the viewing zone where that eye was
+>   detected."* This repository had **already found and verified it** at `docs/05` §3.4 row 28,
+>   whose own reading states the anticipation in bold. This section was written without
+>   consulting it — a process failure, recorded rather than quietly patched.
+> - **Item 4 is anticipated** by Mon3tr (arXiv 2601.07518), per `docs/05` §3.8.
+> - **Items 1 and 3 survive**, item 3 narrowed to multi-engine geometric coherence — depth
+>   blending itself is standard in multifocal near-eye displays.
+> - Anticipation blocks *patenting* item 2, not *using* it. Whether US11474597B2's angular-pixel-
+>   array limitation excludes a ring of steered projectors is a claim-construction question for an
+>   attorney. **Do not read "we can probably use it" as "we can own it."**
+
+**Search first, and start from what is already in this repo:** `docs/05` §3.4 (observer-tracked
+emission — the cluster that matters most) and §3.8 (academic anticipation), then `docs/14`
+(TeleHuman 2 and Vertegaal's estate), then Korevaar & Spivey US 4,881,068 (`docs/12`), the USC ICT
+360° light-field patents (Jones/Debevec/Bolas), Light Field Lab, and Sony's spatial-reality family.
 
 ---
 
