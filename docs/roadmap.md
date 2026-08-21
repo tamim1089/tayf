@@ -1,6 +1,6 @@
 # TAYF Roadmap — Three Tracks
 
-> ### ⚠ SUPERSEDED IN PART — read [`docs/10_TAYF_UNIVERSAL_ENGINEERING.md`](10_TAYF_UNIVERSAL_ENGINEERING.md) first
+> ### ⚠ SUPERSEDED IN PART — read [`docs/00_INDEX.md`](00_INDEX.md) first, then [`docs/10_TAYF_UNIVERSAL_ENGINEERING.md`](10_TAYF_UNIVERSAL_ENGINEERING.md)
 >
 > This document predates the current design and is kept as a **detail source and historical record**, not as a specification. Where it disagrees with document 10, document 10 wins. Specifically superseded:
 > - **The device is not a 10 cm cube.** It is a family of flat apertures (20 cm slab → A4 folio → 50 cm disc → chair → mirror), sized by the aperture law. Depth is dead weight; every form is a slab.
@@ -16,12 +16,29 @@ Source: `FilesPlan.md` §3.2, §7; superseded on the north-star engine by `docs/
 
 The capture→representation→transport stack is solved (cited, working prior art, real measured numbers). Free-space photoreal optical emission at 10cm is not solved anywhere in the published literature — but free-space *wireframe* emission now is: the MATD (Multimodal Acoustic Trapping Display) is verified end-to-end (Nature 2019; SPIE 2020: 10×10×10 cm³ display volume; Sci Adv 2022 BEM; IEEE 2026 AcousTools, MIT) and becomes the product engine. Splitting tracks is the honest engineering move, not a downgrade.
 
-## Track Hackathon-Prototype (buildable solo, Aug 14 → Sep 13)
+## ⚠ The track structure below is superseded — updated 2026-08-21
 
-Everything in `docs/architecture.md`'s pipeline, terminated in a compact light-field or retroreflective aerial-imaging panel instead of true free-space plasma (`hardware/optical-engine.md` §Hackathon-track). Goal: one working end-to-end cube-to-cube demo, a real body reconstructed from 215 numbers a second, over a real CAMARA QoD-guaranteed link, in well under 150ms.
+The three-track split (hackathon / north-star / MATD) described the project as it stood in
+mid-August. It is replaced by a single **gate ladder**, because the binding question turned out
+not to be which optical mechanism to build, but **whether anyone can perceive the difference at
+all** (`docs/15` §4).
 
-- **Aug 14 → Aug 23:** finalize the pitch narrative, pick the hackathon-track optical engine, rerun the killed hardware/vendor research pass, submit Idea Capture Template + pitch deck.
-- **Aug 23 → Sep 13:** build the pipeline for real, integrate the sourced optical panel, get one working demo with a live CAMARA QoD session.
+| Gate | What | Cost | Passes if |
+|---|---|---|---|
+| **1. PQ-1 bench** | Static free-space image; measure **η_RR**; run the 3-condition perception study | **~$215** | aerial beats a flat screen at the design point, and matches a real object |
+| 2. Wedge | One DMD engine + fixed-focus relay + one tracked viewer, 15–20° arc, **at R = 1.3 m** | $4–15k | naive viewers report depth/presence |
+| 3. HOE test tile | Small multiplexed vHOE from Ceres/Covestro or a university lab | $100–400k | a band can be fabricated at all |
+| 4. The room | 15 engines, full ring | several $M | — |
+
+**Nothing below gate 1 is funded or scheduled.** PQ-1 is the next physical action: 26 subjects,
+180 trials, ~36 min each, analysis pre-registered and validated against synthetic studies before
+any data exists (`experiments/perceptual-quality/`).
+
+**On the GSMA Prototype Phase (13 Sep 2026):** it falls mid-PQ-1. What exists by then is a working
+bench, a measured η_RR that no published source states, a governing equation (`N = 2πz/D`), and a
+pre-registered study — not a floating head. Pitch the *method*: here is the equation, here is the
+experiment that decides it, here is the number nobody has measured. Against ten rendered mock-ups
+that is a stronger position than it feels like.
 
 ## Track MATD-Product (the verified free-space engine, post-hackathon)
 

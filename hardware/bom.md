@@ -1,36 +1,80 @@
-# Bill of Materials — Candidate Components
+# Bill of Materials
 
-**Status: UNVERIFIED pricing/availability.** The online research pass tasked with confirming real vendor part numbers and current pricing was killed mid-run before writing anything (see project task list). Nothing below should be ordered until that pass is rerun. What follows is engineering-judgment candidate selection — the *class* of part is a defensible choice, the specific SKU/price is not confirmed.
+> **⚠ REWRITTEN 2026-08-21.** The previous version costed a **10 cm cube** — Jetson Orin, a
+> synchronised camera array, a 5G modem, an undecided optical engine. That is the wrong
+> architecture, not merely stale pricing. The product is now **THE ROOM** (`docs/13`), and the
+> cube variant is TAYF-C35 (`docs/11`). The old capture/compute lines survive in
+> `docs/04_CUBE_HARDWARE_AND_PROTOTYPE_ENGINEERING.md`.
 
-## Cameras (per cube)
+**Status: every price below is `[UNVERIFIED]`.** No vendor quote has been obtained for any line.
+The pricing pass is specified and handed off — see `research/2026-08-21_external_feasibility_review.md`
+and the follow-up brief. **Order nothing from this file.**
 
-- **Candidate class:** 3-4× synchronized global-shutter sensor modules, MIPI-CSI, hardware-triggered sync.
-- **Candidate sensors:** Sony IMX296 / IMX568 class (global shutter, machine-vision grade).
-- **Why global shutter, not rolling:** the capture volume includes fast hand/face motion; rolling shutter skew would corrupt the pose estimators' input.
-- **Open item:** exact count/placement — see `hardware/camera-rig.md`.
+---
 
-## Edge compute
+## 1. What changed the BOM most
 
-- **Candidate:** NVIDIA Jetson Orin Nano Super-class module.
-- **Why:** the only realistic candidate that runs the pose/face/hand estimators plus avatar-animation inference inside a passively-or-lightly-cooled 10cm enclosure. Mon3tr's published numbers (arXiv 2601.07518) assume a PC-class sender GPU and a Quest3-class (Snapdragon XR2) receiver SoC — neither has been validated at Jetson-class embedded compute. This is real risk, not a solved substitution (see `docs/roadmap.md` open items).
-- **Explicitly not this:** the remote RTX 5060 is dev/training/enrollment only, never the deployed runtime.
+`docs/15_THE_ACCOMMODATION_BUDGET.md` showed a person fits inside a **single depth-of-field
+slab** at pod distance, so the display needs **1–2 focal planes, not 24–32**. That deleted:
 
-## Radio
+- the swept-focus element,
+- the 2,700 Hz plane-switch requirement,
+- deformable mirrors at $10–50k each,
+- and the TAG-lens / PB-FLC-stack investigation entirely.
 
-- **Candidate:** 5G modem module with carrier-side CAMARA QoD support; Wi-Fi fallback for indoor demo reliability independent of live 5G coverage.
+**The engines are fixed focus.** The line did not shrink — it disappeared. `N` also fell from 24
+to **15** at the design point (`z = 1.2 m`, `D = 0.5 m`, `N = 2πz/D`).
 
-## Optical engine
+## 2. Per-room BOM — THE ROOM, N = 15
 
-- **Hackathon track:** compact light-field or retroreflective aerial-imaging panel. No vendor/part search done yet — this is the first item for the rerun research pass. **Software feasibility is no longer a question mark**: arXiv 2506.08064 is an already-working open-source webcam-to-Looking-Glass-Portrait pipeline naming video conferencing as its use case (see `experiments/light-field/README.md`) — this narrows the remaining hackathon-track risk down to actual panel sourcing/pricing, not "can this even be driven in real time."
-- **North-star track:** femtosecond fiber laser + galvo/MEMS scanner. Explicitly out of scope for hardware ordering until `hardware/optical-engine.md`'s eye-safety section is resolved.
+| Item | Spec | Qty | Unit | Total |
+|---|---|---|---|---|
+| Display engine | DLP7000/DLP9500-class DMD + high-CRI LED + **fixed-focus relay** + driver | 15 | $900 | $13,500 |
+| HOE / relay band | angularly-multiplexed vHOE, ~6.6 m² | 1 | $2,000/m² proto | $13,200 |
+| Render node | 2× workstation GPU + host; 8 eye-views of a splat avatar at 90 Hz | 1 | — | $18,000 |
+| Tracking | 6× global-shutter IR camera + illuminators + host | 1 | — | $6,000 |
+| Structure | room shell, blackout, acoustics, power, thermal | 1 | — | $25,000 |
+| Integration | calibration rig, cabling, labour | 1 | — | $30,000 |
+| **Prototype BOM** | | | | **≈ $101,000** |
+| **Volume BOM** (100 u; HOE $300/m², engine $450) | | | | **≈ $42,000** |
 
-## Power / thermal
+Full delivered-cost stack, margin and pricing: `docs/16_BUSINESS_LEGAL_AND_LOGISTICS.md` §5
+(volume BOM $42,000 → factory $50,400 → delivered $54,400).
 
-- USB-PD input. Cooling solution (forced-air vs vapor chamber) depends on the thermal budget calculation in `hardware/power-thermal.md`, not yet done.
+**Power: ≈ 1.4 kW** — 15 engines × ~40 W + GPUs ~600 W + tracking/host ~200 W. One 20 A circuit.
+Thermal is the real constraint: 1.4 kW inside a small enclosed room needs quiet active cooling,
+and a telepresence room that roars is unsellable.
 
-## Blocking items before any order is placed
+## 3. Component notes
 
-1. Rerun the killed online-research pass for real part numbers and pricing.
-2. Finish `hardware/camera-rig.md` FOV math to fix the camera count.
-3. Finish `hardware/power-thermal.md` to size the cooling solution.
-4. Decide the hackathon-track optical engine (`hardware/optical-engine.md`).
+- **DMD.** Not the bottleneck and off-the-shelf: DLP7000 (0.7″ XGA) reaches 32,225 Hz binary with
+  the DLPC410 controller; DLP9500 (1080p) 23,148 Hz. Dev kits from ViALUX, Digital Light
+  Innovations, In-Vision, TI. `[UNVERIFIED — inherited from the external review, no quote]`
+- **Sources: LEDs, not lasers.** `docs/13` §4 shows ~1,000× light headroom (pupil-steered
+  delivery needs ~14 lm of source), so spend it on the easier regulatory path — LEDs fall under
+  **IEC 62471** rather than IEC 60825-1 laser classification. This also removed phase SLMs and
+  pulsed lasers from the BOM, which **cuts export-control exposure** (`docs/16` §3.4).
+- **HOE band — the single-source risk and the only real moat.** Covestro **Bayfol HX** photopolymer
+  with **Ceres Holographics** roll-to-roll replication is the candidate fabrication spine. This is
+  a *fabrication programme*, not a purchase: NRE for mastering, MOQ and lead time all unknown.
+  No second supplier exists today. Order the long pole first.
+- **Explicitly rejected: scanned-beam engines.** A galvo/MEMS scanner draws 10⁶–10⁷ points/s
+  against a requirement of 7.2×10⁸. Loses by two orders of magnitude. Do not revisit (`docs/13` §7).
+
+## 4. What actually gets bought next
+
+Not this. **The PQ-1 bench, ≈ $215** — beamsplitter, retroreflective sheeting, two identical
+figurines, a small panel, a stepper carousel, blackout. Parts list and build order in
+`experiments/perceptual-quality/BENCH.md`. It measures **η_RR** — never measured by anyone, and
+the number every brightness figure above quietly depends on — and answers whether a free-space
+image is perceptibly better than a screen at the same location.
+
+Everything in §2 is gated behind that result.
+
+## 5. Blocking before any order
+
+1. Real vendor quotes for every §2 line at qty 1 and qty 100 — **handed off, not done**.
+2. Will Ceres/Covestro quote a bespoke 6.6 m² angularly-multiplexed band to a pre-revenue
+   startup? If not, who does?
+3. ECCN classification per optical line item (`docs/16` §3.4).
+4. IEC 62471 risk-group determination for the chosen LED and optic (`docs/16` §4).

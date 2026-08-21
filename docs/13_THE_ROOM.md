@@ -67,6 +67,8 @@ by making the room bigger. Consequences:
 needs ~88. Same physics, 4× the cost. This falls straight out of the math and should drive the
 industrial design.
 
+> **Geometry constraint, added 2026-08-21.** Viewers stand **inside** the aperture ring, so **`z > R`** necessarily. That rules out the `z = 1.2 m / N = 15` corner of the range below whenever `R = 1.3 m`, because it puts the audience outside their own walls. The self-consistent configuration is **`z = 1.5 m, R = 1.3 m, N = 19`**. `z = 1.2 m` is reachable only by moving viewers nearer than 1.2 m, where a body begins to need a second focal plane. *Found by rendering `models/build_models.py:design_room()` — the drawing caught what the table did not.*
+
 **Design point, fixed 2026-08-21 by `docs/15`:** the perceptual analysis independently drives
 `z` down to the same place the geometry does, and pins the viewer distance too. Use
 **z = 1.2–1.5 m, D = 0.5 m → N = 15–19 engines**, with the viewer at **R ≈ 1.3 m**. That R is

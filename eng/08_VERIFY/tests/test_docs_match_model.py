@@ -163,3 +163,101 @@ def test_bench_admits_what_it_cannot_answer():
 def test_every_price_in_the_bench_is_marked_unverified():
     txt = _text(BENCH)
     assert "[UNVERIFIED]" in txt, "prices must carry a tier label (METHODOLOGY §2)"
+
+
+# ---------------------------------------------------------------------------
+# Front door and index — added 2026-08-21 after the repo-wide sweep
+#
+# The README carried the project's worst recorded error ("a 20 x 20 cm slab
+# shows an upper body") for weeks after docs/11 s1.3 formally retracted it.
+# The correction existed; nobody re-read the front page. These guard that.
+# ---------------------------------------------------------------------------
+
+README = _ROOT / "README.md"
+INDEX = _ROOT / "docs" / "00_INDEX.md"
+
+
+def test_the_retracted_20cm_claim_is_never_a_live_readme_claim():
+    """It may appear only inside a blockquote retraction, never as a table row."""
+    for line in _text(README).splitlines():
+        if "upper body at 1.2" in line or "20 × 20 cm" in line:
+            assert line.lstrip().startswith(">"), f"live retracted claim: {line[:90]}"
+
+
+def test_readme_states_the_current_next_action():
+    txt = _text(README)
+    assert "PQ-1" in txt
+    assert "V0 — a 50 cm static disc" not in txt, "stale next step still present"
+
+
+def test_readme_carries_the_cue_ratio_and_the_tiling_law():
+    txt = _text(README)
+    assert f"{round(cue_sensitivity_ratio())}×" in txt
+    assert "N = 2πz/D" in txt
+
+
+def test_readme_does_not_state_the_portal_law_as_a_capability():
+    """`W = D·(b/a)` is a visibility bound. Any line carrying it must say so."""
+    for line in _text(README).splitlines():
+        if "D·(b/a)" in line:
+            assert ("permission" in line or "not a mechanism" in line
+                    or "Visibility" in line), f"portal stated as capability: {line[:90]}"
+
+
+def test_every_doc_appears_in_the_index():
+    """A new document cannot be added without indexing it."""
+    index = _text(INDEX)
+    missing = [p.name for p in sorted((_ROOT / "docs").glob("*.md"))
+               if p.name != "00_INDEX.md" and p.stem[:2] not in index
+               and p.name not in index and p.stem not in index]
+    assert not missing, f"not listed in docs/00_INDEX.md: {missing}"
+
+
+def test_index_marks_every_status_it_defines():
+    txt = _text(INDEX)
+    for status in ("LIVE", "PART", "HIST"):
+        assert status in txt
+
+
+# ---------------------------------------------------------------------------
+# docs/11 s7's five corrections, applied 2026-08-21 after sitting undone
+# ---------------------------------------------------------------------------
+
+@pytest.mark.parametrize("path,needle", [
+    ("docs/01_SYSTEM_MASTER_SPEC.md", "VISIBILITY BOUND"),
+    ("docs/02_FREE_SPACE_OPTICAL_ENGINEERING.md", "MET 2026-08-21"),
+    ("docs/09_DEVICE_DESIGNS.md", "for CONVENTIONAL AIRR"),
+    ("docs/10_TAYF_UNIVERSAL_ENGINEERING.md", "[DERIVED: M = 1]"),
+    ("docs/10_TAYF_UNIVERSAL_ENGINEERING.md", "for CONVENTIONAL AIRR"),
+])
+def test_doc11_section7_corrections_were_actually_applied(path, needle):
+    assert needle in _text(_ROOT / path), f"{path} still missing: {needle}"
+
+
+def test_doc10_carries_its_supersession_banner():
+    assert "PARTLY SUPERSEDED" in _text(_ROOT / "docs" / "10_TAYF_UNIVERSAL_ENGINEERING.md")
+
+
+# ---------------------------------------------------------------------------
+# The room model must obey its own geometry
+# ---------------------------------------------------------------------------
+
+def test_room_model_keeps_viewers_inside_the_aperture_ring():
+    """z > R, or the audience stands outside their own walls. The first version
+    of design_room() used z = 1.2 with R = 1.3; the render caught it."""
+    src = _text(_ROOT / "models" / "build_models.py")
+    body = src.split("def design_room(")[1].split("\ndef ")[0]
+
+    def assigned(name, cast):
+        """Read the real assignment line, not the first mention in prose - the
+        docstring discusses the rejected z = 1.2 / N = 15 option, and a naive
+        substring search finds that instead."""
+        for line in body.splitlines():
+            stripped = line.strip()
+            if stripped.startswith(f"{name} ="):
+                return cast(stripped.split("=", 1)[1].split("#")[0].strip())
+        raise AssertionError(f"no assignment for {name} in design_room()")
+
+    z, r, n = assigned("Z_POD", float), assigned("R_VIEW", float), assigned("N", int)
+    assert z > r, f"viewers at R={r} are outside the band at z={z}"
+    assert n == round(engines_needed(z, 0.50)), "N does not match 2*pi*z/D"

@@ -1,5 +1,8 @@
 ## Network Transmission and the Agent Layer
 
+> **⚠ `W = D·(b/a)` appears below as a capability. It is a VISIBILITY BOUND (permission), not a mechanism.** Operative law: `a_min = D·p/(D−W)`, no solution once `W ≥ D`. Corrected in `docs/11` §4.2a; this file is a section source for `docs/10` and inherits its status — see `docs/00_INDEX.md`.
+
+
 The network carries a person's *state*, not their picture. Every number in this section follows from that one decision: 215 floats per frame, a fixed-width struct, one datagram per captured frame set, and a wire rate that sits two to three orders of magnitude below every volumetric-telepresence system ever measured. This section specifies the wire format exactly, derives the bitrate ladder from packing arithmetic rather than quoting it, reports the first direct measurement of the compression assumption underneath the headline number, gives the per-stage latency accounting against ITU-T G.114, and specifies the CAMARA/Nokia Network-as-Code agent layer that defends the path.
 
 **Scope note, so no optical claim is implied.** Nothing in this section depends on which aperture mode the receiving device uses. The state vector describes the *person*; whether the far end renders them in the viewer's own space (`W_image ≤ D_aperture`) or beyond the device (`W = D·(b/a)`, which may exceed `D`) — `01_SYSTEM_MASTER_SPEC.md` §4.3b — changes only the receiver's view-synthesis stage and its per-frame pixel count, never the packet. This is why one transport spec serves all six device forms in `09_DEVICE_DESIGNS.md`. The single place the optics reach back into this section is latency: the head-tracked architecture (§4.4) puts observer tracking inside the loop, and §8 below budgets it.

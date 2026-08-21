@@ -1,5 +1,23 @@
 # TAYF — Universal Engineering Document
 
+> ## ⚠ PARTLY SUPERSEDED — read [`docs/00_INDEX.md`](00_INDEX.md) first
+>
+> This document remains the deepest derivation in the project and several arguments exist nowhere
+> else. It **predates documents 11–16**, which changed the following. Where they disagree, they win.
+>
+> | This document says | Now |
+> |---|---|
+> | The product is a family of six flat apertures | **Two products:** TAYF-C35, a 350 mm cube (`docs/11`), and THE ROOM, a 3.5–4 m installed room (`docs/13`). The six-form family is historical. |
+> | Depth planes sized geometrically (≈33 mm steps) | **1–2 planes.** The eye resolves depth in diopters; one depth-of-field slab is ~1 m thick at pod distance (`docs/15`). The swept-focus element, the 2,700 Hz requirement and the $10–50k component are all **deleted**. |
+> | Correct accommodation is the headline advantage | **Accommodation is 268× weaker than stereopsis** and the ratio is distance-independent. VAC is a comfort problem, not a depth problem. Lead with **multi-viewer** (`docs/13` §6, `eng/03_PHYSICS/depth_cues.py`). |
+> | L2 tables read as capability | **Visibility bounds, not mechanisms.** `a_min = D·p/(D−W)`, no solution once `W ≥ D` (`docs/11` §4.2a). |
+> | Magnification unity `[MEASURED]` | `[DERIVED: M = 1]` by isometry, **for conventional AIRR**; LeAIRR/Fresnel-AIRR are named exceptions (§4, corrected below). |
+> | Next step: V0, a 50 cm static disc | **PQ-1 bench, ~$215** — measures η_RR and settles whether anyone can perceive the difference at all (`experiments/perceptual-quality/BENCH.md`). |
+> | Defensible IP includes observer-tracked emission | **Anticipated** by Google US11474597B2, active to 2040 — which `docs/05` §3.4 of this repository had already found (`docs/14` §5). |
+>
+> §9's eliminations, the tiering discipline, and the physics derivations stand unchanged.
+
+
 **Version 1.0 · 2026-08-16 · supersedes nothing, consolidates everything.**
 
 This is the single document. Everything the project knows, from first principles to part numbers, with every load-bearing claim tagged by how much we actually trust it. It exists because the knowledge was scattered across nine specification documents, 175 deep-read papers, six simulation programs and two days of dead ends, and because a project that cannot state its own confidence honestly cannot be built from.
@@ -146,6 +164,9 @@ For calibration against what you already accept without complaint: FaceTime on a
 | 20 cm device gives | a 20 cm head | a full upper body at 1.2 m |
 | Cost | device must be as big as the subject | you look through a frame |
 
+> **⚠ Scoping, added 2026-08-21.** The portal (L2) column and the `portal`-mode rows below are **visibility bounds, not capability claims** — `W = D·(b/a)` says where such an image may be *seen from*, never that a device can *produce* one. The operative law is `a_min = D·p/(D−W)`, with **no solution once `W ≥ D`** (`docs/11` §4.2a). A 20 cm device showing "an upper body at 1.2 m" means *a 20 cm window you look through*, not an upper body standing in your room — and the README asserted the latter until it was retracted (`docs/11` §1.3).
+
+
 Both are legitimate. Both are built below.
 
 ### 2.5 What the laws do *not* constrain
@@ -168,7 +189,7 @@ Depth. An aperture is an emitting **area**; its thickness is set only by how far
 
 | # | Form | Aperture | Shows | Mode |
 |---|---|---|---|---|
-| 1 | **Desk slab** | 20 × 20 cm | upper body at 1.2 m | portal |
+| 1 | **Desk slab** | 20 × 20 cm | upper body at 1.2 m — **portal only, see the scoping note in §2.2** | portal |
 | 2 | **Folio** (folds to a book) | 30 × 21 cm (A4) | upper body / face | either |
 | 3 | **Disc** | 50 cm | head + shoulders | in-front |
 | 4 | **Chair** | 55 × 80 cm | seated upper body, in the chair | in-front |
@@ -412,7 +433,7 @@ Everything in this table was read from Yamamoto 2017 today. It replaces reasoned
 | Quantity | Value | Tag | Where |
 |---|---|---|---|
 | Image position | plane-symmetric to source about the beamsplitter | [MEASURED] | Fig. 2, card interception |
-| Magnification | unity (mirror image, left-right reversed) | [MEASURED] | Fig. 2b |
+| Magnification | unity (mirror image, left-right reversed), **for conventional AIRR** | **[PUBLISHED: plane symmetry] → [DERIVED: M = 1]** | Yamamoto never states a magnification figure; unity follows by isometry. **This strengthens the claim** — a geometric argument beats a measurement. Exceptions: LeAIRR / Fresnel-AIRR. `[Retiered 2026-08-21 per docs/11 §7]` |
 | Independence from retroreflector shape/position | confirmed with curved plate and draped fabric | [MEASURED] | Figs. 5, 6 |
 | **Horizontal viewing range, table-top aerial LED screen** | **170° left-to-right (±85°)** | **[MEASURED]** | §2.2, §3.1 |
 | What limits that range | **the LED panel's own emission directivity**, not the AIRR optics | [PUBLISHED] | §3.1 |
@@ -616,7 +637,11 @@ Mitigations, in order of value [DERIVED]: p-AIRR (2–4×, §4.2); restricting t
 
 ##### Depth of float
 
-**Float distance = source setback, exactly and only** [DERIVED + MEASURED, §2.1 property 3]. There is no other parameter. Consequences:
+**Float distance = source setback, exactly and only — for CONVENTIONAL AIRR** [DERIVED + MEASURED, §2.1 property 3]. There is no other parameter *in this family*.
+
+> **⚠ Corrected 2026-08-21 per `docs/11` §7.** The Fresnel-AIRR variant breaks precisely this 1:1 relation — that is what the added optic buys and what it charges for. Read the consequences below as scoped to conventional AIRR, per `research/METHODOLOGY.md` rule 3.
+
+Consequences:
 
 - A device that floats its image `d` in front of the beamsplitter must place its panel `d` behind it, so **device depth ≥ float distance + fold volume**. This is why the aperture law's "an aperture is an area, not a volume" (§1.4) still leaves a depth term: the depth is bought by float distance, never by image size.
 - The 45° beamsplitter must have clear diagonal `≥ d·√2` [DERIVED] — the geometry that kills a 100 mm float inside a 100 mm cube (141 mm diagonal required) and permits a 40 mm float (57 mm diagonal), per `02_...` §6.4/Layout C. That arithmetic is unchanged.

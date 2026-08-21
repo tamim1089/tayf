@@ -1,5 +1,26 @@
 # Optical Engine — Two-Track Spec
 
+> ## ⚠ THE CHOICE IS MADE — updated 2026-08-21
+>
+> This document framed the optical engine as a two-track decision still open. It is closed.
+>
+> **Engine: DMD + LED + fixed-focus relay.** No swept element, no varifocal, no phase SLM,
+> no scanned beam. 15 of them in a ring, `N = 2πz/D` (`docs/13` §1).
+>
+> - The **swept-focus element is deleted**, not chosen — a person fits inside one depth-of-field
+>   slab at pod distance, so the plane count is 1–2 rather than 24–32 (`docs/15` §2). The
+>   2,700 Hz requirement and the $10–50k component it implied were artefacts of sizing depth
+>   geometrically instead of perceptually.
+> - **Scanned beam is rejected on throughput** by two orders of magnitude (`docs/13` §7).
+> - **Phase SLM is rejected on cost** — 15 × $10k against 15 × $900.
+> - **Sources are LEDs, not lasers** — ~1,000× light headroom (`docs/13` §4) spent on the easier
+>   regulatory path (IEC 62471 rather than IEC 60825-1) and on lower export-control exposure.
+>
+> What remains genuinely open is **not** the engine: it is the **HOE relay band**, which has to be
+> invented rather than bought, and which `docs/14` §5 identifies as the only surviving moat.
+> Read `docs/13` §2 and §7 and `docs/15` §2 in place of the two-track framing below.
+
+
 Source: `FilesPlan.md` §3, `research/arxiv/online_findings.md`. This is the single most consequential hardware decision in the project — nothing else in the display stage can proceed until the hackathon-track choice below is made.
 
 ## The physics constraint (why this is hard)

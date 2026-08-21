@@ -1,6 +1,6 @@
 # Free-Space Optical Engineering for TAYF
 
-> ### ⚠ SUPERSEDED IN PART — read [`docs/10_TAYF_UNIVERSAL_ENGINEERING.md`](10_TAYF_UNIVERSAL_ENGINEERING.md) first
+> ### ⚠ SUPERSEDED IN PART — read [`docs/00_INDEX.md`](00_INDEX.md) first, then [`docs/10_TAYF_UNIVERSAL_ENGINEERING.md`](10_TAYF_UNIVERSAL_ENGINEERING.md)
 >
 > This document predates the current design and is kept as a **detail source and historical record**, not as a specification. Where it disagrees with document 10, document 10 wins. Specifically superseded:
 > - **The device is not a 10 cm cube.** It is a family of flat apertures (20 cm slab → A4 folio → 50 cm disc → chair → mirror), sized by the aperture law. Depth is dead weight; every form is a slab.
@@ -967,7 +967,7 @@ A document like this is only useful if it is wrong in checkable ways. Each claim
 | 5 | Plasma sparse wireframe (1.5×10⁵ vox/s) is thermally marginal at 3.6–36 W | The same threshold measurement, plus the plasma luminous-efficiency measurement (§7.4). These two numbers decide the branch and neither is currently known to this project |
 | 6 | Brightness is not a constraint for any wavefront branch (1–4 lm needed) | An ambient-contrast measurement showing that a see-through free-space image at 200 cd/m² is unreadable against a 500 lux room — plausible, and untested |
 | 7 | The binding thermal constraint for CGH is compute, not optics | A CGH method that runs at video rate for face content within 5 W. 2409.11049 and 2404.10777 are the nearest; neither has been ported to an edge SoC or run on a face |
-| 8 | AIRR inside a 10 cm cube is bounded at ≤60 mm image / 40 mm float | Journal access showing a magnifying AIRR variant. The unit-magnification argument is solid for pure retroreflection; a hybrid Fresnel-AIRR system is exactly what "Reducing thickness of long-distance aerial display system in AIRR using Fresnel lens" (Optical Review 2023) sounds like it addresses |
+| 8 | **MET 2026-08-21.** AIRR inside a 10 cm cube is bounded at ≤60 mm image / 40 mm float. **The falsifier arrived: LeAIRR / Fresnel-AIRR is real and published** (`docs/11` §4.1, `docs/12`). **The bound survives anyway** — magnifying AIRR destroys the 170° viewing angle (3° as built, 24.5° best case) and needs an optic 3.9× larger than the image (Sakane 2023: a 1400×1050 mm Fresnel for a 360×360 mm image), so the constraint relocates from the panel to the exit optic rather than lifting. | Journal access showing a magnifying AIRR variant. The unit-magnification argument is solid for pure retroreflection; a hybrid Fresnel-AIRR system is exactly what "Reducing thickness of long-distance aerial display system in AIRR using Fresnel lens" (Optical Review 2023) sounds like it addresses |
 | 9 | 2511.22639's wide FOV buys angle by spending resolution at fixed mode count | The paper reporting a dynamic mode count above its SLM's 4×10⁶ — which would violate mode conservation and should be treated as a measurement error until explained |
 | 10 | Track D's view-count requirement (116 at ±20°) may be wrong by up to 116× | arXiv 2401.02171's flat-2D result generalizing to free-space multi-viewer. **This is the single highest-leverage untested hypothesis in the entire project** and it is cheap to test with the hackathon-track panel |
 

@@ -447,6 +447,77 @@ def design_family():
         note="each plate is exactly as tall as the figure it shows: W <= D")
 
 
+
+def design_room():
+    """THE ROOM (docs/13): 360-degree free-space telepresence, N = 15 engines.
+
+    The governing law is N = 2*pi*z / D_aperture -- to be seen from every
+    direction, the apertures must tile 360 degrees AT THE IMAGE. It is the
+    clipping theorem applied to a ring rather than to one plate, and it is why
+    this is a small room and not a boardroom: 15 engines at z = 1.2 m, 88 at
+    z = 3.5 m, for exactly the same picture.
+
+    Viewers stand at R ~ 1.3 m. That distance is not an aesthetic choice. Two
+    constraints pull opposite ways -- closer than ~1 m a body spans several
+    diopters and needs multiple focal planes, further than ~2 m the
+    image-vs-background cue falls below threshold and the free-space advantage
+    is not subtle but absent. R = 1.30-1.35 m satisfies both for EVERY
+    plausible depth-of-field figure between 0.20 and 0.50 D
+    (eng/03_PHYSICS/accommodation.py, robust_window()).
+
+    Engines are FIXED FOCUS. A person fits inside a single depth-of-field slab
+    at this distance, so the plane count is 1-2, not the 24-32 that docs/13
+    section 7 originally specified -- which is what deleted the swept-focus
+    element and the deformable mirrors with it (docs/15).
+
+    GEOMETRY CONSTRAINT, found by rendering this model: viewers stand INSIDE
+    the aperture ring, so z > R necessarily. The first version of this function
+    used z = 1.2 m with R = 1.3 m, which puts the audience outside their own
+    walls. docs/13 section 1.1 quotes z = 1.2-1.5 m as a range; only the upper
+    end is compatible with the R = 1.3 m design point, so z = 1.5 m and N = 19.
+    z = 1.2 m / N = 15 is reachable only by moving viewers closer than 1.2 m,
+    where a body starts to need a second focal plane.
+    """
+    m = Mesh()
+    Z_POD = 1.5                                # image-to-aperture, m; > R_VIEW
+    R_VIEW = 1.3                               # viewer ring radius, m
+    N = 19                                     # 2*pi*z/D at D = 0.5 m
+    H_BAND = 1.75                              # aperture band height, m
+    Y_BAND = 0.55                              # band bottom off the floor, m
+
+    m.group("aperture_band")                   # the HOE relay, 360 degrees
+    for i in range(N * 3):                     # 3 segments per engine pitch
+        a0 = 2 * math.pi * i / (N * 3)
+        a1 = 2 * math.pi * (i + 1) / (N * 3)
+        x0, z0 = Z_POD * math.sin(a0), Z_POD * math.cos(a0)
+        x1, z1 = Z_POD * math.sin(a1), Z_POD * math.cos(a1)
+        m.quad((x0, Y_BAND, z0), (x1, Y_BAND, z1),
+               (x1, Y_BAND + H_BAND, z1), (x0, Y_BAND + H_BAND, z0))
+
+    m.group("engines")                         # N steered DMD engines, ceiling ring
+    for i in range(N):
+        a = 2 * math.pi * i / N
+        m.box(Z_POD * math.sin(a), Y_BAND + H_BAND + 0.13, Z_POD * math.cos(a),
+              0.16, 0.11, 0.16)
+
+    m.group("image_volume")                    # the remote person, life size
+    m.human(0.0, 0.0, height=1.72)
+
+    m.group("viewers")                         # four locals at the design radius
+    for i in range(4):
+        a = 2 * math.pi * i / 4 + math.pi / 4
+        m.human(R_VIEW * math.sin(a), R_VIEW * math.cos(a),
+                height=1.70, facing=-1.0)
+
+    return m, "01_the_room", dict(
+        aperture=f"{N} engines x 0.50 m, tiling 360 deg at z = {Z_POD} m",
+        depth=f"{2*Z_POD:.1f} m diameter band, {H_BAND} m tall",
+        shows="a life-size person, viewable from every direction",
+        note=(f"N = 2*pi*z/D. Viewers at R = {R_VIEW} m, INSIDE the ring, so "
+              f"z > R is forced. One focal plane suffices there and the depth "
+              f"cue is still perceptible. Engines are fixed focus (docs/15)."))
+
+
 def design_cube():
     """THE CUBE: TAYF-C35, 350 mm cube, life-size head AND neck floating in air.
 
@@ -518,7 +589,7 @@ def design_cube():
         note="THE CUBE (C35). M=1 exactly; shoulders fail on WIDTH, not height")
 
 
-DESIGNS = [design_cube, design_family, design_table_scene, design_chair_scene, design_folio, design_mirror, design_doorway,
+DESIGNS = [design_room, design_cube, design_family, design_table_scene, design_chair_scene, design_folio, design_mirror, design_doorway,
            design_disc, design_shopwindow, design_c2table]
 
 

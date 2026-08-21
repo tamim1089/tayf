@@ -1,3 +1,19 @@
+# MATD acoustic-trapping display — HISTORICAL
+
+> ### ⚠ RULED OUT — do not build from this file
+>
+> Acoustic trapping (MATD) was evaluated as a display mechanism and **eliminated with
+> quantitative reasons**, alongside the plasma and photophoretic routes — see
+> `docs/10_TAYF_UNIVERSAL_ENGINEERING.md` §9 and `docs/roadmap.md`. Among the disqualifiers:
+> Bjerknes collapse limits multi-particle scaling, and the mechanism requires an enclosed
+> transducer chamber, which is a window and therefore fails `thedream.md` rule 4 — the same
+> failure that kills the 1988 rubidium cube in `docs/12`.
+>
+> Kept for the reasoning and the decision trail, per `research/METHODOLOGY.md` rule 4.
+> The live optical path is `docs/13` §7 and `hardware/optical-engine.md`.
+
+---
+
 A MATD (Multimodal Acoustic Trapping Display) hologram stream refers to a continuous, real-time data broadcast designed to feed a specialized 3D volumetric display that projects physical mid-air imagery you can simultaneously see, hear, and feel. [1, 2, 3, 4] 
 Instead of streaming traditional 2D flat video pixels (like H.264 streams used by YouTube or Netflix), a MATD stream broadcasts compressed 3D point vectors, acoustic modulation parameters, and lighting attributes. [1] 
 The mechanics of this data architecture break down as follows:

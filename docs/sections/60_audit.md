@@ -1,5 +1,8 @@
 ## Confidence Audit and Open Problems
 
+> **⚠ `W = D·(b/a)` appears below as a capability. It is a VISIBILITY BOUND (permission), not a mechanism.** Operative law: `a_min = D·p/(D−W)`, no solution once `W ≥ D`. Corrected in `docs/11` §4.2a; this file is a section source for `docs/10` and inherits its status — see `docs/00_INDEX.md`.
+
+
 This section is the document's warranty. Everything above it argues; this argues with it. It does four things: it tags every load-bearing claim in TAYF with the evidence that actually supports it, it lists the errors this project made and caught, it records the mechanisms that were killed and the arithmetic that killed them, and it ranks what is still unknown. A design document that cannot say which of its numbers were measured, which were computed, and which were guessed is not an engineering document — it is a pitch.
 
 The corrections log (§60.3) is deliberately prominent. Every item in it was a conclusion this project held, acted on, and then reversed. Two of them reversed a *"physically impossible"* verdict into *"fits with margin"*, which is the expensive direction to be wrong in.

@@ -1,6 +1,6 @@
 # 01 — TAYF System Master Specification
 
-> ### ⚠ SUPERSEDED IN PART — read [`docs/10_TAYF_UNIVERSAL_ENGINEERING.md`](10_TAYF_UNIVERSAL_ENGINEERING.md) first
+> ### ⚠ SUPERSEDED IN PART — read [`docs/00_INDEX.md`](00_INDEX.md) first, then [`docs/10_TAYF_UNIVERSAL_ENGINEERING.md`](10_TAYF_UNIVERSAL_ENGINEERING.md)
 >
 > This document predates the current design and is kept as a **detail source and historical record**, not as a specification. Where it disagrees with document 10, document 10 wins. Specifically superseded:
 > - **The device is not a 10 cm cube.** It is a family of flat apertures (20 cm slab → A4 folio → 50 cm disc → chair → mirror), sized by the aperture law. Depth is dead weight; every form is a slab.
@@ -212,6 +212,20 @@ Two consequences, both hard geometry rather than engineering limits:
 **The clearest statement of the whole constraint:** *put a lamp where the viewer's eye is — the region the device can fill with image is exactly the shadow its aperture casts.* Behind the cube that shadow has spread, so the image can exceed the cube's size (portal mode, works). In front, it hasn't spread, so the image is smaller than the cube. Beside the cube there is no shadow, so there is no image. There is no third case, because there is no third thing a straight line can do.
 
 ### 4.3c Viewer distance `a` is a free variable — and it changes the product
+
+> **⚠ Corrected 2026-08-21 per `docs/11_THE_CUBE.md` §7** — a correction written there and, until now, never applied here.
+> **`W = D·(b/a)` is a VISIBILITY BOUND (permission), not a MECHANISM (capability).** It states
+> where an image beyond the device may be *seen from*. It does not state that any device can
+> *produce* such an image, and this document's L2 tables read as though it does. The operative
+> law for a real device is the minimum viewing distance
+> ```
+> a_min = D·p/(D − W)
+> ```
+> which **has no solution once `W ≥ D`.** Validated against Sakane 2025 (D = 1000 mm,
+> W = 360 mm, p = 3700 mm → 5.78 m; experiment run at 10/15/20 m). Read every L2 figure below
+> as *"if such an image existed, here is where you could stand to see it"* — never as a
+> capability claim. Full correction in `docs/11` §4.2(a).
+
 
 Everything above was computed at a fixed a = 1 m. **But `a` is just where the user puts the cube, making it arguably the most freely adjustable parameter in the entire system, and it was never varied.** Since W = D·(b/a) depends only on the ratio:
 
