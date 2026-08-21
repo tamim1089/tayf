@@ -7,6 +7,8 @@ document by the project owner. Everything else — no headset, no glasses, life-
 free-space, 360° — is retained. This describes a *different product* from `docs/11_THE_CUBE.md`
 (TAYF-C35), which remains the rules-compliant design. Both are kept.
 
+**Business, legal, logistics and the full cost stack are in `docs/16_BUSINESS_LEGAL_AND_LOGISTICS.md`.**
+
 **Read `docs/14_TELEHUMAN_AND_THE_PATENT_GAP.md` alongside this.** It corrects §11's moat claim,
 and it records that Queen's University built the broadcast version of this architecture in 2018
 (TeleHuman 2): 275 projectors needed for 360°, 45 affordable, 59° delivered, onto an acrylic
