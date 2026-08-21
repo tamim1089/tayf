@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="540" viewBox="0 0 960 540">
+<rect x="0" y="0" width="960" height="540" fill="#ffffff"/>
+<g font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, sans-serif">
+
+<text x="56" y="40" font-size="19" font-weight="600" fill="#0f1419">AIRR ray path</text>
+<text x="56" y="64" font-size="13" font-weight="400" fill="#5b6672">Every ray returns on its own line, so the light refocuses in open air at exactly 1x, with no screen.</text>
+
+<rect x="56" y="82" width="848" height="370" rx="5" fill="#f7fafc" stroke="#d8dee6" stroke-width="1"/>
+
+<line x1="56" y1="462" x2="904" y2="462" stroke="#d8dee6" stroke-width="1"/>
+<text x="56" y="478" font-size="11.5" font-weight="400" fill="#5b6672">Three static elements. Nothing scans, spins or moves. Viewing angle 170 deg measured (Yamamoto 2017, DOI 10.11370/isj.56.341).</text>
+<text x="56" y="492" font-size="11.5" font-weight="400" fill="#5b6672">Unit magnification: image size = source size.</text>
+
+</g>
+</svg>

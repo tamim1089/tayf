@@ -1,0 +1,130 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="540" viewBox="0 0 960 540">
+<rect x="0" y="0" width="960" height="540" fill="#ffffff"/>
+
+<text x="56" y="40" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, sans-serif" font-size="19" font-weight="600" fill="#0f1419">AIRR ray path</text>
+<text x="904" y="39" text-anchor="end" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, sans-serif" font-size="11.5" font-weight="600" letter-spacing="1.2" fill="#5b6672">AERIAL IMAGING BY RETRO-REFLECTION</text>
+<text x="56" y="64" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, sans-serif" font-size="13" font-weight="400" fill="#5b6672">A beamsplitter folds source light onto a retroreflector; the return pass converges to a real image in mid-air.</text>
+<line x1="56" y1="78" x2="904" y2="78" stroke="#d8dee6" stroke-width="1"/>
+
+<line x1="676" y1="92" x2="676" y2="444" stroke="#d8dee6" stroke-width="1"/>
+<line x1="56" y1="456" x2="904" y2="456" stroke="#d8dee6" stroke-width="1"/>
+<text x="56" y="472" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, sans-serif" font-size="11.5" font-weight="400" fill="#5b6672">Three static elements. Nothing scans, spins or moves. Viewing angle 170 deg measured (Yamamoto 2017, DOI 10.11370/isj.56.341).</text>
+<text x="56" y="487" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, sans-serif" font-size="11.5" font-weight="400" fill="#5b6672">Unit magnification: image size = source size.</text>
+
+<rect x="570" y="114" width="32" height="228" rx="5" fill="#0d9668" fill-opacity="0.05"/>
+<rect x="575" y="122" width="22" height="212" rx="5" fill="#0d9668" fill-opacity="0.07"/>
+
+<line x1="306" y1="420" x2="306" y2="426" stroke="#5b6672" stroke-width="1"/>
+<line x1="506" y1="420" x2="506" y2="426" stroke="#5b6672" stroke-width="1"/>
+<line x1="306" y1="424" x2="306" y2="436" stroke="#5b6672" stroke-width="1"/>
+<line x1="506" y1="424" x2="506" y2="436" stroke="#5b6672" stroke-width="1"/>
+<line x1="306" y1="430" x2="390" y2="430" stroke="#5b6672" stroke-width="1"/>
+<line x1="422" y1="430" x2="506" y2="430" stroke="#5b6672" stroke-width="1"/>
+<text x="406" y="434" text-anchor="middle" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, sans-serif" font-size="13" font-weight="700" fill="#0f1419">w</text>
+
+<line x1="594" y1="128" x2="608" y2="128" stroke="#5b6672" stroke-width="1"/>
+<line x1="594" y1="328" x2="608" y2="328" stroke="#5b6672" stroke-width="1"/>
+<line x1="606" y1="128" x2="618" y2="128" stroke="#5b6672" stroke-width="1"/>
+<line x1="606" y1="328" x2="618" y2="328" stroke="#5b6672" stroke-width="1"/>
+<line x1="612" y1="128" x2="612" y2="216" stroke="#5b6672" stroke-width="1"/>
+<line x1="612" y1="248" x2="612" y2="328" stroke="#5b6672" stroke-width="1"/>
+<text x="612" y="233" text-anchor="middle" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, sans-serif" font-size="13" font-weight="700" fill="#0f1419">w</text>
+
+<line x1="406" y1="408" x2="581" y2="233" stroke="#5b6672" stroke-width="1" stroke-dasharray="5 4"/>
+<polyline points="500.2,322.2 504.4,318 500.2,313.8" fill="none" stroke="#5b6672" stroke-width="1"/>
+<text x="462" y="374" text-anchor="middle" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, sans-serif" font-size="13" font-weight="700" fill="#0f1419">d</text>
+<text x="552" y="284" text-anchor="middle" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, sans-serif" font-size="13" font-weight="700" fill="#0f1419">d</text>
+
+<g stroke="#b8860b" stroke-width="1.6" stroke-linecap="round" stroke-opacity="0.95" fill="none">
+<line x1="306" y1="408" x2="306" y2="128"/>
+<line x1="306" y1="128" x2="166" y2="128"/>
+<line x1="306" y1="128" x2="586" y2="128"/>
+<line x1="306" y1="408" x2="355.08" y2="177.08"/>
+<line x1="355.08" y1="177.08" x2="166" y2="217.27"/>
+<line x1="355.08" y1="177.08" x2="586" y2="128"/>
+<line x1="306" y1="408" x2="392.26" y2="214.26"/>
+<line x1="392.26" y1="214.26" x2="166" y2="314.99"/>
+<line x1="392.26" y1="214.26" x2="586" y2="128"/>
+</g>
+<g stroke="#b8860b" stroke-width="1.6" stroke-linecap="round" stroke-opacity="0.55" fill="none">
+<line x1="506" y1="408" x2="506" y2="328"/>
+<line x1="506" y1="328" x2="166" y2="328"/>
+<line x1="506" y1="328" x2="586" y2="328"/>
+<line x1="506" y1="408" x2="484.41" y2="306.41"/>
+<line x1="484.41" y1="306.41" x2="166" y2="238.73"/>
+<line x1="484.41" y1="306.41" x2="586" y2="328"/>
+<line x1="506" y1="408" x2="441.80" y2="263.80"/>
+<line x1="441.80" y1="263.80" x2="166" y2="141.01"/>
+<line x1="441.80" y1="263.80" x2="586" y2="328"/>
+</g>
+<polygon points="0,0 -9,3.4 -9,-3.4" fill="#b8860b" fill-opacity="0.95" transform="translate(335.5,269.5) rotate(-78)"/>
+<polygon points="0,0 -9,3.4 -9,-3.4" fill="#b8860b" fill-opacity="0.95" transform="translate(210,128) rotate(180)"/>
+<polygon points="0,0 -9,3.4 -9,-3.4" fill="#b8860b" fill-opacity="0.95" transform="translate(270,128) rotate(0)"/>
+<polygon points="0,0 -9,3.4 -9,-3.4" fill="#b8860b" fill-opacity="0.95" transform="translate(537.6,149.5) rotate(-24)"/>
+<polygon points="0,0 -9,3.4 -9,-3.4" fill="#b8860b" fill-opacity="0.55" transform="translate(493,347) rotate(-102)"/>
+<polygon points="0,0 -9,3.4 -9,-3.4" fill="#b8860b" fill-opacity="0.55" transform="translate(549.9,311.9) rotate(24)"/>
+
+<polygon points="276.12,93.88 540.12,357.88 535.88,362.12 271.88,98.12" fill="#0f1419" fill-opacity="0.07"/>
+<line x1="274" y1="96" x2="538" y2="360" stroke="#0f1419" stroke-width="2" stroke-opacity="0.85"/>
+
+<rect x="148" y="118" width="6" height="220" rx="3" fill="#2563a8" fill-opacity="0.12" stroke="#2563a8" stroke-width="1.4"/>
+<polyline points="166,118 154,128 166,138 154,148 166,158 154,168 166,178 154,188 166,198 154,208 166,218 154,228 166,238 154,248 166,258 154,268 166,278 154,288 166,298 154,308 166,318 154,328 166,338" fill="#2563a8" fill-opacity="0.10" stroke="#2563a8" stroke-width="1.6" stroke-linejoin="round"/>
+
+<rect x="306" y="408" width="200" height="10" rx="3" fill="#0d9668" fill-opacity="0.12" stroke="#0d9668" stroke-width="2"/>
+<line x1="307" y1="408" x2="505" y2="408" stroke="#0d9668" stroke-width="3"/>
+
+<rect x="581" y="128" width="10" height="200" rx="3" fill="#0d9668" fill-opacity="0.14" stroke="#0d9668" stroke-width="2.2"/>
+
+<circle cx="95" cy="101" r="9" fill="#ffffff" stroke="#0f1419" stroke-width="1.5"/>
+<text x="95" y="105" text-anchor="middle" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, sans-serif" font-size="11.5" font-weight="700" fill="#0f1419">3</text>
+<text x="114" y="105" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, sans-serif" font-size="12.5" font-weight="600" fill="#0f1419">RETROREFLECTOR</text>
+
+<circle cx="183" cy="413" r="9" fill="#ffffff" stroke="#0f1419" stroke-width="1.5"/>
+<text x="183" y="417" text-anchor="middle" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, sans-serif" font-size="11.5" font-weight="700" fill="#0f1419">1</text>
+<text x="200" y="417" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, sans-serif" font-size="12.5" font-weight="600" fill="#0f1419">SOURCE PANEL</text>
+
+<circle cx="556" cy="378" r="9" fill="#ffffff" stroke="#0f1419" stroke-width="1.5"/>
+<text x="556" y="382" text-anchor="middle" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, sans-serif" font-size="11.5" font-weight="700" fill="#0f1419">2</text>
+<text x="573" y="374" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, sans-serif" font-size="12.5" font-weight="600" fill="#0f1419">BEAMSPLITTER</text>
+<text x="573" y="390" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, sans-serif" font-size="11.5" font-weight="400" fill="#5b6672">45 deg plate</text>
+
+<circle cx="505" cy="102" r="9" fill="#0d9668" stroke="#0d9668" stroke-width="1.5"/>
+<text x="505" y="106" text-anchor="middle" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, sans-serif" font-size="11.5" font-weight="700" fill="#ffffff">4</text>
+<text x="522" y="106" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, sans-serif" font-size="12.5" font-weight="700" fill="#0d9668">REAL AERIAL IMAGE</text>
+
+<text x="176" y="358" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, sans-serif" font-size="11.5" font-weight="400" fill="#5b6672">Retro-reflection:</text>
+<text x="176" y="374" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, sans-serif" font-size="11.5" font-weight="400" fill="#5b6672">every ray returns</text>
+<text x="176" y="390" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, sans-serif" font-size="11.5" font-weight="400" fill="#5b6672">on its own line.</text>
+
+<text x="700" y="104" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, sans-serif" font-size="11.5" font-weight="600" letter-spacing="1.4" fill="#5b6672">SEQUENCE</text>
+
+<circle cx="709" cy="124" r="9" fill="#ffffff" stroke="#0f1419" stroke-width="1.5"/>
+<text x="709" y="128" text-anchor="middle" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, sans-serif" font-size="11.5" font-weight="700" fill="#0f1419">1</text>
+<text x="726" y="128" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, sans-serif" font-size="11.5" font-weight="400" fill="#5b6672">Source panel emits diffuse</text>
+<text x="726" y="143" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, sans-serif" font-size="11.5" font-weight="400" fill="#5b6672">light over a wide cone.</text>
+
+<circle cx="709" cy="165" r="9" fill="#ffffff" stroke="#0f1419" stroke-width="1.5"/>
+<text x="709" y="169" text-anchor="middle" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, sans-serif" font-size="11.5" font-weight="700" fill="#0f1419">2</text>
+<text x="726" y="169" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, sans-serif" font-size="11.5" font-weight="400" fill="#5b6672">Beamsplitter at 45 deg turns</text>
+<text x="726" y="184" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, sans-serif" font-size="11.5" font-weight="400" fill="#5b6672">the bundle sideways, onto</text>
+<text x="726" y="199" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, sans-serif" font-size="11.5" font-weight="400" fill="#5b6672">the retroreflector.</text>
+
+<circle cx="709" cy="221" r="9" fill="#ffffff" stroke="#0f1419" stroke-width="1.5"/>
+<text x="709" y="225" text-anchor="middle" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, sans-serif" font-size="11.5" font-weight="700" fill="#0f1419">3</text>
+<text x="726" y="225" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, sans-serif" font-size="11.5" font-weight="400" fill="#5b6672">Retroreflector sends each</text>
+<text x="726" y="240" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, sans-serif" font-size="11.5" font-weight="400" fill="#5b6672">ray back along its own</text>
+<text x="726" y="255" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, sans-serif" font-size="11.5" font-weight="400" fill="#5b6672">incoming line.</text>
+
+<circle cx="709" cy="277" r="9" fill="#0d9668" stroke="#0d9668" stroke-width="1.5"/>
+<text x="709" y="281" text-anchor="middle" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, sans-serif" font-size="11.5" font-weight="700" fill="#ffffff">4</text>
+<text x="726" y="281" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, sans-serif" font-size="11.5" font-weight="400" fill="#5b6672">The return pass transmits</text>
+<text x="726" y="296" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, sans-serif" font-size="11.5" font-weight="400" fill="#5b6672">through the splitter and</text>
+<text x="726" y="311" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, sans-serif" font-size="11.5" font-weight="400" fill="#5b6672">converges in open air.</text>
+
+<line x1="700" y1="333" x2="904" y2="333" stroke="#d8dee6" stroke-width="1"/>
+<text x="700" y="357" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, sans-serif" font-size="11.5" font-weight="600" letter-spacing="1.4" fill="#5b6672">GEOMETRY</text>
+<text x="700" y="379" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, sans-serif" font-size="11.5" font-weight="400" fill="#5b6672">Image = mirror of source in</text>
+<text x="700" y="394" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, sans-serif" font-size="11.5" font-weight="400" fill="#5b6672">the splitter plane, same d.</text>
+<text x="700" y="416" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, sans-serif" font-size="11.5" font-weight="400" fill="#5b6672">Magnification 1.0, exact: w = w.</text>
+<text x="700" y="438" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, sans-serif" font-size="11.5" font-weight="400" fill="#5b6672">Throughput &lt;= 25 pct (R x T).</text>
+</svg>

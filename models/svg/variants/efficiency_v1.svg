@@ -1,0 +1,108 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="540" viewBox="0 0 960 540" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, sans-serif">
+
+  <rect x="0" y="0" width="960" height="540" fill="#ffffff"/>
+
+  <!-- ============ HEADER ============ -->
+  <text x="56" y="40" font-size="19" font-weight="600" fill="#0f1419">Optical efficiency cascade</text>
+  <text x="56" y="64" font-size="13" font-weight="400" fill="#5b6672">Two beamsplitter crossings cost 75% of the source; the last 25% is only real if eta_RR is near 1.</text>
+  <line x1="56" y1="84" x2="904" y2="84" stroke="#d8dee6" stroke-width="1"/>
+
+  <!-- ============ SCALE AXIS ============ -->
+  <text x="236" y="104" font-size="11.5" font-weight="400" fill="#5b6672" text-anchor="end">share of source (%)</text>
+
+  <text x="252" y="104" font-size="11.5" font-weight="400" fill="#5b6672" text-anchor="middle">0</text>
+  <text x="332" y="104" font-size="11.5" font-weight="400" fill="#5b6672" text-anchor="middle">25</text>
+  <text x="412" y="104" font-size="11.5" font-weight="400" fill="#5b6672" text-anchor="middle">50</text>
+  <text x="492" y="104" font-size="11.5" font-weight="400" fill="#5b6672" text-anchor="middle">75</text>
+  <text x="572" y="104" font-size="11.5" font-weight="400" fill="#5b6672" text-anchor="middle">100</text>
+
+  <line x1="252" y1="114" x2="252" y2="120" stroke="#5b6672" stroke-width="1"/>
+  <line x1="332" y1="114" x2="332" y2="120" stroke="#5b6672" stroke-width="1"/>
+  <line x1="412" y1="114" x2="412" y2="120" stroke="#5b6672" stroke-width="1"/>
+  <line x1="492" y1="114" x2="492" y2="120" stroke="#5b6672" stroke-width="1"/>
+  <line x1="572" y1="114" x2="572" y2="120" stroke="#5b6672" stroke-width="1"/>
+  <line x1="252" y1="120" x2="572" y2="120" stroke="#d8dee6" stroke-width="1"/>
+
+  <!-- grid, drawn first so every mark sits above it -->
+  <line x1="332" y1="120" x2="332" y2="396" stroke="#d8dee6" stroke-width="1"/>
+  <line x1="412" y1="120" x2="412" y2="396" stroke="#d8dee6" stroke-width="1"/>
+  <line x1="492" y1="120" x2="492" y2="396" stroke="#d8dee6" stroke-width="1"/>
+  <line x1="572" y1="120" x2="572" y2="396" stroke="#d8dee6" stroke-width="1"/>
+  <line x1="252" y1="120" x2="252" y2="396" stroke="#5b6672" stroke-width="1"/>
+
+  <!-- ============ ROW 1 : source panel, 100% ============ -->
+  <text x="56" y="146" font-size="11.5" font-weight="400" fill="#5b6672">1</text>
+  <text x="236" y="146" font-size="12.5" font-weight="600" fill="#0f1419" text-anchor="end">source panel</text>
+  <text x="236" y="162" font-size="11.5" font-weight="400" fill="#5b6672" text-anchor="end">1000 cd/m2 emissive panel</text>
+  <rect x="252" y="132" width="320" height="34" rx="3" fill="#5b6672" fill-opacity="0.10" stroke="#5b6672" stroke-width="2"/>
+  <text x="264" y="153" font-size="13" font-weight="700" fill="#0f1419">100%</text>
+
+  <!-- ============ ROW 2 : beamsplitter pass 1, 50% ============ -->
+  <text x="56" y="202" font-size="11.5" font-weight="400" fill="#5b6672">2</text>
+  <text x="236" y="202" font-size="12.5" font-weight="600" fill="#0f1419" text-anchor="end">beamsplitter, pass 1</text>
+  <text x="236" y="218" font-size="11.5" font-weight="400" fill="#5b6672" text-anchor="end">reflect to retroreflector</text>
+  <rect x="416" y="188" width="156" height="34" rx="3" fill="#d8dee6" fill-opacity="0.55"/>
+  <rect x="252" y="188" width="160" height="34" rx="3" fill="#b8860b" fill-opacity="0.13" stroke="#b8860b" stroke-width="2"/>
+  <text x="264" y="209" font-size="13" font-weight="700" fill="#0f1419">50%</text>
+
+  <!-- ============ ROW 3 : retroreflector return, 50% ============ -->
+  <text x="56" y="258" font-size="11.5" font-weight="400" fill="#5b6672">3</text>
+  <text x="236" y="258" font-size="12.5" font-weight="600" fill="#0f1419" text-anchor="end">retroreflector return</text>
+  <text x="236" y="274" font-size="11.5" font-weight="600" fill="#2563a8" text-anchor="end">x eta_RR, UNMEASURED</text>
+  <rect x="416" y="244" width="156" height="34" rx="3" fill="#d8dee6" fill-opacity="0.55"/>
+  <rect x="252" y="244" width="160" height="34" rx="3" fill="#2563a8" fill-opacity="0.12" stroke="#2563a8" stroke-width="2" stroke-dasharray="6 4"/>
+  <text x="264" y="265" font-size="13" font-weight="700" fill="#0f1419">50%</text>
+
+  <!-- leader from the unmeasured stage to the note panel -->
+  <line x1="470" y1="261" x2="646" y2="261" stroke="#2563a8" stroke-width="1" stroke-dasharray="5 4"/>
+  <path d="M 648 257 L 658 261 L 648 265 Z" fill="#2563a8"/>
+
+  <!-- ============ ROW 4 : beamsplitter pass 2, 25% ============ -->
+  <text x="56" y="314" font-size="11.5" font-weight="400" fill="#5b6672">4</text>
+  <text x="236" y="314" font-size="12.5" font-weight="600" fill="#0f1419" text-anchor="end">beamsplitter, pass 2</text>
+  <text x="236" y="330" font-size="11.5" font-weight="400" fill="#5b6672" text-anchor="end">transmit to viewer</text>
+  <rect x="336" y="300" width="236" height="34" rx="3" fill="#d8dee6" fill-opacity="0.55"/>
+  <rect x="252" y="300" width="80" height="34" rx="3" fill="#b8860b" fill-opacity="0.13" stroke="#b8860b" stroke-width="2" stroke-dasharray="6 4"/>
+  <text x="264" y="321" font-size="13" font-weight="700" fill="#0f1419">25%</text>
+
+  <!-- ============ ROW 5 : aerial image, 25% ============ -->
+  <text x="56" y="370" font-size="11.5" font-weight="400" fill="#5b6672">5</text>
+  <text x="236" y="370" font-size="12.5" font-weight="600" fill="#0f1419" text-anchor="end">aerial image</text>
+  <text x="236" y="386" font-size="11.5" font-weight="400" fill="#5b6672" text-anchor="end">~250 cd/m2 at the viewer</text>
+  <rect x="336" y="356" width="236" height="34" rx="3" fill="#d8dee6" fill-opacity="0.55"/>
+  <rect x="252" y="356" width="80" height="34" rx="3" fill="#0d9668" fill-opacity="0.14" stroke="#0d9668" stroke-width="2" stroke-dasharray="6 4"/>
+  <text x="264" y="377" font-size="13" font-weight="700" fill="#0f1419">25%</text>
+
+  <!-- ============ NOTE PANEL : the unmeasured term ============ -->
+  <rect x="660" y="132" width="244" height="258" rx="5" fill="#2563a8" fill-opacity="0.06" stroke="#2563a8" stroke-width="1.6" stroke-dasharray="6 4"/>
+
+  <text x="674" y="162" font-size="12.5" font-weight="600" fill="#2563a8" letter-spacing="0.6">THE UNMEASURED TERM</text>
+  <text x="674" y="190" font-size="19" font-weight="700" fill="#0f1419">eta_RR</text>
+  <text x="674" y="210" font-size="11.5" font-weight="400" fill="#5b6672">retroreflector return efficiency</text>
+
+  <line x1="674" y1="224" x2="890" y2="224" stroke="#d8dee6" stroke-width="1"/>
+
+  <text x="674" y="246" font-size="11.5" font-weight="400" fill="#5b6672">Assumed 1.0 here. Not stated in</text>
+  <text x="674" y="262" font-size="11.5" font-weight="400" fill="#5b6672">any AIRR paper we have checked.</text>
+
+  <text x="674" y="286" font-size="11.5" font-weight="400" fill="#5b6672">Stages 3-5 all scale linearly</text>
+  <text x="674" y="302" font-size="11.5" font-weight="400" fill="#5b6672">with it. At eta_RR = 0.6 the</text>
+  <text x="674" y="318" font-size="11.5" font-weight="400" fill="#5b6672">aerial image is 15%, not 25%.</text>
+
+  <text x="674" y="342" font-size="11.5" font-weight="600" fill="#0f1419">One photometer and one afternoon</text>
+  <text x="674" y="358" font-size="11.5" font-weight="600" fill="#0f1419">pins the whole cascade - the</text>
+  <text x="674" y="374" font-size="11.5" font-weight="600" fill="#0f1419">highest-value test open to us.</text>
+
+  <!-- ============ LEGEND ============ -->
+  <rect x="56" y="408" width="13" height="13" rx="3" fill="#d8dee6" fill-opacity="0.55"/>
+  <text x="76" y="418" font-size="11.5" font-weight="400" fill="#5b6672">light lost at this stage, against the 100% source line</text>
+
+  <rect x="430" y="408" width="13" height="13" rx="3" fill="#2563a8" fill-opacity="0.12" stroke="#2563a8" stroke-width="1.6" stroke-dasharray="4 3"/>
+  <text x="450" y="418" font-size="11.5" font-weight="400" fill="#5b6672">dashed outline = the value depends on an unmeasured term</text>
+
+  <!-- ============ FOOTNOTE ============ -->
+  <line x1="56" y1="440" x2="904" y2="440" stroke="#d8dee6" stroke-width="1"/>
+  <text x="56" y="462" font-size="11.5" font-weight="400" fill="#5b6672">Indoor viewing needs roughly 100-300 cd/m2 at the image, so a 1000 cd/m2 panel closes it - IF eta_RR is near 1.</text>
+  <text x="56" y="482" font-size="11.5" font-weight="400" fill="#5b6672">eta_RR is stated nowhere in the literature.</text>
+
+</svg>

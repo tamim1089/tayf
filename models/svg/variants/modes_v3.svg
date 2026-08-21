@@ -1,0 +1,117 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="540" viewBox="0 0 960 540" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, sans-serif">
+<defs>
+<pattern id="hx" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+<rect width="7" height="7" fill="#2563a8" fill-opacity="0.10"/>
+<line x1="0.5" y1="0" x2="0.5" y2="7" stroke="#2563a8" stroke-width="1" stroke-opacity="0.5"/>
+</pattern>
+</defs>
+<rect x="0" y="0" width="960" height="540" fill="#ffffff"/>
+<text x="56" y="40" font-size="19" font-weight="600" fill="#0f1419">The two aperture modes</text>
+<text x="56" y="64" font-size="13" font-weight="400" fill="#5b6672">Which side of the aperture the image sits on decides whether W is capped at D or free to exceed it.</text>
+<line x1="56" y1="80" x2="904" y2="80" stroke="#d8dee6" stroke-width="1"/>
+<line x1="480" y1="88" x2="480" y2="436" stroke="#d8dee6" stroke-width="1"/>
+<text x="56" y="102" font-size="13" font-weight="700" fill="#0f1419" letter-spacing="0.6">IN-FRONT (Law 1)</text>
+<text x="496" y="102" font-size="13" font-weight="700" fill="#0f1419" letter-spacing="0.6">PORTAL (Law 2)</text>
+<line x1="56" y1="112" x2="464" y2="112" stroke="#d8dee6" stroke-width="1"/>
+<line x1="496" y1="112" x2="904" y2="112" stroke="#d8dee6" stroke-width="1"/>
+<text x="56" y="130" font-size="11.5" font-weight="400" fill="#5b6672">image sits nearer the eye than the aperture</text>
+<text x="496" y="130" font-size="11.5" font-weight="400" fill="#5b6672">aperture sits nearer the eye than the image</text>
+<rect x="56" y="444" width="408" height="26" rx="3" fill="#0d9668" fill-opacity="0.09"/>
+<rect x="496" y="444" width="408" height="26" rx="3" fill="#0d9668" fill-opacity="0.09"/>
+<text x="68" y="461" font-size="12.5" font-weight="600" fill="#0f1419">a 20 cm device shows a 20 cm head, in the viewer's own space</text>
+<text x="508" y="461" font-size="12.5" font-weight="600" fill="#0f1419">a 20 cm device shows a full standing person at 2.55 m</text>
+<text x="56" y="488" font-size="11.5" font-weight="400" fill="#5b6672">Both are legitimate. Conflating them is the easiest technical error in this project.</text>
+<text x="904" y="488" text-anchor="end" font-size="11.5" font-weight="400" fill="#5b6672">Not to scale: axial and transverse scales differ.</text>
+<line x1="70" y1="274" x2="440" y2="274" stroke="#5b6672" stroke-width="1" stroke-opacity="0.6" stroke-dasharray="16 4 3 4"/>
+<line x1="100" y1="274" x2="400" y2="218" stroke="#b8860b" stroke-width="1.6" stroke-dasharray="6 4"/>
+<line x1="100" y1="274" x2="400" y2="330" stroke="#b8860b" stroke-width="1.6" stroke-dasharray="6 4"/>
+<path d="M 164 274 A 64 64 0 0 0 162.9 262.3" fill="none" stroke="#5b6672" stroke-width="1"/>
+<text x="193.98" y="245.27" transform="rotate(-10.58 193.98 245.27)" font-size="11.5" font-weight="400" fill="#5b6672">half-angle 10.6 deg</text>
+<rect x="395" y="192" width="10" height="26" rx="3" fill="url(#hx)" stroke="#2563a8" stroke-width="2"/>
+<rect x="395" y="330" width="10" height="26" rx="3" fill="url(#hx)" stroke="#2563a8" stroke-width="2"/>
+<rect x="321" y="232" width="8" height="84" rx="3" fill="#0d9668" fill-opacity="0.14" stroke="#0d9668" stroke-width="2"/>
+<line x1="315" y1="232" x2="335" y2="232" stroke="#0d9668" stroke-width="2"/>
+<line x1="315" y1="316" x2="335" y2="316" stroke="#0d9668" stroke-width="2"/>
+<line x1="340" y1="232" x2="340" y2="316" stroke="#5b6672" stroke-width="1"/>
+<line x1="335" y1="237" x2="345" y2="227" stroke="#5b6672" stroke-width="1"/>
+<line x1="335" y1="321" x2="345" y2="311" stroke="#5b6672" stroke-width="1"/>
+<line x1="378" y1="218" x2="378" y2="330" stroke="#5b6672" stroke-width="1"/>
+<line x1="373" y1="223" x2="383" y2="213" stroke="#5b6672" stroke-width="1"/>
+<line x1="373" y1="335" x2="383" y2="325" stroke="#5b6672" stroke-width="1"/>
+<rect x="333" y="266" width="14" height="24" fill="#ffffff"/>
+<text x="340" y="280" text-anchor="middle" font-size="13" font-weight="700" fill="#0f1419">W</text>
+<rect x="371" y="266" width="14" height="24" fill="#ffffff"/>
+<text x="378" y="280" text-anchor="middle" font-size="13" font-weight="700" fill="#0f1419">D</text>
+<path d="M 60 274 Q 80 258 100 274 Q 80 290 60 274 Z" fill="#ffffff" stroke="#0f1419" stroke-width="2"/>
+<circle cx="82" cy="274" r="5.5" fill="#0f1419"/>
+<text x="80" y="248" text-anchor="middle" font-size="12.5" font-weight="600" fill="#0f1419">EYE</text>
+<rect x="56" y="146" width="130" height="66" rx="5" fill="#f7f9fb" stroke="#d8dee6" stroke-width="1"/>
+<text x="68" y="167" font-size="13" font-weight="700" fill="#0f1419">W = D * (b/a)</text>
+<text x="68" y="186" font-size="11.5" font-weight="400" fill="#5b6672">b &lt; a -&gt; W &lt;= D</text>
+<text x="68" y="203" font-size="11.5" font-weight="400" fill="#5b6672">drawn: b/a = 0.75</text>
+<text x="250" y="154" font-size="11.5" font-weight="400" fill="#5b6672">limit case: b -&gt; a, W -&gt; D</text>
+<line x1="321" y1="368" x2="325" y2="320" stroke="#5b6672" stroke-width="1"/>
+<text x="318" y="372" text-anchor="end" font-size="12.5" font-weight="600" fill="#0f1419">IMAGE</text>
+<text x="318" y="388" text-anchor="end" font-size="11.5" font-weight="400" fill="#5b6672">W = 15 cm</text>
+<text x="420" y="372" text-anchor="middle" font-size="12.5" font-weight="600" fill="#0f1419">APERTURE</text>
+<text x="420" y="388" text-anchor="middle" font-size="11.5" font-weight="400" fill="#5b6672">D = 20 cm</text>
+<line x1="100" y1="292" x2="100" y2="434" stroke="#d8dee6" stroke-width="1"/>
+<line x1="325" y1="400" x2="325" y2="412" stroke="#d8dee6" stroke-width="1"/>
+<line x1="400" y1="400" x2="400" y2="434" stroke="#d8dee6" stroke-width="1"/>
+<line x1="100" y1="406" x2="325" y2="406" stroke="#5b6672" stroke-width="1"/>
+<line x1="95" y1="411" x2="105" y2="401" stroke="#5b6672" stroke-width="1"/>
+<line x1="320" y1="411" x2="330" y2="401" stroke="#5b6672" stroke-width="1"/>
+<rect x="170" y="396" width="86" height="20" fill="#ffffff"/>
+<text x="213" y="410" text-anchor="middle" font-size="13" font-weight="700" fill="#0f1419">b = 22.5 cm</text>
+<line x1="100" y1="428" x2="400" y2="428" stroke="#5b6672" stroke-width="1"/>
+<line x1="95" y1="433" x2="105" y2="423" stroke="#5b6672" stroke-width="1"/>
+<line x1="395" y1="433" x2="405" y2="423" stroke="#5b6672" stroke-width="1"/>
+<rect x="214" y="418" width="72" height="20" fill="#ffffff"/>
+<text x="250" y="432" text-anchor="middle" font-size="13" font-weight="700" fill="#0f1419">a = 30 cm</text>
+<line x1="506" y1="274" x2="770" y2="274" stroke="#5b6672" stroke-width="1" stroke-opacity="0.6" stroke-dasharray="16 4 3 4"/>
+<line x1="536" y1="274" x2="776" y2="162" stroke="#b8860b" stroke-width="1.6" stroke-dasharray="6 4"/>
+<line x1="536" y1="274" x2="776" y2="386" stroke="#b8860b" stroke-width="1.6" stroke-dasharray="6 4"/>
+<path d="M 600 274 A 64 64 0 0 0 594 247" fill="none" stroke="#5b6672" stroke-width="1"/>
+<text x="655.35" y="206.17" transform="rotate(-25.02 655.35 206.17)" font-size="11.5" font-weight="400" fill="#5b6672">half-angle 25.0 deg</text>
+<rect x="651" y="192" width="10" height="26" rx="3" fill="url(#hx)" stroke="#2563a8" stroke-width="2"/>
+<rect x="651" y="330" width="10" height="26" rx="3" fill="url(#hx)" stroke="#2563a8" stroke-width="2"/>
+<rect x="772" y="162" width="8" height="224" rx="3" fill="#0d9668" fill-opacity="0.14" stroke="#0d9668" stroke-width="2"/>
+<line x1="766" y1="162" x2="786" y2="162" stroke="#0d9668" stroke-width="2"/>
+<line x1="766" y1="386" x2="786" y2="386" stroke="#0d9668" stroke-width="2"/>
+<line x1="800" y1="162" x2="800" y2="386" stroke="#5b6672" stroke-width="1"/>
+<line x1="795" y1="167" x2="805" y2="157" stroke="#5b6672" stroke-width="1"/>
+<line x1="795" y1="391" x2="805" y2="381" stroke="#5b6672" stroke-width="1"/>
+<line x1="634" y1="218" x2="634" y2="330" stroke="#5b6672" stroke-width="1"/>
+<line x1="629" y1="223" x2="639" y2="213" stroke="#5b6672" stroke-width="1"/>
+<line x1="629" y1="335" x2="639" y2="325" stroke="#5b6672" stroke-width="1"/>
+<rect x="793" y="266" width="14" height="24" fill="#ffffff"/>
+<text x="800" y="280" text-anchor="middle" font-size="13" font-weight="700" fill="#0f1419">W</text>
+<rect x="627" y="266" width="14" height="24" fill="#ffffff"/>
+<text x="634" y="280" text-anchor="middle" font-size="13" font-weight="700" fill="#0f1419">D</text>
+<path d="M 496 274 Q 516 258 536 274 Q 516 290 496 274 Z" fill="#ffffff" stroke="#0f1419" stroke-width="2"/>
+<circle cx="518" cy="274" r="5.5" fill="#0f1419"/>
+<text x="516" y="248" text-anchor="middle" font-size="12.5" font-weight="600" fill="#0f1419">EYE</text>
+<rect x="496" y="146" width="130" height="66" rx="5" fill="#f7f9fb" stroke="#d8dee6" stroke-width="1"/>
+<text x="508" y="167" font-size="13" font-weight="700" fill="#0f1419">W = D * (b/a)</text>
+<text x="508" y="186" font-size="11.5" font-weight="400" fill="#5b6672">b &gt; a -&gt; W &gt; D</text>
+<text x="508" y="203" font-size="11.5" font-weight="400" fill="#5b6672">drawn: b/a = 2.0</text>
+<text x="644" y="154" font-size="11.5" font-weight="400" fill="#5b6672">real case: b/a = 8.5</text>
+<line x1="656" y1="368" x2="656" y2="358" stroke="#5b6672" stroke-width="1"/>
+<text x="648" y="372" text-anchor="end" font-size="12.5" font-weight="600" fill="#0f1419">APERTURE</text>
+<text x="648" y="388" text-anchor="end" font-size="11.5" font-weight="400" fill="#5b6672">D = 20 cm</text>
+<text x="820" y="266" font-size="12.5" font-weight="600" fill="#0f1419">IMAGE</text>
+<text x="820" y="288" font-size="11.5" font-weight="400" fill="#5b6672">W = 40 cm</text>
+<line x1="536" y1="292" x2="536" y2="434" stroke="#d8dee6" stroke-width="1"/>
+<line x1="656" y1="400" x2="656" y2="412" stroke="#d8dee6" stroke-width="1"/>
+<line x1="776" y1="400" x2="776" y2="434" stroke="#d8dee6" stroke-width="1"/>
+<line x1="536" y1="406" x2="656" y2="406" stroke="#5b6672" stroke-width="1"/>
+<line x1="531" y1="411" x2="541" y2="401" stroke="#5b6672" stroke-width="1"/>
+<line x1="651" y1="411" x2="661" y2="401" stroke="#5b6672" stroke-width="1"/>
+<rect x="560" y="396" width="72" height="20" fill="#ffffff"/>
+<text x="596" y="410" text-anchor="middle" font-size="13" font-weight="700" fill="#0f1419">a = 30 cm</text>
+<line x1="536" y1="428" x2="776" y2="428" stroke="#5b6672" stroke-width="1"/>
+<line x1="531" y1="433" x2="541" y2="423" stroke="#5b6672" stroke-width="1"/>
+<line x1="771" y1="433" x2="781" y2="423" stroke="#5b6672" stroke-width="1"/>
+<rect x="620" y="418" width="72" height="20" fill="#ffffff"/>
+<text x="656" y="432" text-anchor="middle" font-size="13" font-weight="700" fill="#0f1419">b = 60 cm</text>
+</svg>
